@@ -347,6 +347,11 @@ void fwd_tst(struct robot *bot) {
   // Variable declarations
   double start_time = TimeNow();
   double end_time;
+  struct log_data entry;
+
+  // Initialize log entry
+  entry.fname = "fwd_test";
+  entry.msg = "Moved forward for this many seconds";
 
   // Begin forward motion
   (*bot->l_mot).SetPower(LM_PWR_FW);
@@ -366,8 +371,14 @@ void fwd_tst(struct robot *bot) {
   LCD.Write("Time elapsed: ");
   LCD.WriteLine(end_time - start_time);
 
+  // Update log entry
+  entry.value = end_time - start_time;
+
   // Give time to remove finger from button
   Sleep(250);
+
+  // Log journal entry
+  bot->journal = log(bot->journal, &entry);
 }
 
 // Backward motion -------------------------------------------------------------
