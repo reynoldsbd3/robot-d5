@@ -1,0 +1,302 @@
+/* EWL
+ * Copyright © 2009 Freescale Corporation.  All rights reserved.
+ *
+ * $Date: 2012/07/12 22:31:15 $
+ * $Revision: 1.3 $
+ */
+
+#ifndef _EWL_COPY
+#define _EWL_COPY
+
+#ifdef __CWCC__
+#pragma options align=native
+
+#ifdef _EWL_FORCE_ENUMS_ALWAYS_INT
+	#if _EWL_FORCE_ENUMS_ALWAYS_INT
+		#pragma enumsalwaysint on
+	#else
+		#pragma enumsalwaysint off
+	#endif
+#endif  // _EWL_FORCE_ENUMS_ALWAYS_INT
+
+#ifdef _EWL_FORCE_ENABLE_BOOL_SUPPORT
+	#if _EWL_FORCE_ENABLE_BOOL_SUPPORT
+		#pragma bool on
+	#else
+		#pragma bool off
+	#endif
+#endif  // _EWL_FORCE_ENABLE_BOOL_SUPPORT
+#endif
+
+#ifdef __GNUC__
+extern "C++" {
+#endif // __GNUC__
+
+#ifndef _EWL_NO_CPP_NAMESPACE
+	namespace std {
+#endif
+
+//  lib.alg.min.max, minimum and maximum:
+
+#ifdef min
+#undef min
+#endif
+
+template <class T>
+inline
+const T&
+min(const T& a, const T& b)
+{
+	return b < a ? b : a;
+}
+
+template <class T, class Compare>
+inline
+const T&
+min(const T& a, const T& b, Compare comp)
+{
+	return comp(b, a) ? b : a;
+}
+
+#ifdef max
+#undef max
+#endif
+
+template <class T>
+inline
+const T&
+max(const T& a, const T& b)
+{
+	return a < b ? b : a;
+}
+
+template <class T, class Compare>
+inline
+const T&
+max(const T& a, const T& b, Compare comp)
+{
+	return comp(a, b) ? b : a;
+}
+
+//  lib.alg.copy, copy:
+
+template <class InputIterator, class OutputIterator>
+inline
+typename CodeWarrior::restrict_to
+<
+	((!__is_segmented<InputIterator>::value   &&
+	  !__is_segmented<OutputIterator>::value) ||
+	 (!__is_segmented<InputIterator>::value &&
+	!__is_random_access_iterator<InputIterator>::value &&
+	__is_segmented<OutputIterator>::value)),
+	OutputIterator
+>::type
+copy(InputIterator first, InputIterator last, OutputIterator result)
+{
+	for (; first != last; ++first, ++result)
+		*result = *first;
+	return result;
+}
+
+template <class T, bool IsPOD = CodeWarrior::is_POD<T>::value>
+struct __ewl_copy
+{
+	static T* copy(T* first, T* last, T* result)
+	{
+		for (; first < last; ++first, ++result)
+			*result = *first;
+		return result;
+	}
+};
+
+template <class T>
+struct __ewl_copy<T, true>
+{
+	static T* copy(T* first, T* last, T* result)
+	{
+		size_t n = static_cast<size_t>(last - first);
+		_CSTD::memmove(result, first, n*sizeof(T));
+		return result + n;
+	}
+};
+
+template <class T>
+inline
+T*
+copy(T* first, T* last, T* result)
+{
+	return __ewl_copy<T>::copy(first, last, result);
+}
+
+template <class T>
+inline
+T*
+copy(const T* first, const T* last, T* result)
+{
+	return __ewl_copy<T>::copy(const_cast<T*>(first), const_cast<T*>(last), result);
+}
+
+#if !defined(__GNUC__) || 1
+
+#if !1
+template <class T>
+struct __has___self
+{
+	void quiet_gcc();
+private:
+    struct two {char x; char y;};
+    template <class U> static two  test(...);
+    template <class U> static char test(typename U::__self* = 0);
+public:
+    static const bool value = sizeof(test<T>(0)) == 1;
+};
+#endif
+
+template <class Container, class Iterator1, class Iterator2>
+inline
+typename CodeWarrior::restrict_to<
+	__has_iterator_category<Iterator1>::value &&
+	__has_iterator_category<Iterator2>::value, /*&&
+	__has___self<Container>::value,*/
+__wrap_iterator<Container, Iterator2>
+>::type
+copy(__wrap_iterator<Container, Iterator1> first, __wrap_iterator<Container, Iterator1> last,
+     __wrap_iterator<Container, Iterator2> result)
+{
+	return __wrap_iterator<Container, Iterator2>(copy(first.base(), last.base(), result.base()));
+}
+
+template <class Container, class Iterator1, class T>
+inline
+typename CodeWarrior::restrict_to<
+	__has_iterator_category<Iterator1>::value, /*&&
+	__has___self<Container>::value,*/
+T*
+>::type
+copy(__wrap_iterator<Container, Iterator1> first, __wrap_iterator<Container, Iterator1> last,
+     T* result)
+{
+	return copy(first.base(), last.base(), result);
+}
+
+template <class Container, class T, class Iterator2>
+inline
+typename CodeWarrior::restrict_to<
+	__has_iterator_category<Iterator2>::value, /*&&
+	__has___self<Container>::value,*/
+__wrap_iterator<Container, Iterator2>
+>::type
+copy(T* first, T* last, __wrap_iterator<Container, Iterator2> result)
+{
+	return __wrap_iterator<Container, Iterator2>(copy(first, last, result.base()));
+}
+
+// specialized algorithms
+
+template <class SegmentedIterator1, class SegmentedIterator2>
+typename CodeWarrior::restrict_to
+<
+	__is_segmented<SegmentedIterator1>::value &&
+	__is_segmented<SegmentedIterator2>::value,
+	SegmentedIterator2
+>::type
+copy(SegmentedIterator1 first, SegmentedIterator1 last, SegmentedIterator2 result)
+{
+	typedef typename iterator_traits<SegmentedIterator1>::difference_type difference_type;
+	while (first != last)
+	{
+		difference_type rlen = result.__end() - result.__cur();
+		difference_type m;
+		if (first.__same_segment(last))
+			m = _STD::min(last.__cur() - first.__cur(), rlen);
+		else
+			m = _STD::min(first.__end() - first.__cur(), rlen);
+		_STD::copy(first.__cur(), first.__cur() + m, result.__cur());
+		--m;
+		first.__ref() += m;
+		++first;
+		result.__ref() += m;
+		++result;
+	}
+	return result;
+}
+
+template <class SegmentedIterator, class OutputIterator>
+typename CodeWarrior::restrict_to
+<
+	 __is_segmented<SegmentedIterator>::value &&
+	!__is_segmented<OutputIterator>::value,
+	OutputIterator
+>::type
+copy(SegmentedIterator first, SegmentedIterator last, OutputIterator result)
+{
+	typedef typename iterator_traits<SegmentedIterator>::difference_type difference_type;
+	while (first != last)
+	{
+		difference_type m;
+		if (first.__same_segment(last))
+			m = last.__cur() - first.__cur();
+		else
+			m = first.__end() - first.__cur();
+		result = _STD::copy(first.__cur(), first.__cur() + m, result);
+		--m;
+		first.__ref() += m;
+		++first;
+	}
+	return result;
+}
+
+template <class RandomAccessIterator, class SegmentedIterator>
+typename CodeWarrior::restrict_to
+<
+	!__is_segmented<RandomAccessIterator>::value &&
+	 __is_random_access_iterator<RandomAccessIterator>::value &&
+	 __is_segmented<SegmentedIterator>::value,
+	SegmentedIterator
+>::type
+copy(RandomAccessIterator first, RandomAccessIterator last, SegmentedIterator result)
+{
+	if (first != last)
+	{
+		typedef typename iterator_traits<RandomAccessIterator>::difference_type difference_type;
+		difference_type n = last - first;
+		while (true)
+		{
+			difference_type m = _STD::min(n, difference_type(result.__end()-result.__cur()));
+			RandomAccessIterator i = first + m;
+			_STD::copy(first, i, result.__cur());
+			n -= m;
+			--m;
+			result.__ref() += m;
+			++result;
+			if (n == 0)
+				break;
+			first = i;
+		}
+	}
+	return result;
+}
+
+#endif  // __GNUC__
+
+#ifndef _EWL_NO_CPP_NAMESPACE
+	} // namespace CodeWarrior
+#endif
+
+#ifdef __GNUC__
+} // extern "C++"
+#endif // __GNUC__
+
+#ifdef __CWCC__
+#ifdef _EWL_FORCE_ENUMS_ALWAYS_INT
+	#pragma enumsalwaysint reset
+#endif
+
+#ifdef _EWL_FORCE_ENABLE_BOOL_SUPPORT
+	#pragma bool reset
+#endif
+
+#pragma options align=reset
+#endif
+
+#endif // _EWL_COPY

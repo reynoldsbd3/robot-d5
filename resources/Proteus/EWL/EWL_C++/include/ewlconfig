@@ -1,0 +1,528 @@
+/* EWL
+ * Copyright © 1995-2009 Freescale Corporation.  All rights reserved.
+ *
+ * $Date: 2012/07/12 22:31:16 $
+ * $Revision: 1.3 $
+ */
+
+#ifndef _EWLCONFIG
+#define _EWLCONFIG
+
+#ifdef __CWCC__
+#pragma warn_undefmacro off
+#endif
+
+#define __EWL_CPP__ 0x00015001  //  EWL C++ version identifier
+
+#if defined(__CWCC__) && defined(__COLDFIRE__)
+
+	// ColdFire EWL C++ library has a different configuration
+	#include <coldfire/ewlconfig_CF>
+
+#elif defined (__arm) || defined(__arm__)
+
+	// ARM EWL C++ library has a different configuration
+	#include <arm/ewlconfig_ARM>
+	
+#elif defined(_ENTERPRISE_C_)
+	#include <sc/ewlconfig_SC>			/* StarCore */
+	
+#elif defined(__CWCC__) && defined (__PPC_EABI__)
+
+	#if defined (__linux__)
+		// using EPPC compiler to target linuxppc
+		#include <ewlconfig_ppcgcc>
+	#else  // defined (__linux__)
+#if 0 // this cannot work, os_enum hasn't been read and __dest_os is not set....
+		// EPPC has special __ewl_error with no fprintf
+		#if (__dest_os != __dolphin_os)
+			#include <pa/ewlconfig_PA>
+		#else
+			#include <pa/ewlconfig_GCN>
+		#endif
+#else
+		#include <pa/ewlconfig_PA>
+#endif  // 0
+	#endif  // defined (__linux__)
+
+#elif defined(__GNUC__)
+
+	#include <ewlconfig_gcc>
+    #include <ansi_parms.h>
+
+#elif defined(__CWCC__)
+
+    #include <ansi_parms.h>
+
+//	#define _EWL_DEBUG
+
+	// define _EWL_USING_EWL_C if using EWL for the C lib
+	#define _EWL_USING_EWL_C
+
+//	#define _EWL_USING_NAMESPACE  // uncomment if C in std (defined in C lib for Pro)
+//	#define _EWL_NO_CPP_NAMESPACE // uncomment if C++ in global namespace
+//	#define _EWL_TR1_NAMESPACE 0  // uncomment if tr1 components should be in std
+
+	#define _EWL_FORCE_ENUMS_ALWAYS_INT       0
+	#define _EWL_FORCE_ENABLE_BOOL_SUPPORT    1
+
+		#ifdef _EWL_FORCE_ENUMS_ALWAYS_INT
+			#if _EWL_FORCE_ENUMS_ALWAYS_INT
+				#pragma enumsalwaysint on
+			#else
+				#pragma enumsalwaysint off
+			#endif
+		#endif  // _EWL_FORCE_ENUMS_ALWAYS_INT
+
+		#ifdef _EWL_FORCE_ENABLE_BOOL_SUPPORT
+			#if _EWL_FORCE_ENABLE_BOOL_SUPPORT
+				#pragma bool on
+			#else
+				#pragma bool off
+			#endif
+		#endif  // _EWL_FORCE_ENABLE_BOOL_SUPPORT
+
+	#if !__option(exceptions)
+		// Recompile the C++ lib when flipping this switch
+		#define _EWL_NO_EXCEPTIONS
+	#endif  // !__option(exceptions)
+	#if !__option(bool)
+		// Recompile the C++ lib when flipping this switch
+		#define _EWL_NO_BOOL
+	#endif  // !__option(bool)
+	#if !__option(wchar_type)
+		// Recompile the C++ lib when flipping this switch
+		#define _EWL_NO_WCHART_CPP_SUPPORT
+	#endif  // !__option(wchar_type)
+
+	#ifdef _EWL_USING_GCC_C
+		#include <AvailabilityMacros.h>
+		#if MAC_OS_X_VERSION_MAX_ALLOWED <= MAC_OS_X_VERSION_10_2
+			// wchar_t is available only on Mac OS X 10.3 and later
+			#define _EWL_NO_WCHART_C_SUPPORT
+		#endif  // MAC_OS_X_VERSION_MAX_ALLOWED <= MAC_OS_X_VERSION_10_2
+	#elif defined(_EWL_WIDE_CHAR) && !_EWL_WIDE_CHAR
+		#define _EWL_NO_WCHART_C_SUPPORT
+	#endif
+//	#define _EWL_NO_WCHART_CPP_SUPPORT
+
+	// complex range
+	#ifdef _EWL_USING_EWL_C
+		#if !_EWL_C99
+			#define _EWL_CX_LIMITED_RANGE
+		#endif
+	#endif  // _EWL_USING_EWL_C
+	#ifndef _EWL_USING_EWL_C
+		// Recompile the C++ lib when flipping this switch
+		#define _EWL_LONGLONG 1
+//		#define _EWL_CX_LIMITED_RANGE
+	#endif  // _EWL_USING_EWL_C
+
+	// _EWL_IMAGINARY
+	// When defined, std::imaginary<T> exists in <complex>
+//	#define _EWL_IMAGINARY
+
+	#ifndef _EWL_LITTLE_ENDIAN
+		#if __option(little_endian)
+			#define _EWL_LITTLE_ENDIAN 1
+		#else
+			#define _EWL_LITTLE_ENDIAN 0
+		#endif
+	#endif  // _EWL_LITTLE_ENDIAN
+
+	#if __INTEL__
+		#if __CWCC__ < 0x3000
+			#if __option(ARM_conform)
+				#define _EWL_NO_EXPLICIT_FUNC_TEMPLATE_ARG
+			#endif
+		#else  // __CWCC__ < 0x3000
+			#if __option(mangling_mscompatible)
+				#define _EWL_NO_EXPLICIT_FUNC_TEMPLATE_ARG
+			#endif
+		#endif  // __CWCC__ < 0x3000
+	#endif  // __INTEL__
+	#if __dest_os == __win32_os
+		#ifndef NOMINMAX
+			#define NOMINMAX
+		#endif
+	#endif  // __dest_os == __win32_os
+
+	#if _EWL_THREADSAFE
+		// Recompile the C++ lib when flipping this switch
+		#ifndef _EWL_SINGLE_THREAD
+			#if __INTEL__
+				#ifndef _EWL_USE_WINTHREADS
+					#define _EWL_USE_WINTHREADS
+				#endif
+			#elif __MACH__
+				#ifndef _EWL_USE_PTHREADS
+					#define _EWL_USE_PTHREADS
+				#endif
+			#else  // __MACH__
+				#ifndef _EWL_USE_MPTASKS
+					#define _EWL_USE_MPTASKS
+				#endif
+			#endif  // __MACH__
+			#define _EWL_SHARED_PTR_HAS_MUTEX
+		#endif  // _EWL_SINGLE_THREAD
+	#endif  // _EWL_THREADSAFE
+
+	#if __INTEL__
+		#define _EWL_HAS_FTIME
+	#elif __MACH__
+		#define _EWL_HAS_GETTIMEOFDAY
+	#else
+		#define _EWL_HAS_GETDATETIME
+	#endif
+
+	// _EWL_SHARED_PTR_HAS_MUTEX
+	// When defined, std::tr1::shared_ptr has an internal mutex per shared count
+	// that will protect the count in a multi-threaded program.  This is not
+	// turned on by default even when in multi-threaded mode because it may be
+	// more effcient to protect the shared_ptr at a higher level, or not at all
+	// if it is not used across threads.  Recompile the C++ lib when flipping this
+	// switch.
+//	#define _EWL_SHARED_PTR_HAS_MUTEX
+
+	// _EWL_MINIMUM_NAMED_LOCALE when defined, turns off all of the named locale
+	// stuff except for "C" and "" (which will be the same as "C")
+//	#define _EWL_MINIMUM_NAMED_LOCALE
+
+	// _EWL_NO_LOCALE will create a C++ lib which does not have locale capability
+	// This will reduce the size of the lib for those apps not wishing to take
+	// advantage of this part of the C++ lib.  Code savings can be on the order of
+	// 50 to 80 Kb.  This switch should also be set when building the C++ lib as a
+	// shared lib.
+	// Recompile the C++ lib when flipping this switch
+//	#define _EWL_NO_LOCALE
+
+	// _EWL_EXTENDED_PRECISION_OUTP allows the output of floating point output to
+	// be printed with precision greater than DECIMAL_DIG.  With this option, an
+	// exact binary to decimal conversion can be performed (by bumping precision
+	// high enough).  The cost is about 5-6Kb in code size.
+	// Recompile the C++ lib when flipping this switch
+//	#define _EWL_EXTENDED_PRECISION_OUTP
+
+	// _Inhibit_Container_Optimization, if uncommented will disable pointer
+	// specializations in the containers.  This may make debugging easier.
+	// Recompile the C++ lib when flipping this switch
+//	#define _Inhibit_Container_Optimization
+
+	// _EWL_NO_VECTOR_BOOL, if uncommented will disable the standard vector<bool>
+	// partial specialization.  You can still instantiate vector<bool>, but it will
+	// not have the space optimization of one bool per bit.  No need to recompile
+	// the C++ lib when flipping this switch, but do remake any precompiled headers
+	// you might be using.
+//	#define _EWL_NO_VECTOR_BOOL
+
+	// _Inhibit_Optimize_RB_bit is a space optimization that compacts the red/black
+	// flag with the parent pointer in each node.  By uncommenting this
+	// define, the optimization is turned off, and the red/black flag will
+	// be stored as an enum in each node.
+//	#define _Inhibit_Optimize_RB_bit
+
+//	#define _EWL_ARRAY_AUTO_PTR
+
+	// _EWL_USE_AUTO_PTR_96 will disable the standard auto_ptr and enable the
+	// version of auto_ptr that appeared in the Dec. '96 CD2.
+//	#define _EWL_USE_AUTO_PTR_96
+
+	// _EWL_EXTENDED_BINDERS adds defaulted template parameters to binder1st
+	// and binder2nd.  This allows client code to alter the type of the value
+	// that is stored.  This is especially useful when you want the binder to
+	// store the value by const reference instead of by value to save on an
+	// expensive copy construction.  This also allows for the use of polymorphic
+	// operators by specifying reference types for the operator.
+	#define _EWL_EXTENDED_BINDERS
+
+	// _EWL_RAW_ITERATORS if defined will cause string and vector to use pointers
+	// for their iterators, else nested classes are used.  The nested classes behave
+	// a little better with respect to Koenig lookup.
+//	#define _EWL_RAW_ITERATORS
+
+	#define _EWL_NO_TEMPLATE_FRIENDS
+//	#define _EWL_NO_THROW_SPECS
+//	#define _EWL_NO_EXPLICIT_FUNC_TEMPLATE_ARG
+//	#define _EWL_MUST_INLINE_MEMBER_TEMPLATE
+
+//	#define _EWL_NO_IO
+//	#define _EWL_NO_FILE_IO
+//	#define _EWL_NO_CONSOLE_IO
+//	#define _EWL_NO_CONSOLE_INPUT
+//	#define _EWL_POSIX_STREAM
+//	#define _EWL_CFILE_STREAM
+//	#define _EWL_WIDE_FILENAME
+
+	// Define _EWL_LL_FILE_SUPPORT to 0 to insist that streamoff be defined as a long
+	// Define _EWL_LL_FILE_SUPPORT to 1 to insist that streamoff be defined as a long long
+	// Leave _EWL_LL_FILE_SUPPORT undefined to let the library decide what it will be.  The
+	// library will make streamoff a long long if long long support is enabled.
+//	#define _EWL_LL_FILE_SUPPORT 0
+//	#define _EWL_LL_FILE_SUPPORT 1
+
+//	#define _EWL_NO_FLOATING_POINT
+
+		#ifdef _EWL_FORCE_ENUMS_ALWAYS_INT
+			#pragma enumsalwaysint reset
+		#endif
+
+		#ifdef _EWL_FORCE_ENABLE_BOOL_SUPPORT
+			#pragma bool reset
+		#endif
+
+#endif  // defined(__CWCC__)
+
+//-----------------------------------------------------------------
+
+#ifndef _EWL_ENUM_ALWAYS_INT
+	#ifdef _EWL_FORCE_ENUMS_ALWAYS_INT
+		#if _EWL_FORCE_ENUMS_ALWAYS_INT
+			#define _EWL_ENUM_ALWAYS_INT
+		#endif
+	#elif defined(__CWCC__)
+		#if __option(enumsalwaysint)
+			#define _EWL_ENUM_ALWAYS_INT
+		#endif
+	#endif  // defined(__CWCC__)
+#endif  // _EWL_ENUM_ALWAYS_INT
+
+#ifndef _EWL_NO_RTTI
+	#ifdef __CWCC__
+		#if !__option(RTTI)
+			#define _EWL_NO_RTTI
+		#endif
+	#endif  // __CWCC__
+#endif  // _EWL_NO_RTTI
+
+#ifndef _EWL_NO_RTTI
+#ifdef _EWL_NO_CPP_NAMESPACE
+#define _EWL_NO_RTTI
+#endif
+#endif  // _EWL_NO_RTTI
+
+#ifdef _EWL_DLL
+	#ifndef _EWL_NO_LOCALE
+	#ifdef _EWL_NO_RTTI
+		#error RTTI support must be on when using EWL C++ with locale support and as shared lib
+	#endif
+	#endif  // _EWL_NO_LOCALE
+#endif  // _EWL_DLL
+
+#ifndef _EWL_CDECL
+#define _EWL_CDECL
+#endif
+
+#ifndef _EWL_USING_NAMESPACE
+	#define _CSTD
+#else
+	#define _CSTD ::std
+#endif
+
+#ifdef _EWL_NO_CPP_NAMESPACE
+	#define _STD
+#else
+	#define _STD ::std
+#endif
+
+// _EWL_TR1_NAMESPACE == 0  put in _STD
+// _EWL_TR1_NAMESPACE == 1  put in _STD::tr1
+
+#ifndef _EWL_TR1_NAMESPACE
+#ifdef _EWL_NO_CPP_NAMESPACE
+	#define _EWL_TR1_NAMESPACE 0
+#else
+	#define _EWL_TR1_NAMESPACE 1
+#endif
+#endif  // _EWL_TR1_NAMESPACE
+
+#if _EWL_TR1_NAMESPACE
+	#define _TR1 tr1
+	#define _STD_TR1 _STD::tr1
+#ifdef _EWL_NO_CPP_NAMESPACE
+	#define _EWL_START_TR1_NAMESPACE namespace tr1 {
+	#define _EWL_END_TR1_NAMESPACE }
+#else  // _EWL_NO_CPP_NAMESPACE
+	#define _EWL_START_TR1_NAMESPACE namespace std { namespace tr1 {
+	#define _EWL_END_TR1_NAMESPACE } }
+#endif  // _EWL_NO_CPP_NAMESPACE
+#else  // _EWL_TR1_NAMESPACE
+#ifdef _EWL_NO_CPP_NAMESPACE
+	#define _EWL_START_TR1_NAMESPACE
+	#define _EWL_END_TR1_NAMESPACE
+#else  // _EWL_NO_CPP_NAMESPACE
+	#define _EWL_START_TR1_NAMESPACE namespace std {
+	#define _EWL_END_TR1_NAMESPACE }
+#endif  // _EWL_NO_CPP_NAMESPACE
+	#define _TR1 _STD
+	#define _STD_TR1 _STD
+#endif  // _EWL_TR1_NAMESPACE
+
+#ifdef _EWL_NO_BOOL
+	#ifndef bool
+		typedef unsigned char bool;
+	#endif
+	#ifndef true
+		#define false static_cast<bool>(0)
+		#define true  static_cast<bool>(1)
+	#endif  // true
+#endif  // _EWL_NO_BOOL
+
+#if !defined(_EWL_NO_WCHART_CPP_SUPPORT)
+
+	#ifdef _EWL_USING_EWL_C
+		#include <wchar_t.h>
+	#else
+		extern "C" {typedef unsigned short wchar_t;}
+	#endif
+
+#endif  // !defined(_EWL_NO_WCHART_CPP_SUPPORT)
+
+#ifdef _EWL_NO_THROW_SPECS
+	#define _EWL_THROW      // deprecated, use _EWL_NO_THROW
+	#ifndef _EWL_NO_THROW
+		#define _EWL_NO_THROW
+	#endif
+	#ifndef _EWL_CANT_THROW
+		#define _EWL_CANT_THROW
+	#endif
+#else  // _EWL_NO_THROW_SPECS
+	#define _EWL_THROW throw() // deprecated, use _EWL_NO_THROW
+	#ifndef _EWL_NO_THROW
+		#define _EWL_NO_THROW throw()
+	#endif
+	#ifndef _EWL_CANT_THROW
+		#define _EWL_CANT_THROW __attribute__((nothrow))
+	#endif
+#endif  // _EWL_NO_THROW_SPECS
+
+#ifndef _EWL_NO_MEMBER_TEMPLATE
+	#define _EWL_REBIND(type) typename Allocator::rebind<type>::other
+#else
+	#define _EWL_REBIND(type) allocator<type>
+#endif
+
+#ifdef _EWL_NO_EXCEPTIONS
+
+	#ifndef _EWL_ERROR_FUNC
+		#define _EWL_ERROR_FUNC 1
+	#endif
+
+	#ifndef _EWL_NO_CPP_NAMESPACE
+		namespace std {
+	#endif
+
+	void __ewl_error(const char*);
+
+	#ifndef _EWL_NO_CPP_NAMESPACE
+		} // namespace std
+	#endif
+
+	// If you don't want EWL C++ to throw an exception, code your
+	// error handling code here as an inline method named _STD::__ewl_error
+	// Two examples are below:
+	#if _EWL_ERROR_FUNC == 1
+		// Example 1 - bail
+		#include <cstdio>
+		#include <cstdlib>
+
+		inline
+		void
+		_STD::__ewl_error(const char* str)
+		{
+			printf(str);
+			abort();
+		}
+	#endif  // _EWL_ERROR_FUNC == 1
+
+	#if _EWL_ERROR_FUNC == 2
+		// Example 2 - ignore
+		inline
+		void
+		_STD::__ewl_error(const char*)
+		{
+		}
+	#endif  // _EWL_ERROR_FUNC == 2
+
+#endif  // _EWL_NO_EXCEPTIONS
+
+#ifndef _EWL_ERROR
+	#ifndef _EWL_NO_EXCEPTIONS
+		#define _EWL_ERROR(e, m) throw e(m)
+	#else
+		#define _EWL_ERROR(e, m) _STD::__ewl_error(m)
+	#endif
+#endif  // _EWL_ERROR
+
+#ifndef _EWL_DEBUG_ERROR
+	#define _EWL_DEBUG_ERROR(e, m) _EWL_ERROR(e, m)
+#endif
+
+#ifndef _EWL_IMP_EXP
+	#define _EWL_IMP_EXP
+#endif
+
+#ifndef _EWL_IMP_EXP_CPP
+	#define _EWL_IMP_EXP_CPP _EWL_IMP_EXP
+#endif
+
+#ifndef _EWL_IMP_EXP_RUNTIME
+	#define _EWL_IMP_EXP_RUNTIME _EWL_IMP_EXP
+#endif
+
+#ifndef _EWL_LITTLE_ENDIAN
+	#error _EWL_LITTLE_ENDIAN must be defined to 0 or 1
+#endif
+
+#if !defined(_EWL_POSIX_STREAM) && !defined(_EWL_CFILE_STREAM)
+	#define _EWL_CFILE_STREAM
+#endif
+
+#if defined(_EWL_POSIX_STREAM) && defined(_EWL_CFILE_STREAM)
+	#error _EWL_POSIX_STREAM and _EWL_CFILE_STREAM defined
+#endif
+
+#ifndef _EWL_LL_FILE_SUPPORT
+	#if _EWL_LONGLONG
+		#define _EWL_LL_FILE_SUPPORT 1
+	#else
+		#define _EWL_LL_FILE_SUPPORT 0
+	#endif
+#endif  // _EWL_LL_FILE_SUPPORT
+
+#ifndef _EWL_NO_FLOATING_POINT
+	#ifdef _EWL_FLOATING_POINT
+		#if !_EWL_FLOATING_POINT
+			#define _EWL_NO_FLOATING_POINT
+		#endif
+	#endif  // _EWL_FLOATING_POINT
+#endif  // _EWL_NO_FLOATING_POINT
+
+#ifdef _EWL_NO_CONDITION
+	#define _EWL_NO_THREAD
+#endif
+
+#if !defined(_EWL_SINGLE_THREAD) && !defined(_EWL_USE_PTHREADS) && \
+    !defined(_EWL_USE_MPTASKS) && !defined(_EWL_USE_WINTHREADS) && \
+    !defined(_EWL_USE_NITROTHREADS)
+	#define _EWL_SINGLE_THREAD
+#endif  // !defined(_EWL_SINGLE_THREAD) && !defined(_EWL_USE_PTHREADS)
+
+#ifndef _EWL_NO_TIME_SUPPORT
+	#ifdef _EWL_USING_EWL_C
+		#if !_EWL_OS_TIME_SUPPORT || !_EWL_TIME_T_AVAILABLE
+			#define _EWL_NO_TIME_SUPPORT
+		#endif
+	#endif  // _EWL_USING_EWL_C
+#endif  // _EWL_NO_TIME_SUPPORT
+
+#ifdef __CWCC__
+
+#if __option(rvalue_refs)
+	#define _EWL_MOVE
+#endif
+
+#pragma warn_undefmacro reset
+
+#endif  // __CWCC__
+
+#endif  // _EWLCONFIG

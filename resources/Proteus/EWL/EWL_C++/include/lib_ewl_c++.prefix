@@ -1,0 +1,14 @@
+
+/*
+** Prefix file for EWL-C++
+*/
+
+#define _EWL_NO_WCHART_CPP_SUPPORT 1
+#define _EWL_NO_WCHART_C_SUPPORT 1
+#define _EWL_USES_SUN_MATH_LIB 1
+#define _EWL_FLOATING_POINT 1
+#define _EWL_TINY_IO	1
+
+#include <lib_ewl.prefix>
+/*#include <ewlconfig>*/
+

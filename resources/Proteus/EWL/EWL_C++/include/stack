@@ -1,0 +1,176 @@
+/* EWL
+ * Copyright © 1995-2009 Freescale Corporation.  All rights reserved.
+ *
+ * $Date: 2012/06/28 06:42:22 $
+ * $Revision: 1.2 $
+ */
+
+#ifndef _STACK
+#define _STACK
+
+/*  stack synopsis
+
+	synopsis skipped.  Code self explanatory
+
+*/
+
+#include <ewlconfig>
+#include <deque>
+
+#ifdef __CWCC__
+#pragma options align=native
+#endif
+
+#ifdef _EWL_FORCE_ENUMS_ALWAYS_INT
+	#if _EWL_FORCE_ENUMS_ALWAYS_INT
+		#pragma enumsalwaysint on
+	#else
+		#pragma enumsalwaysint off
+	#endif
+#endif  // _EWL_FORCE_ENUMS_ALWAYS_INT
+
+#ifdef _EWL_FORCE_ENABLE_BOOL_SUPPORT
+	#if _EWL_FORCE_ENABLE_BOOL_SUPPORT
+		#pragma bool on
+	#else
+		#pragma bool off
+	#endif
+#endif  // _EWL_FORCE_ENABLE_BOOL_SUPPORT
+
+extern "C++" {
+
+#ifndef _EWL_NO_CPP_NAMESPACE
+	namespace std {
+#endif
+
+template <class T, class Container = deque<T> >
+class stack
+{
+public:
+	typedef typename Container::value_type            value_type;
+	typedef typename Container::size_type             size_type;
+	typedef typename Container::reference             reference;
+	typedef typename Container::const_reference       const_reference;
+	typedef          Container                        container_type;
+
+	         stack() {}
+	explicit stack(const Container& x) : c(x) {}
+
+#ifdef _EWL_MOVE
+	explicit stack(Container&& x) : c(_STD::move(x)) {}
+	stack(stack&& s) : c(_STD::move(s.c)) {}
+	stack& operator=(stack&& s) {swap(s); return *this;}
+#endif  // _EWL_MOVE
+
+	bool      empty() const             { return c.empty(); }
+	size_type size()  const             { return c.size(); }
+	reference         top()             { return c.back(); }
+	const_reference   top() const       { return c.back(); }
+	void push(const value_type& x)      { c.push_back(x); }
+#ifdef _EWL_MOVE
+	void push(value_type&& x)           { c.push_back(_STD::move(x)); }
+#endif
+	void pop()                          { c.pop_back(); }
+#ifdef _EWL_MOVE
+	void swap(stack&& s) {using _STD::swap; swap(c, s.c);}
+#endif
+protected:
+	Container c;
+
+	template <typename T1, typename Container1>
+		friend bool operator== (const stack<T1, Container1>& x, const stack<T1, Container1>& y);
+	template <typename T1, typename Container1>
+		friend bool operator!= (const stack<T1, Container1>& x, const stack<T1, Container1>& y);
+	template <typename T1, typename Container1>
+		friend bool operator<  (const stack<T1, Container1>& x, const stack<T1, Container1>& y);
+	template <typename T1, typename Container1>
+		friend bool operator<= (const stack<T1, Container1>& x, const stack<T1, Container1>& y);
+	template <typename T1, typename Container1>
+		friend bool operator>  (const stack<T1, Container1>& x, const stack<T1, Container1>& y);
+	template <typename T1, typename Container1>
+		friend bool operator>= (const stack<T1, Container1>& x, const stack<T1, Container1>& y);
+};
+
+template <class T, class Container>
+inline
+bool
+operator==(const stack<T, Container>& x, const stack<T, Container>& y)
+{
+	return x.c == y.c;
+}
+
+template <class T, class Container>
+inline
+bool
+operator< (const stack<T, Container>& x, const stack<T, Container>& y)
+{
+	return x.c < y.c;
+}
+
+template <class T, class Container>
+inline
+bool
+operator!=(const stack<T, Container>& x, const stack<T, Container>& y)
+{
+	return x.c != y.c;
+}
+
+template <class T, class Container>
+inline
+bool
+operator> (const stack<T, Container>& x, const stack<T, Container>& y)
+{
+	return x.c > y.c;
+}
+
+template <class T, class Container>
+inline
+bool
+operator>=(const stack<T, Container>& x, const stack<T, Container>& y)
+{
+	return x.c >= y.c;
+}
+
+template <class T, class Container>
+inline
+bool
+operator<=(const stack<T, Container>& x, const stack<T, Container>& y)
+{
+	return x.c <= y.c;
+}
+
+#ifdef _EWL_MOVE
+
+template <class T, class Container>
+inline
+void swap(stack<T, Container>& x, stack<T, Container>& y) {x.swap(y);}
+
+template <class T, class Container>
+inline
+void swap(stack<T, Container>&& x, stack<T, Container>& y) {x.swap(y);}
+
+template <class T, class Container>
+inline
+void swap(stack<T, Container>& x, stack<T, Container>&& y) {x.swap(y);}
+
+#endif  // _EWL_MOVE
+
+#ifndef _EWL_NO_CPP_NAMESPACE
+	} // namespace std
+#endif
+
+} // extern "C++"
+
+#ifdef _EWL_FORCE_ENUMS_ALWAYS_INT
+	#pragma enumsalwaysint reset
+#endif
+
+#ifdef _EWL_FORCE_ENABLE_BOOL_SUPPORT
+	#pragma bool reset
+#endif
+
+#ifdef __CWCC__
+#pragma options align=reset
+#endif
+
+#endif // _STACK

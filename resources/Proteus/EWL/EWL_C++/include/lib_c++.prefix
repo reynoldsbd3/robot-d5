@@ -1,0 +1,6 @@
+
+/*
+** Prefix file for std C++
+*/
+#include <lib_c99.prefix>
+

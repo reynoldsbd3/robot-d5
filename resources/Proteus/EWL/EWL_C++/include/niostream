@@ -1,0 +1,77 @@
+/* EWL
+ * Copyright © 1995-2009 Freescale Corporation.  All rights reserved.
+ *
+ * $Date: 2012/07/12 22:31:16 $
+ * $Revision: 1.3 $
+ */
+
+#ifndef _NIOSTREAM
+#define _NIOSTREAM
+
+#include <ewlconfig>
+
+#ifndef _EWL_NO_IO
+
+#include <istream>
+#include <ostream>
+
+#ifdef __CWCC__
+#pragma options align=native
+
+#ifdef _EWL_FORCE_ENUMS_ALWAYS_INT
+	#if _EWL_FORCE_ENUMS_ALWAYS_INT
+		#pragma enumsalwaysint on
+	#else
+		#pragma enumsalwaysint off
+	#endif
+#endif  // _EWL_FORCE_ENUMS_ALWAYS_INT
+
+#ifdef _EWL_FORCE_ENABLE_BOOL_SUPPORT
+	#if _EWL_FORCE_ENABLE_BOOL_SUPPORT
+		#pragma bool on
+	#else
+		#pragma bool off
+	#endif
+#endif  // _EWL_FORCE_ENABLE_BOOL_SUPPORT
+#endif
+
+extern "C++" {
+
+#ifndef _EWL_NO_CPP_NAMESPACE
+	namespace std {
+#endif
+
+#ifndef _EWL_NO_CONSOLE_IO
+
+#ifndef _EWL_NO_CONSOLE_INPUT
+_EWL_IMP_EXP_CPP extern istream cin;
+#endif
+_EWL_IMP_EXP_CPP extern ostream cout;
+_EWL_IMP_EXP_CPP extern ostream clog;
+_EWL_IMP_EXP_CPP extern ostream cerr;
+
+static __nInit  __ewl_ios_base_ninit;
+
+#endif  // _EWL_NO_CONSOLE_IO
+
+#ifndef _EWL_NO_CPP_NAMESPACE
+	} // namespace std
+#endif
+
+} // extern "C++"
+
+#ifdef __CWCC__
+#ifdef _EWL_FORCE_ENUMS_ALWAYS_INT
+	#pragma enumsalwaysint reset
+#endif
+
+#ifdef _EWL_FORCE_ENABLE_BOOL_SUPPORT
+	#pragma bool reset
+#endif
+
+#pragma options align=reset
+#endif
+
+#endif // _EWL_NO_IO
+
+#endif  // _NIOSTREAM

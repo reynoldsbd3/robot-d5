@@ -1,0 +1,107 @@
+/* EWL
+ * Copyright © 1995-2009 Freescale Corporation.  All rights reserved.
+ *
+ * $Date: 2012/06/01 15:39:37 $
+ * $Revision: 1.1 $
+ */
+
+#ifndef _EWL_CSIGNAL
+#define _EWL_CSIGNAL
+
+#include <ansi_parms.h>
+
+#if !_EWL_USING_CW_C_HEADERS_
+	#include <signal.h>
+
+	#if _EWL_PUT_THIRD_PARTY_C_IN_STD
+		#include <ewl_cpp_std_signal.h>
+	#endif
+#else
+
+#if _AEABI_PORTABILITY_LEVEL
+	#include <arm/csignal_aeabi>
+#endif
+
+#if __dest_os == __starcore
+
+#include <sc/csignal_StarCore.h>
+
+#else
+
+_EWL_BEGIN_NAMESPACE_STD
+_EWL_BEGIN_EXTERN_C
+
+	typedef int sig_atomic_t;
+	typedef void (*__signal_func_ptr)(int);
+
+	/** The signal function chooses one of three ways in which receipt of the signal number
+	 *	sig is to be subsequently handled. If the value of func is SIG_DFL, default handling
+	 *	for that signal will occur. If the value of func is SIG_IGN, the signal will be ignored.
+	 *	Otherwise, func shall point to a function to be called when that signal occurs. An
+	 *	invocation of such a function because of a signal, or (recursively) of any further functions
+	 *	called by that invocation (other than functions in the standard library), is called a signal
+	 *	handler.
+	 */
+	_EWL_IMP_EXP_C __signal_func_ptr _EWL_CDECL	signal(int, __signal_func_ptr) _EWL_CANT_THROW;
+
+	/** The raise function carries out the actions described in 7.14.1.1 for the signal sig. If a
+	 *	signal handler is called, the raise function shall not return until after the signal handler
+	 *	does.
+	 *	Returns zero if successful, nonzero if unsuccessful.
+	 */
+	_EWL_IMP_EXP_C int _EWL_CDECL raise(int) _EWL_CANT_THROW;
+
+	#ifndef SIG_DFL
+		#define SIG_DFL	((__std(__signal_func_ptr)) 0)
+	#endif
+
+	#ifndef SIG_IGN
+		#define SIG_IGN	((__std(__signal_func_ptr)) 1)
+	#endif
+
+	#ifndef SIG_ERR
+		#define SIG_ERR	((__std(__signal_func_ptr)) -1)
+	#endif
+
+_EWL_END_EXTERN_C
+_EWL_END_NAMESPACE_STD
+
+#ifndef SIGABRT
+#define SIGABRT		1
+#endif
+
+#ifndef SIGFPE
+#define SIGFPE		2
+#endif
+
+#ifndef SIGILL
+#define SIGILL		3
+#endif
+
+#ifndef SIGINT
+#define SIGINT		4
+#endif
+
+#ifndef SIGSEGV
+#define SIGSEGV		5
+#endif
+
+#ifndef SIGTERM
+#define SIGTERM		6
+#endif
+
+#ifndef SIGBREAK
+#define SIGBREAK	7
+#endif
+
+#define __ewl_signal_max 7
+
+#endif /* dest_os */
+
+#if defined(_EWL_EXPORT_CNAMES) && defined(__cplusplus) && defined(_EWL_USING_NAMESPACE)
+#include <signal.h>
+#endif /*  defined(_EWL_EXPORT_CNAMES) && defined(__cplusplus) && defined(_EWL_USING_NAMESPACE) */
+
+#endif /* _EWL_USING_CW_C_HEADERS_ */
+
+#endif /* _EWL_CSIGNAL */

@@ -1,0 +1,40 @@
+/* EWL
+ * Copyright © 1995-2007 Freescale Corporation.  All rights reserved.
+ *
+ * $Date: 2012/06/01 15:40:17 $
+ * $Revision: 1.1 $
+ */
+
+#ifndef _EWL_CERRNO_AEABI
+#define _EWL_CERRNO_AEABI
+
+/* mandatory portatibility declaration C Library ABI for ARM architecture section 5.1.1 */
+#if defined(_AEABI_PORTABILITY_LEVEL) && !defined(_AEABI_PORTABLE)
+# define _AEABI_PORTABLE 1
+#endif
+
+_EWL_BEGIN_EXTERN_C
+
+#if !defined(_EWL_ERRNO)
+	extern int errno;
+# define _EWL_ERRNO errno
+#endif /* _EWL_ERRNO */
+
+
+#if _EWL_C99
+# define EILSEQ	__aeabi_EILSEQ
+#endif /*_EWL_C99 */
+#define EDOM __aeabi_EDOM
+#define ERANGE	__aeabi_ERANGE
+
+#define errno (*__aeabi_errno_addr())
+
+_EWL_CDECL volatile int *__aeabi_errno_addr(void);
+
+_EWL_IMP_EXP_C  extern const int __aeabi_EDOM;
+_EWL_IMP_EXP_C	extern const int __aeabi_EILSEQ;
+_EWL_IMP_EXP_C	extern const int __aeabi_ERANGE;
+
+_EWL_END_EXTERN_C
+
+#endif /* _EWL_CERRNO_AEABI */

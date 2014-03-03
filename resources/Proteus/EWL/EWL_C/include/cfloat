@@ -1,0 +1,227 @@
+/* EWL
+ * Copyright © 1995-2009 Freescale Corporation.  All rights reserved.
+ *
+ * $Date: 2012/06/01 15:39:37 $
+ * $Revision: 1.1 $
+ */
+
+#ifndef _EWL_CFLOAT
+#define _EWL_CFLOAT
+
+#include <ansi_parms.h>
+
+#if !_EWL_USING_CW_C_HEADERS_
+	#include <float.h>
+#else
+
+#include <ewl_t.h>
+
+#if (_EWL_FLOATING_POINT || _EWL_FLOATING_POINT_PRINTF_SCANF)
+
+#if _EWL_C99 || _EWL_C99_MATH_LEAK
+#define DECIMAL_DIG 17
+#endif
+
+/* 	FLT_EVAL_METHOD represents the internal precision and range of
+	operations using the float and double types.  For method 0,
+	operations are performed just to the precision/range of the
+	given floating point type.  For method 1, float and double
+	operations are performed in double precision/range, and long
+	double operations are performed in long double precision/range.
+	For method 2, all floating operations are performed in long
+	double precision/range.  Method -1 is indeterminable, which I take
+	to mean inconsistent, given the specific code compiled. */
+
+#ifndef _EWL_FLT_EVAL_METHOD
+	#error _EWL_FLT_EVAL_METHOD must be defined in the ansi_prefix.xxx.h
+#else
+	#define FLT_EVAL_METHOD _EWL_FLT_EVAL_METHOD
+#endif
+
+/*** Defaults ***/
+
+#ifndef _EWL_FLOAT_SIZE
+	#define _EWL_FLOAT_SIZE 32
+#endif
+
+#ifndef _EWL_DOUBLE_SIZE
+	#define _EWL_DOUBLE_SIZE 64
+#endif
+
+#ifndef _EWL_LONG_DOUBLE_SIZE
+	#define _EWL_LONG_DOUBLE_SIZE 64
+#endif
+
+/*** end Defaults ***/
+
+#if !_EWL_FLOAT_HEX
+
+_EWL_BEGIN_EXTERN_C
+
+	extern _EWL_IMP_EXP_C _INT32 __float_min[], __float_max[], __float_epsilon[];
+	extern _EWL_IMP_EXP_C _INT32 __double_min[], __double_max[], __double_epsilon[];
+	extern _EWL_IMP_EXP_C _INT32 __extended_min[],__extended_max[],__extended_epsilon[];
+
+_EWL_END_EXTERN_C
+
+#endif
+
+#if _EWL_C99 && (defined(__STARCORE__) && __dest_os == __win32_os)
+#define	FLT_ROUNDS					fegetround()
+#else
+#define FLT_ROUNDS					1  /* see fenv.h for changing rounding modes intel/mac only */
+#endif
+
+#define FLT_RADIX					2
+
+#if _EWL_FLOAT_SIZE == 32
+
+	#define FLT_MANT_DIG         24
+	#define FLT_DIG               6
+	#define FLT_MIN_EXP      (-125)
+	#define FLT_MIN_10_EXP    (-37)
+	#define FLT_MAX_EXP         128
+	#define FLT_MAX_10_EXP       38
+#if _EWL_FLOAT_HEX
+	#define FLT_MAX       0x1.fffffeP127F
+	#define FLT_EPSILON   0x1.000000P-23F
+	#define FLT_MIN       0x1.000000P-126F
+#endif
+
+#else
+
+	#error unsupported size for float in <cfloat>
+
+#endif
+
+#if !_EWL_FLOAT_HEX
+
+	#define FLT_MAX             (_MISRA_EXCEPTION_FLOAT_CAST() *(float *)__float_max)
+	#define FLT_EPSILON         (_MISRA_EXCEPTION_FLOAT_CAST() *(float *)__float_epsilon)
+	#define FLT_MIN             (_MISRA_EXCEPTION_FLOAT_CAST() *(float *)__float_min)
+
+#endif
+
+#if _EWL_DOUBLE_SIZE == 32
+
+	#define DBL_MANT_DIG          24
+	#define DBL_DIG                6
+	#define DBL_MIN_EXP       (-125)
+	#define DBL_MIN_10_EXP     (-37)
+	#define DBL_MAX_EXP          128
+	#define DBL_MAX_10_EXP        38
+#if _EWL_FLOAT_HEX
+	#define DBL_MAX       0x1.fffffeP127
+	#define DBL_EPSILON   0x1.000000P-23
+	#define DBL_MIN       0x1.000000P-126
+#endif
+
+#elif _EWL_DOUBLE_SIZE == 64
+
+	#define DBL_MANT_DIG          53
+	#define DBL_DIG               15
+	#define DBL_MIN_EXP      (-1021)
+	#define DBL_MIN_10_EXP    (-308)
+	#define DBL_MAX_EXP         1024
+	#define DBL_MAX_10_EXP       308
+#if _EWL_FLOAT_HEX
+	#define DBL_MAX       0x1.fffffffffffffP1023
+	#define DBL_EPSILON   0x1.0000000000000P-52
+	#define DBL_MIN       0x1.0000000000000P-1022
+#endif
+
+#elif _EWL_DOUBLE_SIZE == 80 || _EWL_DOUBLE_SIZE == 96
+
+	#define DBL_MANT_DIG          64
+	#define DBL_DIG               18
+	#define DBL_MIN_EXP     (-16381)
+	#define DBL_MIN_10_EXP   (-4931)
+	#define DBL_MAX_EXP        16384
+	#define DBL_MAX_10_EXP      4932
+#if _EWL_FLOAT_HEX
+	#define DBL_MAX       0x1.fffffffffffffffeP16383
+	#define DBL_EPSILON   0x1.0000000000000000P-63
+	#define DBL_MIN       0x1.0000000000000000P-16382
+#endif
+
+#else
+
+	#error unsupported size for double in <cfloat>
+
+#endif
+
+#if !_EWL_FLOAT_HEX
+
+	#define DBL_MAX                (_MISRA_EXCEPTION_FLOAT_CAST() *(double *)__double_max)
+	#define DBL_EPSILON            (_MISRA_EXCEPTION_FLOAT_CAST() *(double *)__double_epsilon)
+	#define DBL_MIN                (_MISRA_EXCEPTION_FLOAT_CAST() *(double *)__double_min)
+
+#endif
+
+#if _EWL_LONG_DOUBLE_SIZE == 32
+
+	#define LDBL_MANT_DIG          24
+	#define LDBL_DIG                6
+	#define LDBL_MIN_EXP       (-125)
+	#define LDBL_MIN_10_EXP     (-37)
+	#define LDBL_MAX_EXP          128
+	#define LDBL_MAX_10_EXP        38
+#if _EWL_FLOAT_HEX
+	#define LDBL_MAX       0x1.fffffeP127L
+	#define LDBL_EPSILON   0x1.000000P-23L
+	#define LDBL_MIN       0x1.000000P-126L
+#endif
+
+#elif _EWL_LONG_DOUBLE_SIZE == 64
+
+	#define LDBL_MANT_DIG          53
+	#define LDBL_DIG               15
+	#define LDBL_MIN_EXP      (-1021)
+	#define LDBL_MIN_10_EXP    (-308)
+	#define LDBL_MAX_EXP         1024
+	#define LDBL_MAX_10_EXP       308
+#if _EWL_FLOAT_HEX
+	#define LDBL_MAX       0x1.fffffffffffffP1023L
+	#define LDBL_EPSILON   0x1.0000000000000P-52L
+	#define LDBL_MIN       0x1.0000000000000P-1022L
+#endif
+
+#elif _EWL_LONG_DOUBLE_SIZE == 80 || _EWL_LONG_DOUBLE_SIZE == 96
+
+	#define LDBL_MANT_DIG          64
+	#define LDBL_DIG               18
+	#define LDBL_MIN_EXP     (-16381)
+	#define LDBL_MIN_10_EXP   (-4931)
+	#define LDBL_MAX_EXP        16384
+	#define LDBL_MAX_10_EXP      4932
+#if _EWL_FLOAT_HEX
+	#define LDBL_MAX       0x1.fffffffffffffffeP16383L
+	#define LDBL_EPSILON   0x1.0000000000000000P-63L
+	#define LDBL_MIN       0x1.0000000000000000P-16382L
+#endif
+
+#else
+
+	#error unsupported size for long double in <cfloat>
+
+#endif
+
+#if !_EWL_FLOAT_HEX
+
+	#define LDBL_MAX              (_MISRA_EXCEPTION_FLOAT_CAST() *(long double *)&__extended_max)
+	#define LDBL_EPSILON          (_MISRA_EXCEPTION_FLOAT_CAST() *(long double *)&__extended_epsilon)
+	#define LDBL_MIN              (_MISRA_EXCEPTION_FLOAT_CAST() *(long double *)&__extended_min)
+
+#endif
+
+#if (defined(__INTEL__) && __dest_os == __win32_os)
+	#include <x86/float.win32.h>
+#elif defined(__arm) ||  defined(__arm__)
+    #include <arm/float.ARM.h>
+#endif
+
+#endif /* _EWL_FLOATING_POINT */
+
+#endif /* _EWL_USING_CW_C_HEADERS_ */
+
+#endif /* _EWL_CFLOAT */

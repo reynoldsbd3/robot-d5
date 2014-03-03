@@ -1,0 +1,44 @@
+/* EWL
+ * Copyright © 1995-2009 Freescale Corporation.  All rights reserved.
+ *
+ * $Date: 2012/06/01 15:39:37 $
+ * $Revision: 1.1 $
+ */
+
+/*
+ * this file provides a compatibility layer between MSL and EWL
+ * it will be used during the transition to EWL, _MSL_* names
+ * will be deprecated.
+ */
+
+#if _EWL_USES_MSL_GLUE
+
+#define __MSL__						__EWL__
+#define _MSL_CDECL 					_EWL_CDECL
+#define _MSL_HEAP_START				_EWL_HEAP_START
+#define _MSL_HEAP_SIZE				_EWL_HEAP_SIZE
+#define _MSL_BEGIN_NAMESPACE_STD	_EWL_BEGIN_NAMESPACE_STD
+#define _MSL_BEGIN_EXTERN_C			_EWL_BEGIN_EXTERN_C
+#define _MSL_MATH_CDECL				_EWL_MATH_CDECL
+#define msl_settings				ewl_settings
+#define _MSL_NO_FILE_IO				_EWL_NO_FILE_IO
+#define __MSL_LONGLONG_SUPPORT__	__EWL_LONGLONG_SUPPORT__
+#define _MSL_FLOATING_POINT_IO		_EWL_FLOATING_POINT_PRINTF_SCANF
+#define _MSL_WIDE_CHAR				_EWL_WIDE_CHAR
+#define _MSL_LONGLONG				_EWL_LONGLONG
+#define _MSL_NO_TIME_SUPPORT 		_EWL_NO_TIME_SUPPORT
+#define _MSL_OS_TIME_SUPPORT 		_EWL_OS_TIME_SUPPORT
+#define _MSL_OS_DISK_FILE_SUPPORT	_EWL_OS_DISK_FILE_SUPPORT
+#define _MSL_C_LOCALE_ONLY			_EWL_C_LOCALE_ONLY
+#define _MSL_NO_LOCALE				_EWL_NO_LOCALE
+#define _MSL_CANT_THROW				_EWL_CANT_THROW
+#define _MSL_NO_THROW				_EWL_NO_THROW
+#define _MSL_USING_NAMESPACE		_EWL_USING_NAMESPACE
+#define _MSL_IMP_EXP_C				_EWL_IMP_EXP_C
+#define __MSL_CPP__					__EWL_CPP__
+#define _MSL_COMPLEX				_EWL_COMPLEX_SUPPORT	
+#define _MSL_C99					_EWL_C99
+#define _MSL_LITTLE_ENDIAN			_EWL_LITTLE_ENDIAN
+
+#endif
+

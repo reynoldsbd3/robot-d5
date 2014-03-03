@@ -1,0 +1,844 @@
+#include <FEHIO.h>
+#include <FEHLCD.h>
+#include <FEHMotor.h>
+#include <FEHUtility.h>
+#include <FEHWONKA.h>
+
+#include "logging.h"
+#include "movement.h"
+#include "robot.h"
+
+#define BLNC_FCTR 3            // Offset factor for balamcing motor power
+#define HEAD_ERR 3.0           // Maximum allowable heading error
+#define FL_PWR -90             // Forklift power
+#define FTRY_THRESH 20         // Y-coordinate where shop ends
+#define LINE_THRESH_FTRY_0 1.5 // Threshold for opt_0 in factory
+#define LINE_THRESH_FTRY_1 1.5 // Threshold for opt_1 in factory
+#define LINE_THRESH_FTRY_2 1.5 // Threshold for opt_2 in factory
+#define LINE_THRESH_SHOP_0 1.5 // Threshold for opt_0 in shop
+#define LINE_THRESH_SHOP_1 1.5 // Threshold for opt_1 in shop
+#define LINE_THRESH_SHOP_2 1.5 // Threshold for opt_2 in shop
+#define LM_PWR_FW -98          // Left motor forward power
+#define LM_PWR_LR -90          // Left motor left rotation power
+#define LM_PWR_LT 30           // Left motor left turn power
+#define LM_PWR_RR 90           // Left motor right rotation power
+#define LM_PWR_RT 70           // Left motor right turn power
+#define LT_LPI 2.44            // Left tread links per inch
+#define RM_PWR_FW -90          // Right motor forward power
+#define RM_PWR_LR 95           // Right motor left rotation power
+#define RM_PWR_LT 70           // Right motor left turn power
+#define RM_PWR_RR -90          // Right motor right rotation power
+#define RM_PWR_RT 30           // Right motor right turn power
+#define RT_LPI 2.05            // Right tread links per inch
+
+// Prototypes
+int head_diff(int, int);
+int l_tgt_cts(float);
+int r_tgt_cts(float);
+void rot_deg(struct robot, int);
+void rot_head(struct robot, int);
+void ud_head(struct robot);
+
+// Enumerations
+enum line_state {
+
+  LINE_FAR_LEFT,
+  LINE_LEFT,
+  LINE_CENTER,
+  LINE_RIGHT,
+  LINE_FAR_RIGHT,
+  LINE_LOST
+};
+
+// Forward motion --------------------------------------------------------------
+
+/* Moves the robot forward for a specified amount of time in seconds.
+ * 
+ * PARAM bot : struct robot*
+ *    Points to struct with all the robot's peripherals
+ *
+ * PARAM time : float
+ *    Amount of time for the robot to move forward
+ *
+ * RETURN void
+ *    This method returns nothing
+ */
+void fwd_time(struct robot *bot, float time) {
+
+  // Variable declaration
+  struct log_data entry;
+
+  // Initialize log entry
+  entry.fname = "fwd_time";
+  entry.msg = "Moved forward for this many seconds";
+  entry.value = time;
+  
+  // Begin forward motion
+  (*bot->l_mot).SetPower(LM_PWR_FW);
+  (*bot->r_mot).SetPower(RM_PWR_FW);
+  
+  // Wait for the specified amount of time
+  Sleep(time);
+  
+  // Cease forward motion
+  (*bot->l_mot).SetPower(0);
+  (*bot->r_mot).SetPower(0);
+
+  // Log journal entry
+  bot->journal = log(bot->journal, &entry);
+}
+
+/* Moves the robot forward a specific distance in inches.
+ * Uses digital encoders to more accurately measure distance
+ * 
+ * PARAM bot : struct robot*
+ * 	  Points to struct with all the robot's peripherals
+ * 
+ * PARAM distance : float
+ * 	  Distance in inches for which to move
+ *
+ * RETURN void
+ *    This method returns nothing
+ */
+void fwd_dist(struct robot *bot, float distance) {
+  
+  // Declare variables
+  int l_tgt = l_tgt_cts(distance);
+  int r_tgt = r_tgt_cts(distance);
+  int l_pwr = LM_PWR_FW;
+  int r_pwr = RM_PWR_FW;
+  int cnt_diff;
+  bool adjustment_made = false;
+  struct log_data entry_0;
+  struct log_data entry_1;
+  struct log_data entry_2;
+  struct log_data entry_3;
+
+  // Initialize journal entries
+  entry_0.fname = "fwd_dist";
+  entry_0.msg = "Moved forward for this many inches";
+  entry_0.value = distance;
+  entry_1.fname = "fwd_dist";
+  entry_1.msg = "Left target was this";
+  entry_1.value = (float)l_tgt;
+  entry_2.fname = "fwd_dist";
+  entry_2.msg = "Right target was this";
+  entry_2.value = (float)r_tgt;
+  entry_3.fname = "fwd_dist";
+  entry_3.msg = "Adjustments were made this many times";
+  entry_3.value = 0.0;
+  
+  // Ensure a clean count to begin
+  (*bot->l_enc).ResetCounts();
+  (*bot->r_enc).ResetCounts();
+  
+  // Move forward until robot reaches desired distance
+  while ((*bot->l_enc).Counts() < l_tgt &&
+    (*bot->r_enc).Counts() < r_tgt) {
+    
+    // Move forward
+    (*bot->l_mot).SetPower(l_pwr);
+    (*bot->r_mot).SetPower(r_pwr);
+
+    Sleep(50);
+    
+    // // Check if one motor is outpacing another
+    if ((*bot->l_enc).Counts() / l_tgt > 
+      (*bot->r_enc).Counts() / r_tgt) {
+      
+      // If left is faster than right, attempt to correct this
+      // by applying a balancing factor
+      l_pwr -= BLNC_FCTR;
+      r_pwr += BLNC_FCTR;
+      adjustment_made = true;
+      
+    } else if ((*bot->l_enc).Counts() / l_tgt < 
+      (*bot->r_enc).Counts() / r_tgt) {
+      
+      // If right is faster than left, attempt to correct this
+      // by applying a balancing factor
+      l_pwr += BLNC_FCTR;
+      r_pwr -= BLNC_FCTR;
+      adjustment_made = true;
+    }
+
+    if (adjustment_made) {
+
+      entry_3.value += 1;
+      adjustment_made = false;
+    }
+  }
+  
+  // Cease forward motion
+  (*bot->l_mot).SetPower(0);
+  (*bot->r_mot).SetPower(0);
+
+  // Log journal entries
+  bot->journal = log(bot->journal, &entry_0);
+  bot->journal = log(bot->journal, &entry_1);
+  bot->journal = log(bot->journal, &entry_2);
+  bot->journal = log(bot->journal, &entry_3);
+}
+
+/* Causes the robot to "follow" a black line for an approximate distance in inches.
+ * Uses digital encoders to more accurately measure distance.
+ * Uses analog optosensors to observe the line being followed.
+ * 
+ * PARAM bot : struct robot*
+ *    Points to struct with all the robot's peripherals
+ * 
+ * PARAM distance : float
+ * 	  Approximate distacne (in inches) for which to follow
+ *
+ * RETURN void
+ *    This method returns nothing
+ */
+void fwd_flw(struct robot *bot, float distance) {
+
+  // Variable declarations
+  enum line_state current_state = LINE_CENTER;
+  enum line_state last_state;
+
+  // Ensure a clean count to begin
+  (*bot->l_enc).ResetCounts();
+  (*bot->r_enc).ResetCounts();
+
+  while (((*bot->l_enc).Counts() < l_tgt_cts(distance)) &&
+    ((*bot->r_enc).Counts() < r_tgt_cts(distance))) {
+
+    // Respond to current state
+    switch (current_state) {
+
+      case LINE_FAR_LEFT:
+        (*bot->l_mot).SetPower(LM_PWR_LR);
+        (*bot->l_mot).SetPower(RM_PWR_LR);
+        break;
+
+      case LINE_LEFT:
+        (*bot->l_mot).SetPower(LM_PWR_LT);
+        (*bot->l_mot).SetPower(RM_PWR_LT);
+        break;
+
+      case LINE_CENTER:
+        (*bot->l_mot).SetPower(LM_PWR_FW);
+        (*bot->l_mot).SetPower(RM_PWR_FW);
+        break;
+
+      case LINE_RIGHT:
+        (*bot->l_mot).SetPower(LM_PWR_RT);
+        (*bot->l_mot).SetPower(RM_PWR_RT);
+        break;
+
+      case LINE_FAR_RIGHT:
+        (*bot->l_mot).SetPower(LM_PWR_RR);
+        (*bot->l_mot).SetPower(RM_PWR_RR);
+        break;
+
+      case LINE_LOST:
+        (*bot->l_mot).SetPower(0);
+        (*bot->l_mot).SetPower(0);
+        break;
+    }
+
+    // Store current state
+    last_state = current_state;
+
+    // Branch depending on location of the robot
+    if ((*bot->rps).Y() > FTRY_THRESH) { // Robot is in factory
+
+      if ((*bot->opt_0).Value() > LINE_THRESH_FTRY_0 &&
+        (*bot->opt_1).Value() < LINE_THRESH_FTRY_1 &&
+        (*bot->opt_2).Value() < LINE_THRESH_FTRY_2) {
+
+        // Only the left optosensor detects the line
+        current_state = LINE_FAR_LEFT;
+
+      } else if ((*bot->opt_0).Value() > LINE_THRESH_FTRY_0 &&
+        (*bot->opt_1).Value() > LINE_THRESH_FTRY_1 &&
+        (*bot->opt_2).Value() < LINE_THRESH_FTRY_2) {
+
+        // Both left and center optosensors detect the line
+        current_state = LINE_LEFT;
+
+      } else if ((*bot->opt_0).Value() < LINE_THRESH_FTRY_0 &&
+        (*bot->opt_1).Value() > LINE_THRESH_FTRY_1 &&
+        (*bot->opt_2).Value() < LINE_THRESH_FTRY_2) {
+
+        // Only the center optosensor detects the line
+        current_state = LINE_CENTER;
+
+      } else if ((*bot->opt_0).Value() < LINE_THRESH_FTRY_0 &&
+        (*bot->opt_1).Value() > LINE_THRESH_FTRY_1 &&
+        (*bot->opt_2).Value() > LINE_THRESH_FTRY_2) {
+
+        // Both right and center optosensors detect the line
+        current_state = LINE_RIGHT;
+
+      } else if ((*bot->opt_0).Value() < LINE_THRESH_FTRY_0 &&
+        (*bot->opt_1).Value() < LINE_THRESH_FTRY_1 &&
+        (*bot->opt_2).Value() > LINE_THRESH_FTRY_2) {
+
+        // Only the right optosensor detects the line
+        current_state = LINE_FAR_RIGHT;
+
+      } else {
+
+        // Line was lost or read error
+        current_state = LINE_LOST;
+      }
+
+    } else { // Robot is in store
+
+      if ((*bot->opt_0).Value() < LINE_THRESH_FTRY_0 &&
+        (*bot->opt_1).Value() > LINE_THRESH_FTRY_1 &&
+        (*bot->opt_2).Value() > LINE_THRESH_FTRY_2) {
+
+        // Only the left optosensor detects the line
+        current_state = LINE_FAR_LEFT;
+
+      } else if ((*bot->opt_0).Value() < LINE_THRESH_FTRY_0 &&
+        (*bot->opt_1).Value() < LINE_THRESH_FTRY_1 &&
+        (*bot->opt_2).Value() > LINE_THRESH_FTRY_2) {
+
+        // Both left and center optosensors detect the line
+        current_state = LINE_LEFT;
+
+      } else if ((*bot->opt_0).Value() > LINE_THRESH_FTRY_0 &&
+        (*bot->opt_1).Value() < LINE_THRESH_FTRY_1 &&
+        (*bot->opt_2).Value() > LINE_THRESH_FTRY_2) {
+
+        // Only the center optosensor detects the line
+        current_state = LINE_CENTER;
+
+      } else if ((*bot->opt_0).Value() > LINE_THRESH_FTRY_0 &&
+        (*bot->opt_1).Value() < LINE_THRESH_FTRY_1 &&
+        (*bot->opt_2).Value() < LINE_THRESH_FTRY_2) {
+
+        // Both right and center optosensors detect the line
+        current_state = LINE_RIGHT;
+
+      } else if ((*bot->opt_0).Value() > LINE_THRESH_FTRY_0 &&
+        (*bot->opt_1).Value() > LINE_THRESH_FTRY_1 &&
+        (*bot->opt_2).Value() < LINE_THRESH_FTRY_2) {
+
+        // Only the right optosensor detects the line
+        current_state = LINE_FAR_RIGHT;
+
+      } else {
+
+        // Line was lost or read error
+        current_state = LINE_LOST;
+      }
+    }
+  }
+}
+
+/* Moves the robot forward indefinitely.
+ * Stops when middle button on button board is pressed.
+ *
+ * PARAM bot : struct robot*
+ *    Points to struct with all the robot's peripherals
+ *
+ * RETURN void
+ *    This method returns nothing
+ */
+void fwd_tst(struct robot *bot) {
+
+  // Variable declarations
+  double start_time = TimeNow();
+  double end_time;
+
+  // Begin forward motion
+  (*bot->l_mot).SetPower(LM_PWR_FW);
+  (*bot->r_mot).SetPower(RM_PWR_FW);
+
+  // Wait until the middle button is pressed
+  while (!(*bot->btns).MiddlePressed());
+
+  // Mark the time
+  end_time = TimeNow();
+
+  // Cease forward motion
+  (*bot->l_mot).SetPower(0);
+  (*bot->r_mot).SetPower(0);
+
+  // Display elapsed time
+  LCD.Write("Time elapsed: ");
+  LCD.WriteLine(end_time - start_time);
+
+  // Give time to remove finger from button
+  Sleep(250);
+}
+
+// Backward motion -------------------------------------------------------------
+
+/* Moves the robot backward for a specified amount of time in seconds.
+ * 
+ * PARAM bot : struct robot*
+ *    Points to struct with all the robot's peripherals
+ *
+ * PARAM time : float
+ *    Amount of time for the robot to move backward
+ *
+ * RETURN void
+ *    This method returns nothing
+ */
+void bck_time(struct robot *bot, float time) {
+  
+  // Begin backward motion
+  (*bot->l_mot).SetPower(-1 * LM_PWR_FW);
+  (*bot->r_mot).SetPower(-1 * RM_PWR_FW);
+  
+  // Wait for the specified amount of time
+  Sleep(time);
+  
+  // Cease forward motion
+  (*bot->l_mot).SetPower(0);
+  (*bot->r_mot).SetPower(0);
+}
+
+/* Moves the robot backward a specific distance in inches.
+ * Uses digital encoders to more accurately measure distance
+ * 
+ * PARAM bot : struct robot*
+ *    Points to struct with all the robot's peripherals
+ * 
+ * PARAM distance : float
+ *    Distance in inches for which to move
+ *
+ * RETURN void
+ *    This method returns nothing
+ */
+void bck_dist(struct robot *bot, float distance) {
+  
+  // Declare variables
+  int l_tgt = l_tgt_cts(distance);
+  int r_tgt = r_tgt_cts(distance);
+  int l_pwr = -1 * LM_PWR_FW;
+  int r_pwr = -1 * RM_PWR_FW;
+  int cnt_diff;
+  
+  // Ensure a clean count to begin
+  (*bot->l_enc).ResetCounts();
+  (*bot->r_enc).ResetCounts();
+  
+  // Move backward until robot reaches desired distance
+  while ((*bot->l_enc).Counts() < l_tgt && (*bot->r_enc).Counts() < r_tgt) {
+    
+    // Move backward
+    (*bot->l_mot).SetPower(l_pwr);
+    (*bot->r_mot).SetPower(r_pwr);
+    
+    // Check if one motor is outpacing another
+    if ((*bot->l_enc).Counts() / l_tgt > 
+      (*bot->r_enc).Counts() / r_tgt) {
+      
+      // If left is faster than right, attempt to correct this
+      // by applying a balancing factor
+      l_pwr += BLNC_FCTR;
+      r_pwr -= BLNC_FCTR;
+      
+    } else if ((*bot->l_enc).Counts() / l_tgt < 
+      (*bot->r_enc).Counts() / r_tgt) {
+      
+      // If right is faster than left, attempt to correct this
+      // by applying a balancing factor
+      l_pwr -= BLNC_FCTR;
+      r_pwr += BLNC_FCTR;
+    }
+
+    Sleep(50);
+  }
+  
+  // Cease back motion
+  (*bot->l_mot).SetPower(0);
+  (*bot->r_mot).SetPower(0);
+}
+
+/* Moves the robot backward indefinitely.
+ * Stops when middle button on button board is pressed.
+ *
+ * PARAM bot : struct robot*
+ *    Points to struct with all the robot's peripherals
+ *
+ * RETURN void
+ *    This method returns nothing
+ */
+void bck_tst(struct robot *bot) {
+
+  // Variable declarations
+  double start_time = TimeNow();
+  double end_time;
+
+  // Begin backward motion
+  (*bot->l_mot).SetPower(-1 * LM_PWR_FW);
+  (*bot->r_mot).SetPower(-1 * RM_PWR_FW);
+
+  // Wait until the middle button is pressed
+  while (!(*bot->btns).MiddlePressed());
+
+  // Mark the time
+  end_time = TimeNow();
+
+  // Cease backward motion
+  (*bot->l_mot).SetPower(0);
+  (*bot->r_mot).SetPower(0);
+
+  // Display elapsed time
+  LCD.Write("Time elapsed: ");
+  LCD.WriteLine(end_time - start_time);
+
+  // Give time to remove finger from button
+  Sleep(200);
+}
+
+// Turning ---------------------------------------------------------------------
+
+/* Rotates the robot for a specified amount of time in seconds.
+ *
+ * Direction of rotation is specified throught the cw parameter.
+ *
+ * PARAM bot : struct robot*
+ *    Points to struct with all the robot's peripherals
+ *
+ * PARAM time : float
+ *    Amount of time fot the robot to rotate
+ *
+ * PARAM cw : bool
+ *    Whether the robot will turn clockwise. If false, the
+ *    robot will turn counterclockwise
+ *
+ * RETURN void
+ *    This method returns nothing
+ */
+void rot_time(struct robot *bot, float time, bool cw) {
+
+  // Begin rotation
+  if (cw) { // Rotate clockwise
+
+    (*bot->l_mot).SetPower(LM_PWR_RR);
+    (*bot->r_mot).SetPower(RM_PWR_RR);
+
+  } else { // Rotate counterclockwise
+
+    (*bot->l_mot).SetPower(LM_PWR_LR);
+    (*bot->r_mot).SetPower(RM_PWR_LR);
+  }
+
+  // Wait for the specified amount of time
+  Sleep(time);
+
+  // Cease rotation
+  (*bot->l_mot).SetPower(0);
+  (*bot->r_mot).SetPower(0);
+}
+
+/* Rotates the robot a specified number of degrees.
+ *
+ * Uses RPS to ensure accuracy.
+ *
+ * PARAM bot : struct robot*
+ *    Points to struct with all the robot's peripherals
+ *
+ * PARAM degree : int
+ *    Amount of degrees to turn. If positive, rotation is
+ *    counterclockwise; if negative rotation is cloclwise
+ *
+ * RETURN void
+ *    This method returns nothing
+ */
+void rot_deg(struct robot *bot, int degree) {
+
+  // Variable declaration
+  int target;
+
+  // Get an up to date reading
+  ud_head(bot);
+
+  // Determine a target heading
+  target = bot->head + degree;
+
+  // Ensure target is valid
+  if (target >= 360) {
+
+    target -= 360;
+
+  } else if (target < 0) {
+
+    target += 360;
+  }
+
+  // Rotate to the target heading
+  do {
+
+    rot_head(bot, target);
+    ud_head(bot);
+
+  } while (head_diff(bot->head, target) > HEAD_ERR ||
+    head_diff(bot->head, target) < -1 * HEAD_ERR);
+}
+
+/* Rotates the robot such that it has a certain heading according
+ * to the RPS sensor.
+ *
+ * PARAM bot : struct robot*
+ *    Points to struct with all the robot's peripherals
+ *
+ * PARAM heading : int
+ *    Heading for robot to have after function call
+ *
+ * RETURN void
+ *    This method returns nothing
+ */
+void rot_head(struct robot *bot, int head) {
+
+  // Variable declarations
+  int diff;
+
+  // Get an up to date reading
+  ud_head(bot);
+
+  // Get difference to target
+  diff  = head_diff(bot->head, head);
+
+  // While the current heading is too far from target
+  while (diff > HEAD_ERR || diff < -1 * HEAD_ERR) {
+
+    // Move in the appropriate direction
+    if (diff > 0) {
+
+      // Counterclockwise
+      (*bot->l_mot).SetPower(LM_PWR_LR);
+      (*bot->r_mot).SetPower(RM_PWR_LR);
+
+    } else {
+
+      // Clockwise
+      (*bot->l_mot).SetPower(LM_PWR_RR);
+      (*bot->r_mot).SetPower(RM_PWR_RR);
+    }
+
+    // Update heading and difference to target
+    ud_head(bot);
+    diff = head_diff(bot->head, head);
+  }
+
+  // Stop rotation
+  (*bot->l_mot).SetPower(0);
+  (*bot->r_mot).SetPower(0);
+}
+
+/* Rotates robot indefinitely.
+ *
+ * Direction of rotation is specified through the cw parameter.
+ *
+ * PARAM bot : struct robot*
+ *    Points to struct with all the robot's peripherals
+ *
+ * PARAM cw : bool
+ *    Whether the robot will turn clockwise. If false, the
+ *    robot will turn counterclockwise
+ *
+ * RETURN void
+ *    This method returns nothing
+ */
+void rot_tst(struct robot *bot, bool cw) {
+
+  // Variable declarations
+  double start_time = TimeNow();
+  double end_time;
+
+  // Begin rotation
+  if (cw) { // Rotate clockwise
+
+    (*bot->l_mot).SetPower(LM_PWR_RR);
+    (*bot->r_mot).SetPower(RM_PWR_RR);
+
+  } else { // Rotate counterclockwise
+
+    (*bot->l_mot).SetPower(LM_PWR_LR);
+    (*bot->r_mot).SetPower(RM_PWR_LR);
+  }
+
+  // Wait until the middle button is pressed
+  while (!(*bot->btns).MiddlePressed());
+
+  // Mark the time
+  end_time = TimeNow();
+
+  // Cease rotation
+  (*bot->l_mot).SetPower(0);
+  (*bot->r_mot).SetPower(0);
+
+  // Display elapsed time
+  LCD.Write("Time elapsed: ");
+  LCD.WriteLine(end_time - start_time);
+
+  // Give time to remove finger from button
+  Sleep(200);
+}
+
+// Forklift --------------------------------------------------------------------
+
+/* Raises the forklift for a specific amount of time.
+ *
+ * PARAM time : float
+ *    Amount of time for which to raise the fork
+ *
+ * RETURN void
+ *    This method returns nothing
+ */
+void raise_fork(struct robot *bot, float time) {
+
+  // Begin raising fork
+  (*bot->f_mot).SetPower(FL_PWR);
+
+  // Wait the specified amount of time
+  Sleep(time);
+
+  // Cease raising fork
+  (*bot->f_mot).SetPower(0);
+}
+
+/* Lowers the forklift for a specific amount of time.
+ *
+ * PARAM time : float
+ *    Amount of time for which to lower fork
+ *
+ * RETURN void
+ *    This method returns nothing
+ */
+void lower_fork(struct robot *bot, float time) {
+
+  // Begin lowering fork
+  (*bot->f_mot).SetPower(-1 * FL_PWR);
+
+  // Wait the specified amount of time
+  Sleep(time);
+
+  // Cease lowering fork
+  (*bot->f_mot).SetPower(0);
+}
+
+// Misc. and Utility -----------------------------------------------------------
+
+/* Calculates the number of encoder transitions that should elapse
+ * given a specific distance.
+ * 
+ * Specifically tuned for the left encoder.
+ *
+ * PARAM distance : float
+ *    Distance for which encoder counts will be projected
+ *
+ * RETURN int
+ *    Number of encoder counts expected for distance
+ */
+int l_tgt_cts(float distance) {
+
+  return distance * LT_LPI;
+}
+
+/* Calculates the number of encoder transitions that should elapse
+ * given a specific distance.
+ * 
+ * Specifically tuned for the right encoder.
+ *
+ * PARAM distance : float
+ *    Distance for which encoder counts will be projected
+ *
+ * RETURN int
+ *    Number of encoder counts expected for distance
+ */
+int r_tgt_cts(float distance) {
+  
+  return distance * RT_LPI;
+}
+
+/* Calculates the difference between current and target headings.
+ *
+ * PARAM head : int
+ *    Robot's current heading
+ *
+ * PARAM target : int
+ *    Target heading for the robot
+ *
+ * RETURN int
+ *    Number of degrees seperating the robot from the
+ *    desired heading
+ */
+int head_diff(int head, int target) {
+
+  // Variable 
+  int difference = target - head;
+
+  // Reverse direction if need be
+  if (difference > 179) {
+
+    difference -= 360;
+  }
+  if (difference < -179) {
+
+    difference += 360;
+  }
+
+  return difference;
+}
+
+/* Updates stored heading based on RPS feedback.
+ *
+ * Remains accurate and accounts for looping RPS value if
+ * called before robot has moved more than HEAD_ERR degrees from
+ * its previous heading.
+ *
+ * PARAM bot : struct robot*
+ *    Points to struct with robot's peripherals
+ *
+ * RETURN void
+ *    This method returns nothing
+ */
+void ud_head(struct robot *bot) {
+
+  // Variable declarations
+  int old_head = bot->head;
+  int raw_head = (*bot->rps).Heading();
+  int new_head;
+
+  // Take cases
+  if (old_head < HEAD_ERR || old_head > 360 - HEAD_ERR) {
+
+    // Either RPS corresponds to mathematical heading,
+    // or it has moved counterclockwise and wrapped
+    if (raw_head < 90) {
+
+      new_head = raw_head;
+
+    } else {
+
+      new_head = 180 + raw_head;
+    }
+  } else if (old_head < 180 - HEAD_ERR) {
+
+    // In this case, raw RPS is correct
+    new_head = raw_head;
+
+  } else if (old_head < 180 + HEAD_ERR) {
+
+    // Either the robot has moved clockwise and wrapped,
+    // or RPS is correct
+    if (raw_head < 90) {
+
+      new_head = 180 + raw_head;
+
+    } else {
+
+      new_head = raw_head;
+    }
+  } else {
+
+    // In this case, the robot is certainly wrapped
+    new_head = 180 + raw_head;
+  }
+
+  // Assign the newly computed heading
+  bot->head = new_head;
+}

@@ -1,0 +1,319 @@
+/* EWL
+ * Copyright © 1995-2009 Freescale Corporation.  All rights reserved.
+ *
+ * $Date: 2012/06/28 06:42:06 $
+ * $Revision: 1.2 $
+ */
+
+#ifndef _LIMITS
+#define _LIMITS
+
+/*  limits synopsis
+
+namespace std {
+
+template<class T>
+class numeric_limits
+{
+public:
+	static const bool is_specialized = false;
+	static T min() throw();
+	static T max() throw();
+
+	static const int  digits = 0;
+	static const int  digits10 = 0;
+	static const bool is_signed = false;
+	static const bool is_integer = false;
+	static const bool is_exact = false;
+	static const int  radix = 0;
+	static T epsilon() throw();
+	static T round_error() throw();
+
+	static const int  min_exponent = 0;
+	static const int  min_exponent10 = 0;
+	static const int  max_exponent = 0;
+	static const int  max_exponent10 = 0;
+
+	static const bool has_infinity = false;
+	static const bool has_quiet_NaN = false;
+	static const bool has_signaling_NaN = false;
+	static const float_denorm_style has_denorm = denorm_absent;
+	static const bool has_denorm_loss = false;
+	static T infinity() throw();
+	static T quiet_NaN() throw();
+	static T signaling_NaN() throw();
+	static T denorm_min() throw();
+
+	static const bool is_iec559 = false;
+	static const bool is_bounded = false;
+	static const bool is_modulo = false;
+
+	static const bool traps = false;
+	static const bool tinyness_before = false;
+	static const float_round_style round_style = round_toward_zero;
+};
+
+enum float_round_style;
+enum float_denorm_style;
+
+template<> class numeric_limits<bool>;
+
+template<> class numeric_limits<char>;
+template<> class numeric_limits<signed char>;
+template<> class numeric_limits<unsigned char>;
+template<> class numeric_limits<wchar_t>;
+
+template<> class numeric_limits<short>;
+template<> class numeric_limits<int>;
+template<> class numeric_limits<long>;
+template<> class numeric_limits<long long>;          // CodeWarrior extension
+template<> class numeric_limits<unsigned short>;
+template<> class numeric_limits<unsigned int>;
+template<> class numeric_limits<unsigned long>;
+template<> class numeric_limits<unsigned long long>; // CodeWarrior extension
+
+template<> class numeric_limits<float>;
+template<> class numeric_limits<double>;
+template<> class numeric_limits<long double>;
+
+}  // std
+*/
+
+#include <ewlconfig>
+#include <ewl_int_limits>
+
+#ifndef _EWL_NO_FLOATING_POINT
+	#include <cfloat>
+	#include <cmath>
+	#include <cstdint>
+#endif  // _EWL_NO_FLOATING_POINT
+
+#ifdef __CWCC__
+#pragma options align=native
+#endif
+
+#ifdef _EWL_FORCE_ENUMS_ALWAYS_INT
+	#if _EWL_FORCE_ENUMS_ALWAYS_INT
+		#pragma enumsalwaysint on
+	#else
+		#pragma enumsalwaysint off
+	#endif
+#endif  // _EWL_FORCE_ENUMS_ALWAYS_INT
+
+#ifdef _EWL_FORCE_ENABLE_BOOL_SUPPORT
+	#if _EWL_FORCE_ENABLE_BOOL_SUPPORT
+		#pragma bool on
+	#else
+		#pragma bool off
+	#endif
+#endif  // _EWL_FORCE_ENABLE_BOOL_SUPPORT
+
+extern "C++" {
+
+#ifndef _EWL_NO_CPP_NAMESPACE
+	namespace std {
+#endif
+
+#ifdef min
+#undef min
+#endif
+
+#ifdef max
+#undef max
+#endif
+
+#ifndef _EWL_NO_FLOATING_POINT
+
+#if _EWL_LITTLE_ENDIAN
+	#define _EWL_SNAN {0xFFFFFFFF, 0x7FF7FFFF}
+#else
+	#define _EWL_SNAN {0x7FF7FFFF, 0xFFFFFFFF}
+#endif
+
+template <>
+class numeric_limits <float>
+{
+public:
+	static const bool is_specialized = true;
+	static float min() _EWL_NO_THROW {return FLT_MIN;}
+	static float max() _EWL_NO_THROW {return FLT_MAX;}
+	static const int  digits = FLT_MANT_DIG;
+	static const int  digits10 = FLT_DIG;
+	static const bool is_signed = true;
+	static const bool is_integer = false;
+	static const bool is_exact = false;
+	static const int  radix = FLT_RADIX;
+	static float epsilon() _EWL_NO_THROW {return FLT_EPSILON;}
+	static float round_error() _EWL_NO_THROW {return 0.5F;}
+
+	static const int  min_exponent = FLT_MIN_EXP;
+	static const int  min_exponent10 = FLT_MIN_10_EXP;
+	static const int  max_exponent = FLT_MAX_EXP;
+	static const int  max_exponent10 = FLT_MAX_10_EXP;
+
+	#ifdef _EWL_NO_MATH_LIB
+		static const bool is_iec559 = false;
+		static const bool has_infinity = false;
+		static const bool has_quiet_NaN = false;
+		static const bool has_signaling_NaN = false;
+	#else  // _EWL_NO_MATH_LIB
+		static const bool is_iec559 = true;
+		static const bool has_infinity = true;
+		static const bool has_quiet_NaN = true;
+		static const bool has_signaling_NaN = true;
+	#endif  // _EWL_NO_MATH_LIB
+	static const float_denorm_style has_denorm = denorm_absent;
+	static const bool has_denorm_loss = false;
+	#ifdef _EWL_NO_MATH_LIB
+		static float infinity() _EWL_NO_THROW {return 0.0F;}
+		static float quiet_NaN() _EWL_NO_THROW {return 0.0F;}
+		static float signaling_NaN() _EWL_NO_THROW {return 0.0F;}
+	#else  // _EWL_NO_MATH_LIB
+		static float infinity() _EWL_NO_THROW {return HUGE_VALF;}
+		static float quiet_NaN() _EWL_NO_THROW {return static_cast<float>(NAN);}
+		static float signaling_NaN() _EWL_NO_THROW
+			{static const uint32_t x = 0x7FBFFFFF; return *(float*)&x;}
+	#endif  // _EWL_NO_MATH_LIB
+	static float denorm_min() _EWL_NO_THROW {return min();}
+
+	static const bool is_bounded = true;
+	static const bool is_modulo = false;
+
+	static const bool traps = true;
+	static const bool tinyness_before = true;
+	static const float_round_style round_style = round_to_nearest;
+};
+
+template <>
+class numeric_limits <double>
+{
+public:
+	static const bool is_specialized = true;
+	static double min() _EWL_NO_THROW {return DBL_MIN;}
+	static double max() _EWL_NO_THROW {return DBL_MAX;}
+	static const int  digits = DBL_MANT_DIG;
+	static const int  digits10 = DBL_DIG;
+	static const bool is_signed = true;
+	static const bool is_integer = false;
+	static const bool is_exact = false;
+	static const int  radix = FLT_RADIX;
+	static double epsilon() _EWL_NO_THROW {return DBL_EPSILON;}
+	static double round_error() _EWL_NO_THROW {return 0.5;}
+
+	static const int  min_exponent = DBL_MIN_EXP;
+	static const int  min_exponent10 = DBL_MIN_10_EXP;
+	static const int  max_exponent = DBL_MAX_EXP;
+	static const int  max_exponent10 = DBL_MAX_10_EXP;
+
+	#ifdef _EWL_NO_MATH_LIB
+		static const bool is_iec559 = false;
+		static const bool has_infinity = false;
+		static const bool has_quiet_NaN = false;
+		static const bool has_signaling_NaN = false;
+	#else  // _EWL_NO_MATH_LIB
+		static const bool is_iec559 = true;
+		static const bool has_infinity = true;
+		static const bool has_quiet_NaN = true;
+		static const bool has_signaling_NaN = true;
+	#endif  // _EWL_NO_MATH_LIB
+	static const float_denorm_style has_denorm = denorm_absent;
+	static const bool has_denorm_loss = false;
+	#ifdef _EWL_NO_MATH_LIB
+		static double infinity() _EWL_NO_THROW {return 0.0;}
+		static double quiet_NaN() _EWL_NO_THROW {return 0.0;}
+		static double signaling_NaN() _EWL_NO_THROW {return 0.0;}
+	#else  // _EWL_NO_MATH_LIB
+		static double infinity() _EWL_NO_THROW {return HUGE_VAL;}
+		static double quiet_NaN() _EWL_NO_THROW {return static_cast<double>(NAN);}
+		static double signaling_NaN() _EWL_NO_THROW
+			{static const uint32_t x[2] = _EWL_SNAN; return *(double*)&x;}
+	#endif  // _EWL_NO_MATH_LIB
+	static double denorm_min() _EWL_NO_THROW {return min();}
+
+	static const bool is_bounded = true;
+	static const bool is_modulo = false;
+
+	static const bool traps = true;
+	static const bool tinyness_before = true;
+	static const float_round_style round_style = round_to_nearest;
+};
+
+template <>
+class numeric_limits <long double>
+{
+public:
+	static const bool is_specialized = true;
+	static long double min() _EWL_NO_THROW {return LDBL_MIN;}
+	static long double max() _EWL_NO_THROW {return LDBL_MAX;}
+	static const int  digits = LDBL_MANT_DIG;
+	static const int  digits10 = LDBL_DIG;
+	static const bool is_signed = true;
+	static const bool is_integer = false;
+	static const bool is_exact = false;
+	static const int  radix = FLT_RADIX;
+	static long double epsilon() _EWL_NO_THROW {return LDBL_EPSILON;}
+	static long double round_error() _EWL_NO_THROW {return 0.5L;}
+
+	static const int  min_exponent = LDBL_MIN_EXP;
+	static const int  min_exponent10 = LDBL_MIN_10_EXP;
+	static const int  max_exponent = LDBL_MAX_EXP;
+	static const int  max_exponent10 = LDBL_MAX_10_EXP;
+
+	#ifdef _EWL_NO_MATH_LIB
+		static const bool is_iec559 = false;
+		static const bool has_infinity = false;
+		static const bool has_quiet_NaN = false;
+		static const bool has_signaling_NaN = false;
+	#else  // _EWL_NO_MATH_LIB
+		static const bool is_iec559 = true;
+		static const bool has_infinity = true;
+		static const bool has_quiet_NaN = true;
+		static const bool has_signaling_NaN = true;
+	#endif  // _EWL_NO_MATH_LIB
+	static const float_denorm_style has_denorm = denorm_absent;
+	static const bool has_denorm_loss = false;
+	#ifdef _EWL_NO_MATH_LIB
+		static long double infinity() _EWL_NO_THROW {return 0.0L;}
+		static long double quiet_NaN() _EWL_NO_THROW {return 0.0L;}
+		static long double signaling_NaN() _EWL_NO_THROW {return 0.0L;}
+	#else  // _EWL_NO_MATH_LIB
+	#ifdef HUGE_VALL
+		static long double infinity() _EWL_NO_THROW {return HUGE_VALL;}
+	#else
+		static long double infinity() _EWL_NO_THROW {return INFINITY;}
+	#endif
+		static long double quiet_NaN() _EWL_NO_THROW {return static_cast<long double>(NAN);}
+		static long double signaling_NaN() _EWL_NO_THROW
+			{static const uint32_t x[2] = _EWL_SNAN; return *(long double*)&x;}
+	#endif  // _EWL_NO_MATH_LIB
+	static long double denorm_min() _EWL_NO_THROW {return min();}
+
+	static const bool is_bounded = true;
+	static const bool is_modulo = false;
+
+	static const bool traps = true;
+	static const bool tinyness_before = true;
+	static const float_round_style round_style = round_to_nearest;
+};
+
+#endif // _EWL_NO_FLOATING_POINT
+
+#ifndef _EWL_NO_CPP_NAMESPACE
+	} // namespace std
+#endif
+
+} // extern "C++"
+
+#ifdef _EWL_FORCE_ENUMS_ALWAYS_INT
+	#pragma enumsalwaysint reset
+#endif
+
+#ifdef _EWL_FORCE_ENABLE_BOOL_SUPPORT
+	#pragma bool reset
+#endif
+
+#ifdef __CWCC__
+#pragma options align=reset
+#endif
+
+#endif  // _LIMITS 

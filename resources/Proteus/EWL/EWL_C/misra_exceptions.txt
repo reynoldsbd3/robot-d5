@@ -1,0 +1,3540 @@
+
+This file lists the MISRA-C:2004 compliance exceptions for the Freescale EWL C 
+library. The exceptions listed cover all EWL C files and targets. However, we 
+have only fully tested the PA and ARM targets for compliance at this point.
+
+MISRA violations were detected using the PC-Lint 9.00d tool and the 
+lnt/au-misra2.lnt checker file. To verify these results you can use the 
+makefiles that are used to build a target's library files:
+
+	make -C ewl/EWL_C -f -f EWL_C.PA.mak misra PLATFORM=PA \
+		LNTDIR="/cygdrive/d/Lint" \
+		LNTINCL="-iD:/Lint/lnt" \
+		misra
+
+This should list no MISRA violations or other PC-Lint warnings/errors.
+
+EWL uses EXCEPTION_RULE_*() macros to silence violations, e.g.:
+
+ #define MISRA_EXCEPTION_RULE_20_5() \
+/*lint -e{586} MISRA 2004 Rule 20.5: errno shall not be used */
+
+The exception macros are defined in the header file EWL_C/include/ewl_misra_types.h.
+
+---
+
+MISRA_ALLOW_POINTER_CASTS :
+
+MISRA 2004 Rule 11.4: Cast from pointer to pointer/void 
+
+Used to globally disable pointer casting related messages in some source files. 
+
+  EWL_C/src/alloc.c Line: 40
+  EWL_C/src/alloc.c Line: 490
+  EWL_C/src/alloc.c Line: 653
+  EWL_C/src/alloc.c Line: 992
+  EWL_C/src/alloc.c Line: 1702
+  EWL_C/src/mbstring.c Line: 47
+  EWL_C/src/mem_funcs.c Line: 56
+  EWL_C/src/printformat.c Line: 48
+  EWL_C/src/scanformat.c Line: 48
+  EWL_C/src/string.c Line: 60
+  EWL_C/src/strtoul.c Line: 87
+  EWL_C/src/wcstold.c Line: 122
+  EWL_C/src/wcstoul.c Line: 96
+  EWL_C/src/wprintf.c Line: 58
+  EWL_C/src/wprintformat.c Line: 47
+  EWL_C/src/wscanf.c Line: 46
+  EWL_C/src/wstring.c Line: 53
+
+---
+
+MISRA_EXCEPTION_CMATH_MACROS :
+
+macro(506 970, signbit, fpclassify) 
+
+Used to implement signbit and fpclassify macros. 
+* MISRA 2004 Rules 13.7 and 14.1: Constant value Boolean  
+* MISRA 2004 Rule 6.3: Use of modifier or type outside of a typedef 
+
+  EWL_C/include/ansi_parms.h Line: 458
+  EWL_C/include/cmath Line: 28
+
+---
+
+MISRA_EXCEPTION_FLOAT_CAST :
+
+Exceptions to allow bit pattern -> floating point casts 
+
+Used to generate floating point values from bit patterns. 
+* MISRA 2004 Rule 1.2: unusual pointer casts 
+* unusual pointer cast 
+* MISRA 2004 Rule 6.3: Use of modifier or type outside of a typedef 
+
+  EWL_C/include/ansi_parms.h Line: 457
+  EWL_C/include/cfloat Line: 99
+  EWL_C/include/cfloat Line: 100
+  EWL_C/include/cfloat Line: 101
+  EWL_C/include/cfloat Line: 155
+  EWL_C/include/cfloat Line: 156
+  EWL_C/include/cfloat Line: 157
+  EWL_C/include/cfloat Line: 211
+  EWL_C/include/cfloat Line: 212
+  EWL_C/include/cfloat Line: 213
+  EWL_C/include/cmath Line: 106
+  EWL_C/include/cmath Line: 122
+  EWL_C/include/cmath Line: 126
+  EWL_C/include/cmath Line: 151
+  EWL_C/include/cmath Line: 184
+  EWL_C/include/sun_math/fdlibm.h Line: 85
+  EWL_C/src/coldfire/math_cf.c Line: 48
+
+---
+
+MISRA_EXCEPTION_LONG_NAME :
+
+MISRA 2004 Rule 1.2, 1.4 and 5.1: Allow long internal name 
+
+Used to allow long file names, e.g., "__ewl_generic_count_leading_zero32". 
+
+  EWL_C/src/arm/float_exceptions.c Line: 44
+  EWL_C/src/arm/float_exceptions.c Line: 154
+  EWL_C/src/math_api.c Line: 61
+
+---
+
+MISRA_EXCEPTION_MATHAPISP_MACROS :
+
+macro(929, GET_FLOAT_WORD, GET_FLOAT_UWORD, SET_FLOAT_WORD, SET_FLOAT_UWORD) 
+
+Used to implement GET_FLOAT_WORD, GET_FLOAT_UWORD, SET_FLOAT_WORD, SET_FLOAT_UWORD macros (to access floats as words). 
+* MISRA 2004 Rule 11.4: Cast from pointer to pointer 
+
+  EWL_C/include/ansi_parms.h Line: 461
+  EWL_C/include/pa/fdlibm_pa.h Line: 24
+
+---
+
+MISRA_EXCEPTION_MATHAPI_MACROS :
+
+macro(929, __HI, __UHI, __LO, __ULO) 
+
+Used to implement __HI, __UHI, __LO, __ULO macros (to access double hi/lo words). 
+* MISRA 2004 Rule 11.4: Cast from pointer to pointer 
+
+  EWL_C/include/ansi_parms.h Line: 460
+  EWL_C/include/math_api.h Line: 26
+  EWL_C/include/math_api.h Line: 42
+  EWL_C/include/math_api.h Line: 48
+
+---
+
+MISRA_EXCEPTION_RULE_10_1 :
+
+MISRA 2004 Rule 10.1: converting expressions 
+
+Used to allow implicit and explicit arithmetic conversions. 
+
+  EWL_C/src/alloc.c Line: 327
+  EWL_C/src/alloc.c Line: 465
+  EWL_C/src/alloc.c Line: 2233
+  EWL_C/src/alloc.c Line: 2235
+  EWL_C/src/alloc.c Line: 2781
+  EWL_C/src/alloc.c Line: 2784
+  EWL_C/src/alloc.c Line: 2788
+  EWL_C/src/alloc.c Line: 2807
+  EWL_C/src/alloc.c Line: 2812
+  EWL_C/src/alloc.c Line: 2849
+  EWL_C/src/alloc.c Line: 2863
+  EWL_C/src/alloc.c Line: 2868
+  EWL_C/src/alloc.c Line: 2885
+  EWL_C/src/alloc.c Line: 2890
+  EWL_C/src/alloc.c Line: 2988
+  EWL_C/src/locale.c Line: 185
+  EWL_C/src/printformat.c Line: 1441
+  EWL_C/src/printformat.c Line: 1444
+  EWL_C/src/printformat.c Line: 1465
+  EWL_C/src/printformat.c Line: 1756
+  EWL_C/src/printformat.c Line: 1815
+  EWL_C/src/scanformat.c Line: 613
+  EWL_C/src/scanformat.c Line: 1227
+  EWL_C/src/scanformat.c Line: 1267
+  EWL_C/src/scanformat.c Line: 1383
+  EWL_C/src/string.c Line: 153
+  EWL_C/src/string.c Line: 159
+  EWL_C/src/string.c Line: 222
+  EWL_C/src/string.c Line: 228
+  EWL_C/src/string.c Line: 244
+  EWL_C/src/string.c Line: 250
+  EWL_C/src/string.c Line: 261
+  EWL_C/src/sun_math/Double_precision/s_ceil.c Line: 46
+  EWL_C/src/sun_math/Single_precision/e_powf.c Line: 70
+  EWL_C/src/sun_math/Single_precision/s_ceilf.c Line: 49
+  EWL_C/src/sun_math/ansi_fp.c Line: 138
+  EWL_C/src/sun_math/ansi_fp.c Line: 143
+  EWL_C/src/sun_math/ansi_fp.c Line: 658
+  EWL_C/src/sun_math/ansi_fp.c Line: 692
+  EWL_C/src/sun_math/ansi_fp.c Line: 696
+  EWL_C/src/sun_math/ansi_fp.c Line: 706
+  EWL_C/src/sun_math/ansi_fp.c Line: 708
+  EWL_C/src/sun_math/ansi_fp.c Line: 767
+  EWL_C/src/sun_math/ansi_fp.c Line: 797
+  EWL_C/src/sun_math/ansi_fp.c Line: 938
+  EWL_C/src/sun_math/ansi_fp.c Line: 972
+  EWL_C/src/sun_math/ansi_fp.c Line: 1256
+  EWL_C/src/time.c Line: 782
+  EWL_C/src/wcstold.c Line: 347
+  EWL_C/src/wcstold.c Line: 352
+  EWL_C/src/wcstold.c Line: 377
+  EWL_C/src/wcstold.c Line: 387
+  EWL_C/src/wcstold.c Line: 402
+  EWL_C/src/wcstold.c Line: 412
+  EWL_C/src/wcstold.c Line: 443
+  EWL_C/src/wcstold.c Line: 453
+  EWL_C/src/wcstold.c Line: 463
+  EWL_C/src/wcstold.c Line: 480
+  EWL_C/src/wcstold.c Line: 490
+  EWL_C/src/wcstold.c Line: 524
+  EWL_C/src/wcstold.c Line: 536
+  EWL_C/src/wcstold.c Line: 616
+  EWL_C/src/wcstold.c Line: 635
+  EWL_C/src/wcstold.c Line: 645
+  EWL_C/src/wcstold.c Line: 856
+  EWL_C/src/wcstold.c Line: 861
+  EWL_C/src/wcstold.c Line: 866
+  EWL_C/src/wcstoul.c Line: 155
+  EWL_C/src/wcstoul.c Line: 159
+  EWL_C/src/wcstoul.c Line: 170
+  EWL_C/src/wcstoul.c Line: 181
+  EWL_C/src/wcstoul.c Line: 203
+  EWL_C/src/wcstoul.c Line: 221
+  EWL_C/src/wcstoul.c Line: 298
+  EWL_C/src/wcstoul.c Line: 302
+  EWL_C/src/wcstoul.c Line: 313
+  EWL_C/src/wcstoul.c Line: 324
+  EWL_C/src/wcstoul.c Line: 346
+  EWL_C/src/wcstoul.c Line: 353
+  EWL_C/src/wcstoul.c Line: 365
+  EWL_C/src/wctype.c Line: 189
+  EWL_C/src/wctype.c Line: 258
+  EWL_C/src/wmem.c Line: 114
+  EWL_C/src/wprintf.c Line: 1122
+  EWL_C/src/wprintf.c Line: 1125
+  EWL_C/src/wprintformat.c Line: 624
+  EWL_C/src/wprintformat.c Line: 633
+  EWL_C/src/wprintformat.c Line: 638
+  EWL_C/src/wprintformat.c Line: 1273
+  EWL_C/src/wprintformat.c Line: 1278
+  EWL_C/src/wprintformat.c Line: 1302
+  EWL_C/src/wprintformat.c Line: 1707
+  EWL_C/src/wtime.c Line: 356
+
+---
+
+MISRA_EXCEPTION_RULE_10_2 :
+
+MISRA 2004 Rule 10.2: Complex returns 
+
+Used to allow conversions in return statements, e.g., "return NAN;". 
+
+  EWL_C/src/math_fma.c Line: 65
+  EWL_C/src/math_fma.c Line: 77
+  EWL_C/src/math_fma.c Line: 82
+  EWL_C/src/math_fma.c Line: 88
+  EWL_C/src/math_fma.c Line: 117
+  EWL_C/src/math_fma.c Line: 123
+  EWL_C/src/math_fma.c Line: 131
+  EWL_C/src/math_fma.c Line: 136
+  EWL_C/src/math_fma.c Line: 148
+  EWL_C/src/math_fma.c Line: 152
+  EWL_C/src/math_fma.c Line: 159
+  EWL_C/src/math_fma.c Line: 529
+  EWL_C/src/math_fma.c Line: 534
+  EWL_C/src/math_fma.c Line: 540
+  EWL_C/src/math_fma.c Line: 569
+  EWL_C/src/math_fma.c Line: 575
+  EWL_C/src/math_fma.c Line: 583
+  EWL_C/src/math_fma.c Line: 588
+  EWL_C/src/wcstold.c Line: 727
+
+---
+
+MISRA_EXCEPTION_RULE_10_3 :
+
+MISRA 2004 Rule 10.3: Cast of expressions 
+
+Used to allow casting of expressions, e.g., "(int32_t)(x_i & 0x7F800000UL);". 
+
+  EWL_C/src/math_float.c Line: 99
+  EWL_C/src/math_float.c Line: 129
+  EWL_C/src/math_fma.c Line: 40
+  EWL_C/src/math_fma.c Line: 42
+  EWL_C/src/math_fma.c Line: 44
+  EWL_C/src/math_fma.c Line: 312
+  EWL_C/src/math_fma.c Line: 327
+  EWL_C/src/math_fma.c Line: 413
+  EWL_C/src/math_fma.c Line: 424
+  EWL_C/src/math_fma.c Line: 495
+  EWL_C/src/math_fma.c Line: 497
+  EWL_C/src/math_fma.c Line: 499
+  EWL_C/src/math_fma.c Line: 742
+  EWL_C/src/math_fma.c Line: 751
+  EWL_C/src/math_fma.c Line: 795
+  EWL_C/src/math_fma.c Line: 805
+  EWL_C/src/mem.c Line: 201
+  EWL_C/src/mem_funcs.c Line: 179
+  EWL_C/src/mem_funcs.c Line: 331
+  EWL_C/src/mem_funcs.c Line: 504
+  EWL_C/src/sc/fenv_StarCore.c Line: 136
+  EWL_C/src/sc/fenv_StarCore.c Line: 155
+  EWL_C/src/sc/file_io_StarCore.c Line: 345
+  EWL_C/src/sc/math_StarCore.c Line: 78
+  EWL_C/src/sc/math_StarCore.c Line: 110
+  EWL_C/src/sc/mem_funcs_cpy_StarCore.c Line: 99
+  EWL_C/src/sc/mem_funcs_cpy_StarCore.c Line: 118
+  EWL_C/src/sc/mem_funcs_set_StarCore.c Line: 107
+  EWL_C/src/sc/signal_StarCore.c Line: 97
+  EWL_C/src/scanformat.c Line: 930
+  EWL_C/src/scanformat.c Line: 937
+  EWL_C/src/string.c Line: 685
+  EWL_C/src/string.c Line: 895
+  EWL_C/src/string.c Line: 917
+  EWL_C/src/string.c Line: 948
+  EWL_C/src/string.c Line: 970
+  EWL_C/src/strtold.c Line: 728
+  EWL_C/src/strtold.c Line: 816
+  EWL_C/src/strtold.c Line: 896
+  EWL_C/src/strtoul.c Line: 277
+  EWL_C/src/strtoul.c Line: 356
+  EWL_C/src/sun_math/Double_precision/e_atan2.c Line: 78
+  EWL_C/src/sun_math/Double_precision/e_atan2.c Line: 84
+  EWL_C/src/sun_math/Double_precision/e_atanh.c Line: 62
+  EWL_C/src/sun_math/Double_precision/e_fmod.c Line: 32
+  EWL_C/src/sun_math/Double_precision/e_log10.c Line: 129
+  EWL_C/src/sun_math/Double_precision/e_pow.c Line: 263
+  EWL_C/src/sun_math/Double_precision/e_pow.c Line: 327
+  EWL_C/src/sun_math/Double_precision/e_pow.c Line: 384
+  EWL_C/src/sun_math/Double_precision/e_pow.c Line: 413
+  EWL_C/src/sun_math/Double_precision/e_pow.c Line: 416
+  EWL_C/src/sun_math/Double_precision/e_sqrt.c Line: 169
+  EWL_C/src/sun_math/Double_precision/k_rem_pio2.c Line: 206
+  EWL_C/src/sun_math/Double_precision/k_rem_pio2.c Line: 294
+  EWL_C/src/sun_math/Double_precision/k_rem_pio2.c Line: 356
+  EWL_C/src/sun_math/Double_precision/k_tan.c Line: 89
+  EWL_C/src/sun_math/Double_precision/s_frexp.c Line: 57
+  EWL_C/src/sun_math/Double_precision/s_ldexp.c Line: 38
+  EWL_C/src/sun_math/Double_precision/s_ldexp.c Line: 47
+  EWL_C/src/sun_math/Double_precision/s_log1p.c Line: 173
+  EWL_C/src/sun_math/Double_precision/s_log1p.c Line: 180
+  EWL_C/src/sun_math/Double_precision/s_modf.c Line: 48
+  EWL_C/src/sun_math/Double_precision/s_nextafter.c Line: 85
+  EWL_C/src/sun_math/Double_precision/s_rint.c Line: 58
+  EWL_C/src/sun_math/Double_precision/s_rint.c Line: 67
+  EWL_C/src/sun_math/Double_precision/s_rint.c Line: 69
+  EWL_C/src/sun_math/Double_precision/s_rint.c Line: 89
+  EWL_C/src/sun_math/Double_precision/s_tan.c Line: 75
+  EWL_C/src/sun_math/Single_precision/e_expf.c Line: 70
+  EWL_C/src/sun_math/Single_precision/e_fmodf.c Line: 63
+  EWL_C/src/sun_math/Single_precision/e_log10f.c Line: 120
+  EWL_C/src/sun_math/Single_precision/e_powf.c Line: 363
+  EWL_C/src/sun_math/Single_precision/e_powf.c Line: 366
+  EWL_C/src/sun_math/Single_precision/e_sqrtf.c Line: 98
+  EWL_C/src/sun_math/Single_precision/k_rem_pio2f.c Line: 109
+  EWL_C/src/sun_math/Single_precision/k_rem_pio2f.c Line: 192
+  EWL_C/src/sun_math/Single_precision/k_tanf.c Line: 70
+  EWL_C/src/sun_math/Single_precision/s_erff.c Line: 127
+  EWL_C/src/sun_math/Single_precision/s_erff.c Line: 213
+  EWL_C/src/sun_math/Single_precision/s_expm1f.c Line: 67
+  EWL_C/src/sun_math/Single_precision/s_frexpf.c Line: 61
+  EWL_C/src/sun_math/Single_precision/s_log1pf.c Line: 129
+  EWL_C/src/sun_math/Single_precision/s_log1pf.c Line: 137
+  EWL_C/src/sun_math/Single_precision/s_modff.c Line: 48
+  EWL_C/src/sun_math/Single_precision/s_nextafterf.c Line: 82
+  EWL_C/src/sun_math/Single_precision/s_rintf.c Line: 54
+  EWL_C/src/sun_math/Single_precision/s_rintf.c Line: 56
+  EWL_C/src/sun_math/Single_precision/s_rintf.c Line: 84
+  EWL_C/src/sun_math/Single_precision/s_tanf.c Line: 59
+  EWL_C/src/sun_math/ansi_fp.c Line: 250
+  EWL_C/src/sun_math/ansi_fp.c Line: 300
+  EWL_C/src/sun_math/ansi_fp.c Line: 311
+  EWL_C/src/sun_math/ansi_fp.c Line: 351
+  EWL_C/src/sun_math/ansi_fp.c Line: 729
+  EWL_C/src/sun_math/ansi_fp.c Line: 966
+  EWL_C/src/sun_math/ansi_fp.c Line: 986
+  EWL_C/src/time.c Line: 399
+  EWL_C/src/wcstold.c Line: 709
+  EWL_C/src/wcstold.c Line: 768
+  EWL_C/src/wcstold.c Line: 835
+  EWL_C/src/wcstoul.c Line: 424
+  EWL_C/src/wcstoul.c Line: 456
+  EWL_C/src/wprintf.c Line: 253
+  EWL_C/src/wprintf.c Line: 280
+  EWL_C/src/wprintf.c Line: 567
+  EWL_C/src/wprintf.c Line: 685
+  EWL_C/src/wprintformat.c Line: 1844
+  EWL_C/src/wscanf.c Line: 146
+  EWL_C/src/wscanf.c Line: 591
+  EWL_C/src/wstring.c Line: 682
+  EWL_C/src/wstring.c Line: 695
+
+---
+
+MISRA_EXCEPTION_RULE_10_4 :
+
+MISRA 2004 Rule 10.4: cast of floating point 
+
+Used to allow casting of floating point expressions. 
+
+  EWL_C/src/sc/exp_StarCore.c Line: 150
+  EWL_C/src/sun_math/Single_precision/e_expf.c Line: 113
+  EWL_C/src/sun_math/Single_precision/s_expm1f.c Line: 123
+
+---
+
+MISRA_EXCEPTION_RULE_10_5 :
+
+MISRA 2004 Rule 10.5: Shift left of signed quantity 
+
+Used to allow shifting of signed expressions, e.g., "a << 1". 
+
+  EWL_C/src/strtold.c Line: 863
+  EWL_C/src/strtold.c Line: 889
+  EWL_C/src/wcstold.c Line: 802
+  EWL_C/src/wcstold.c Line: 828
+
+---
+
+MISRA_EXCEPTION_RULE_11_3 :
+
+MISRA 2004 Rule 11.3: Cast pointer/non-pointer 
+
+Used in pointer alignment computations, e.g., "((uint32_t)ptr & 3UL). 
+
+  EWL_C/src/alloc.c Line: 261
+  EWL_C/src/alloc.c Line: 266
+  EWL_C/src/alloc.c Line: 311
+  EWL_C/src/alloc.c Line: 320
+  EWL_C/src/alloc.c Line: 380
+  EWL_C/src/alloc.c Line: 422
+  EWL_C/src/alloc.c Line: 455
+  EWL_C/src/mem.c Line: 89
+  EWL_C/src/mem.c Line: 101
+  EWL_C/src/mem_funcs.c Line: 88
+  EWL_C/src/mem_funcs.c Line: 120
+  EWL_C/src/mem_funcs.c Line: 124
+  EWL_C/src/mem_funcs.c Line: 180
+  EWL_C/src/mem_funcs.c Line: 264
+  EWL_C/src/mem_funcs.c Line: 332
+  EWL_C/src/mem_funcs.c Line: 348
+  EWL_C/src/mem_funcs.c Line: 430
+  EWL_C/src/mem_funcs.c Line: 440
+  EWL_C/src/mem_funcs.c Line: 505
+  EWL_C/src/printf.c Line: 68
+  EWL_C/src/printf.c Line: 87
+  EWL_C/src/sc/mem_funcs_cpy_StarCore.c Line: 45
+  EWL_C/src/sc/mem_funcs_cpy_StarCore.c Line: 88
+  EWL_C/src/sc/signal_StarCore.c Line: 116
+  EWL_C/src/signal.c Line: 35
+  EWL_C/src/signal.c Line: 64
+  EWL_C/src/signal.c Line: 71
+  EWL_C/src/string.c Line: 146
+  EWL_C/src/string.c Line: 424
+
+---
+
+MISRA_EXCEPTION_RULE_11_4 :
+
+MISRA 2004 Rule 11.4: cast from pointer to pointer 
+
+Used for opaque data structure accessing or floating point bit pattern manipulations, e.g., "(struct _FILE *)_file". 
+
+  EWL_C/src/ansi_files.c Line: 329
+  EWL_C/src/ansi_files.c Line: 360
+  EWL_C/src/arm/file_io_aeabi.c Line: 33
+  EWL_C/src/arm/file_io_aeabi.c Line: 37
+  EWL_C/src/arm/file_io_aeabi.c Line: 41
+  EWL_C/src/arm/localel_aeabi.c Line: 25
+  EWL_C/src/arm/math_ARM.c Line: 47
+  EWL_C/src/buffer_io.c Line: 130
+  EWL_C/src/buffer_io.c Line: 140
+  EWL_C/src/buffer_io.c Line: 150
+  EWL_C/src/buffer_io.c Line: 204
+  EWL_C/src/buffer_io.c Line: 217
+  EWL_C/src/buffer_io.c Line: 243
+  EWL_C/src/buffer_io.c Line: 318
+  EWL_C/src/char_io.c Line: 50
+  EWL_C/src/char_io.c Line: 105
+  EWL_C/src/char_io.c Line: 129
+  EWL_C/src/char_io.c Line: 166
+  EWL_C/src/char_io.c Line: 219
+  EWL_C/src/char_io.c Line: 253
+  EWL_C/src/char_io.c Line: 290
+  EWL_C/src/char_io.c Line: 325
+  EWL_C/src/char_io.c Line: 357
+  EWL_C/src/char_io.c Line: 368
+  EWL_C/src/char_io.c Line: 436
+  EWL_C/src/char_io.c Line: 463
+  EWL_C/src/char_io.c Line: 492
+  EWL_C/src/char_io.c Line: 520
+  EWL_C/src/char_io.c Line: 540
+  EWL_C/src/char_io.c Line: 550
+  EWL_C/src/coldfire/uart_console_io_cf.c Line: 82
+  EWL_C/src/direct_io.c Line: 66
+  EWL_C/src/direct_io.c Line: 120
+  EWL_C/src/direct_io.c Line: 212
+  EWL_C/src/file_io.c Line: 178
+  EWL_C/src/file_io.c Line: 223
+  EWL_C/src/file_pos.c Line: 40
+  EWL_C/src/file_pos.c Line: 171
+  EWL_C/src/file_pos.c Line: 312
+  EWL_C/src/file_pos.c Line: 315
+  EWL_C/src/locale.c Line: 51
+  EWL_C/src/locale.c Line: 88
+  EWL_C/src/locale.c Line: 94
+  EWL_C/src/locale.c Line: 101
+  EWL_C/src/math_api.c Line: 113
+  EWL_C/src/math_api.c Line: 121
+  EWL_C/src/math_double.c Line: 56
+  EWL_C/src/math_double.c Line: 59
+  EWL_C/src/math_double.c Line: 93
+  EWL_C/src/math_float.c Line: 64
+  EWL_C/src/math_float.c Line: 201
+  EWL_C/src/math_float.c Line: 204
+  EWL_C/src/math_fma.c Line: 486
+  EWL_C/src/math_fma.c Line: 489
+  EWL_C/src/math_fma.c Line: 492
+  EWL_C/src/math_fma.c Line: 780
+  EWL_C/src/math_fma.c Line: 811
+  EWL_C/src/math_fma.c Line: 820
+  EWL_C/src/math_fma.c Line: 851
+  EWL_C/src/misc_io.c Line: 37
+  EWL_C/src/misc_io.c Line: 46
+  EWL_C/src/misc_io.c Line: 56
+  EWL_C/src/pa/math_ppc.c Line: 152
+  EWL_C/src/printf.c Line: 69
+  EWL_C/src/sc/math_StarCore.c Line: 31
+  EWL_C/src/sc/math_StarCore.c Line: 34
+  EWL_C/src/sc/math_StarCore.c Line: 119
+  EWL_C/src/scanf.c Line: 83
+  EWL_C/src/scanf.c Line: 466
+  EWL_C/src/scanf.c Line: 488
+  EWL_C/src/strtold.c Line: 811
+  EWL_C/src/strtold.c Line: 947
+  EWL_C/src/strtold.c Line: 965
+  EWL_C/src/strtold.c Line: 969
+  EWL_C/src/strtold.c Line: 990
+  EWL_C/src/strtold.c Line: 994
+  EWL_C/src/strtold.c Line: 1017
+  EWL_C/src/strtold.c Line: 1021
+  EWL_C/src/sun_math/Double_precision/e_cosh.c Line: 93
+  EWL_C/src/sun_math/Double_precision/e_sinh.c Line: 90
+  EWL_C/src/sun_math/ansi_fp.c Line: 136
+  EWL_C/src/sun_math/ansi_fp.c Line: 141
+  EWL_C/src/sun_math/ansi_fp.c Line: 820
+  EWL_C/src/sun_math/ansi_fp.c Line: 1000
+  EWL_C/src/sun_math/ansi_fp.c Line: 1046
+  EWL_C/src/sun_math/ansi_fp.c Line: 1235
+  EWL_C/src/wchar_io.c Line: 66
+  EWL_C/src/wchar_io.c Line: 88
+  EWL_C/src/wchar_io.c Line: 136
+  EWL_C/src/wchar_io.c Line: 157
+  EWL_C/src/wchar_io.c Line: 169
+  EWL_C/src/wchar_io.c Line: 264
+  EWL_C/src/wchar_io.c Line: 393
+  EWL_C/src/wchar_io.c Line: 418
+  EWL_C/src/wmem.c Line: 98
+
+---
+
+MISRA_EXCEPTION_RULE_12_4 :
+
+MISRA 2004 Rule 12.4: side effect righthand of && or || 
+
+Used to allow sideeffect in logical expressions, e.g., "if (isnan(x) || isnan(y)) ...". 
+
+  EWL_C/src/char_io.c Line: 192
+  EWL_C/src/math_fma.c Line: 63
+  EWL_C/src/math_fma.c Line: 516
+  EWL_C/src/printformat.c Line: 1647
+  EWL_C/src/printformat.c Line: 1933
+  EWL_C/src/printformat.c Line: 1945
+  EWL_C/src/printformat.c Line: 2381
+  EWL_C/src/printformat.c Line: 2429
+  EWL_C/src/sc/pow_StarCore.c Line: 93
+  EWL_C/src/scanformat.c Line: 448
+  EWL_C/src/scanformat.c Line: 614
+  EWL_C/src/scanformat.c Line: 690
+  EWL_C/src/scanformat.c Line: 1226
+  EWL_C/src/scanformat.c Line: 1266
+  EWL_C/src/scanformat.c Line: 1384
+  EWL_C/src/scanformat.c Line: 1440
+  EWL_C/src/string.c Line: 1193
+  EWL_C/src/string.c Line: 1225
+  EWL_C/src/string.c Line: 1268
+  EWL_C/src/strtold.c Line: 345
+  EWL_C/src/strtold.c Line: 370
+  EWL_C/src/strtold.c Line: 377
+  EWL_C/src/strtold.c Line: 723
+  EWL_C/src/strtoul.c Line: 196
+  EWL_C/src/strtoul.c Line: 454
+  EWL_C/src/sun_math/Double_precision/e_pow.c Line: 121
+  EWL_C/src/sun_math/Single_precision/e_powf.c Line: 92
+  EWL_C/src/sun_math/ansi_fp.c Line: 1024
+  EWL_C/src/time.c Line: 104
+  EWL_C/src/wchar_io.c Line: 390
+  EWL_C/src/wcstold.c Line: 314
+  EWL_C/src/wcstold.c Line: 339
+  EWL_C/src/wcstold.c Line: 346
+  EWL_C/src/wcstold.c Line: 704
+  EWL_C/src/wcstoul.c Line: 213
+  EWL_C/src/wcstoul.c Line: 357
+  EWL_C/src/wprintf.c Line: 1232
+  EWL_C/src/wprintf.c Line: 1513
+  EWL_C/src/wprintf.c Line: 1525
+  EWL_C/src/wprintf.c Line: 1824
+  EWL_C/src/wprintf.c Line: 1870
+  EWL_C/src/wprintformat.c Line: 1501
+  EWL_C/src/wprintformat.c Line: 1835
+  EWL_C/src/wprintformat.c Line: 1849
+  EWL_C/src/wscanf.c Line: 306
+  EWL_C/src/wscanf.c Line: 368
+  EWL_C/src/wscanf.c Line: 413
+  EWL_C/src/wscanf.c Line: 719
+  EWL_C/src/wscanf.c Line: 756
+  EWL_C/src/wscanf.c Line: 824
+  EWL_C/src/wscanf.c Line: 886
+  EWL_C/src/wstring.c Line: 97
+
+---
+
+MISRA_EXCEPTION_RULE_12_7 :
+
+MISRA 2004 Rule 12.7: Bitwise shift operator applied to signed underlying type 
+
+Used to allow >>, e.g., "ex >>= 23;". 
+
+  EWL_C/src/math_fma.c Line: 236
+  EWL_C/src/math_fma.c Line: 685
+  EWL_C/src/mem.c Line: 102
+  EWL_C/src/pa/fenv.ppc.c Line: 73
+  EWL_C/src/pa/fenv.ppc.c Line: 122
+  EWL_C/src/pa/fenv.ppc.c Line: 166
+  EWL_C/src/pa/fenv.ppc.c Line: 218
+  EWL_C/src/pa/fenv.ppc.c Line: 273
+  EWL_C/src/sc/math_StarCore.c Line: 46
+  EWL_C/src/sc/math_StarCore.c Line: 68
+  EWL_C/src/sc/math_StarCore.c Line: 72
+  EWL_C/src/sc/math_StarCore.c Line: 83
+  EWL_C/src/sc/math_StarCore.c Line: 115
+  EWL_C/src/sc/math_StarCore.c Line: 117
+  EWL_C/src/sc/modf_StarCore.c Line: 16
+  EWL_C/src/sc/sin_StarCore.c Line: 128
+  EWL_C/src/sc/sin_StarCore.c Line: 134
+  EWL_C/src/sc/sin_StarCore.c Line: 141
+  EWL_C/src/strtoul.c Line: 303
+  EWL_C/src/strtoul.c Line: 532
+  EWL_C/src/sun_math/Double_precision/e_acos.c Line: 73
+  EWL_C/src/sun_math/Double_precision/e_acos.c Line: 76
+  EWL_C/src/sun_math/Double_precision/e_acosh.c Line: 55
+  EWL_C/src/sun_math/Double_precision/e_asin.c Line: 82
+  EWL_C/src/sun_math/Double_precision/e_asin.c Line: 86
+  EWL_C/src/sun_math/Double_precision/e_atan2.c Line: 71
+  EWL_C/src/sun_math/Double_precision/e_atan2.c Line: 75
+  EWL_C/src/sun_math/Double_precision/e_atan2.c Line: 90
+  EWL_C/src/sun_math/Double_precision/e_atan2.c Line: 109
+  EWL_C/src/sun_math/Double_precision/e_atan2.c Line: 126
+  EWL_C/src/sun_math/Double_precision/e_atan2.c Line: 175
+  EWL_C/src/sun_math/Double_precision/e_atan2.c Line: 189
+  EWL_C/src/sun_math/Double_precision/e_atanh.c Line: 60
+  EWL_C/src/sun_math/Double_precision/e_exp.c Line: 190
+  EWL_C/src/sun_math/Double_precision/e_fmod.c Line: 33
+  EWL_C/src/sun_math/Double_precision/e_hypot.c Line: 128
+  EWL_C/src/sun_math/Double_precision/e_log.c Line: 144
+  EWL_C/src/sun_math/Double_precision/e_log.c Line: 183
+  EWL_C/src/sun_math/Double_precision/e_log10.c Line: 126
+  EWL_C/src/sun_math/Double_precision/e_pow.c Line: 266
+  EWL_C/src/sun_math/Double_precision/e_pow.c Line: 373
+  EWL_C/src/sun_math/Double_precision/e_pow.c Line: 437
+  EWL_C/src/sun_math/Double_precision/e_pow.c Line: 439
+  EWL_C/src/sun_math/Double_precision/e_rem_pio2.c Line: 96
+  EWL_C/src/sun_math/Double_precision/e_rem_pio2.c Line: 141
+  EWL_C/src/sun_math/Double_precision/e_rem_pio2.c Line: 144
+  EWL_C/src/sun_math/Double_precision/e_rem_pio2.c Line: 152
+  EWL_C/src/sun_math/Double_precision/e_rem_pio2.c Line: 184
+  EWL_C/src/sun_math/Double_precision/e_rem_pio2.c Line: 186
+  EWL_C/src/sun_math/Double_precision/e_sqrt.c Line: 190
+  EWL_C/src/sun_math/Double_precision/k_rem_pio2.c Line: 224
+  EWL_C/src/sun_math/Double_precision/k_rem_pio2.c Line: 249
+  EWL_C/src/sun_math/Double_precision/k_rem_pio2.c Line: 268
+  EWL_C/src/sun_math/Double_precision/k_tan.c Line: 119
+  EWL_C/src/sun_math/Double_precision/s_cbrt.c Line: 54
+  EWL_C/src/sun_math/Double_precision/s_ceil.c Line: 63
+  EWL_C/src/sun_math/Double_precision/s_ceil.c Line: 66
+  EWL_C/src/sun_math/Double_precision/s_ceil.c Line: 91
+  EWL_C/src/sun_math/Double_precision/s_ceil.c Line: 97
+  EWL_C/src/sun_math/Double_precision/s_copysign.c Line: 31
+  EWL_C/src/sun_math/Double_precision/s_expm1.c Line: 245
+  EWL_C/src/sun_math/Double_precision/s_expm1.c Line: 251
+  EWL_C/src/sun_math/Double_precision/s_floor.c Line: 34
+  EWL_C/src/sun_math/Single_precision/e_acosf.c Line: 65
+  EWL_C/src/sun_math/Single_precision/e_acoshf.c Line: 57
+  EWL_C/src/sun_math/Single_precision/e_asinf.c Line: 70
+  EWL_C/src/sun_math/Single_precision/e_atan2f.c Line: 58
+  EWL_C/src/sun_math/Single_precision/e_atan2f.c Line: 61
+  EWL_C/src/sun_math/Single_precision/e_atan2f.c Line: 73
+  EWL_C/src/sun_math/Single_precision/e_atan2f.c Line: 156
+  EWL_C/src/sun_math/Single_precision/e_atanhf.c Line: 61
+  EWL_C/src/sun_math/Single_precision/e_expf.c Line: 142
+  EWL_C/src/sun_math/Single_precision/e_fmodf.c Line: 47
+  EWL_C/src/sun_math/Single_precision/e_hypotf.c Line: 116
+  EWL_C/src/sun_math/Single_precision/e_log10f.c Line: 116
+  EWL_C/src/sun_math/Single_precision/e_logf.c Line: 115
+  EWL_C/src/sun_math/Single_precision/e_logf.c Line: 154
+  EWL_C/src/sun_math/Single_precision/e_powf.c Line: 71
+  EWL_C/src/sun_math/Single_precision/e_powf.c Line: 224
+  EWL_C/src/sun_math/Single_precision/e_powf.c Line: 387
+  EWL_C/src/sun_math/Single_precision/e_powf.c Line: 389
+  EWL_C/src/sun_math/Single_precision/e_rem_pio2f.c Line: 123
+  EWL_C/src/sun_math/Single_precision/e_rem_pio2f.c Line: 135
+  EWL_C/src/sun_math/Single_precision/e_rem_pio2f.c Line: 148
+  EWL_C/src/sun_math/Single_precision/e_rem_pio2f.c Line: 168
+  EWL_C/src/sun_math/Single_precision/e_rem_pio2f.c Line: 173
+  EWL_C/src/sun_math/Single_precision/e_rem_pio2f.c Line: 177
+  EWL_C/src/sun_math/Single_precision/e_rem_pio2f.c Line: 186
+  EWL_C/src/sun_math/Single_precision/e_rem_pio2f.c Line: 217
+  EWL_C/src/sun_math/Single_precision/e_rem_pio2f.c Line: 219
+  EWL_C/src/sun_math/Single_precision/e_sqrtf.c Line: 111
+  EWL_C/src/sun_math/Single_precision/k_rem_pio2f.c Line: 124
+  EWL_C/src/sun_math/Single_precision/k_rem_pio2f.c Line: 147
+  EWL_C/src/sun_math/Single_precision/k_rem_pio2f.c Line: 166
+  EWL_C/src/sun_math/Single_precision/k_tanf.c Line: 100
+  EWL_C/src/sun_math/Single_precision/s_cbrtf.c Line: 70
+  EWL_C/src/sun_math/Single_precision/s_ceilf.c Line: 66
+  EWL_C/src/sun_math/Single_precision/s_ceilf.c Line: 69
+  EWL_C/src/sun_math/Single_precision/s_expm1f.c Line: 169
+  EWL_C/src/sun_math/Single_precision/s_expm1f.c Line: 171
+  EWL_C/src/sun_math/Single_precision/s_expm1f.c Line: 177
+  EWL_C/src/sun_math/Single_precision/s_floorf.c Line: 47
+  EWL_C/src/sun_math/ansi_fp.c Line: 489
+  EWL_C/src/sun_math/ansi_fp.c Line: 1191
+  EWL_C/src/sun_math/ansi_fp.c Line: 1413
+  EWL_C/src/sun_math/ansi_fp.c Line: 1441
+  EWL_C/src/wcstoul.c Line: 482
+  EWL_C/src/wcstoul.c Line: 526
+
+---
+
+MISRA_EXCEPTION_RULE_12_7a :
+
+MISRA 2004 Rule 12.7: Bitwise operator (and(&),  or(|)) applied to signed underlying type 
+
+Used to allow bitwise "&" on signed types, e.g., "intpart & 1L". 
+
+  EWL_C/src/sun_math/Single_precision/e_fmodf.c Line: 48
+  EWL_C/src/sun_math/Single_precision/k_tanf.c Line: 114
+  EWL_C/src/sun_math/Single_precision/k_tanf.c Line: 119
+  EWL_C/src/sun_math/Single_precision/s_ilogbf.c Line: 61
+  EWL_C/src/sun_math/Single_precision/s_rintf.c Line: 42
+  EWL_C/src/sun_math/Single_precision/s_scalbnf.c Line: 41
+  EWL_C/src/sun_math/ansi_fp.c Line: 679
+  EWL_C/src/sun_math/math_sun.c Line: 347
+  EWL_C/src/sun_math/math_sun.c Line: 437
+  EWL_C/src/sun_math/math_sun.c Line: 526
+
+---
+
+MISRA_EXCEPTION_RULE_12_7b :
+
+MISRA 2004 Rule 12.7: Bitwise operator xor (^) used in logical expressions or with signed types 
+
+Used to allow '^' as xor in logical expresisons, e.g., "sign = ((_x < 0) ^ (y < 0)) ? -1 : 1;". 
+
+  EWL_C/src/arith.c Line: 249
+  EWL_C/src/arith.c Line: 273
+  EWL_C/src/arith.c Line: 296
+  EWL_C/src/sun_math/Single_precision/e_fmodf.c Line: 49
+
+---
+
+MISRA_EXCEPTION_RULE_13_1 :
+
+MISRA 2004 Rule 13.1: Boolean test of a parenthesized assignment 
+
+To be removed: Used to generate more efficient code, e.g., "while ((*q++ = *p++)) ... ". 
+
+  EWL_C/src/string.c Line: 116
+  EWL_C/src/string.c Line: 283
+  EWL_C/src/string.c Line: 299
+  EWL_C/src/string.c Line: 324
+  EWL_C/src/string.c Line: 336
+  EWL_C/src/string.c Line: 356
+  EWL_C/src/string.c Line: 375
+  EWL_C/src/string.c Line: 593
+  EWL_C/src/string.c Line: 609
+  EWL_C/src/string.c Line: 776
+  EWL_C/src/string.c Line: 797
+  EWL_C/src/string.c Line: 831
+  EWL_C/src/string.c Line: 838
+  EWL_C/src/string.c Line: 852
+  EWL_C/src/string.c Line: 859
+  EWL_C/src/string.c Line: 882
+  EWL_C/src/string.c Line: 889
+  EWL_C/src/string.c Line: 903
+  EWL_C/src/string.c Line: 910
+  EWL_C/src/string.c Line: 934
+  EWL_C/src/string.c Line: 941
+  EWL_C/src/string.c Line: 956
+  EWL_C/src/string.c Line: 963
+  EWL_C/src/string.c Line: 997
+  EWL_C/src/string.c Line: 1004
+  EWL_C/src/string.c Line: 1019
+  EWL_C/src/string.c Line: 1039
+  EWL_C/src/string.c Line: 1046
+  EWL_C/src/string.c Line: 1061
+  EWL_C/src/string.c Line: 1102
+  EWL_C/src/string.c Line: 1109
+  EWL_C/src/string.c Line: 1124
+  EWL_C/src/string.c Line: 1144
+  EWL_C/src/string.c Line: 1151
+  EWL_C/src/string.c Line: 1166
+  EWL_C/src/string.c Line: 1194
+  EWL_C/src/string.c Line: 1200
+  EWL_C/src/string.c Line: 1207
+  EWL_C/src/string.c Line: 1226
+  EWL_C/src/string.c Line: 1232
+  EWL_C/src/string.c Line: 1239
+  EWL_C/src/time.c Line: 827
+  EWL_C/src/wstring.c Line: 113
+  EWL_C/src/wstring.c Line: 121
+  EWL_C/src/wstring.c Line: 165
+  EWL_C/src/wstring.c Line: 182
+  EWL_C/src/wstring.c Line: 242
+  EWL_C/src/wstring.c Line: 253
+  EWL_C/src/wstring.c Line: 308
+  EWL_C/src/wstring.c Line: 327
+  EWL_C/src/wstring.c Line: 475
+  EWL_C/src/wstring.c Line: 490
+  EWL_C/src/wstring.c Line: 531
+  EWL_C/src/wstring.c Line: 552
+  EWL_C/src/wstring.c Line: 577
+  EWL_C/src/wstring.c Line: 590
+  EWL_C/src/wstring.c Line: 611
+  EWL_C/src/wstring.c Line: 623
+  EWL_C/src/wstring.c Line: 644
+  EWL_C/src/wstring.c Line: 656
+  EWL_C/src/wstring.c Line: 676
+  EWL_C/src/wstring.c Line: 689
+  EWL_C/src/wstring.c Line: 729
+  EWL_C/src/wstring.c Line: 744
+  EWL_C/src/wstring.c Line: 762
+  EWL_C/src/wstring.c Line: 777
+  EWL_C/src/wstring.c Line: 812
+  EWL_C/src/wstring.c Line: 818
+  EWL_C/src/wstring.c Line: 842
+  EWL_C/src/wstring.c Line: 848
+  EWL_C/src/wstring.c Line: 855
+  EWL_C/src/wtime.c Line: 103
+
+---
+
+MISRA_EXCEPTION_RULE_13_3 :
+
+MISRA 2004 Rule 13.3: Testing floats for equality 
+
+Used to allow floating point equality checks, e.g., "if (x == -INFINITY) ...". 
+
+  EWL_C/src/math_double.c Line: 75
+  EWL_C/src/math_float.c Line: 208
+  EWL_C/src/math_float.c Line: 306
+  EWL_C/src/math_fma.c Line: 158
+  EWL_C/src/math_fma.c Line: 187
+  EWL_C/src/math_fma.c Line: 204
+  EWL_C/src/math_fma.c Line: 608
+  EWL_C/src/math_fma.c Line: 637
+  EWL_C/src/math_fma.c Line: 653
+  EWL_C/src/math_longdouble.c Line: 111
+  EWL_C/src/math_longdouble.c Line: 173
+  EWL_C/src/math_longdouble.c Line: 212
+  EWL_C/src/math_longdouble.c Line: 220
+  EWL_C/src/sc/atan2_StarCore.c Line: 47
+  EWL_C/src/sc/exp_StarCore.c Line: 113
+  EWL_C/src/sc/exp_StarCore.c Line: 132
+  EWL_C/src/sun_math/Double_precision/e_lgamma_r.c Line: 185
+  EWL_C/src/sun_math/Double_precision/e_lgamma_r.c Line: 233
+  EWL_C/src/sun_math/Double_precision/e_lgamma_r.c Line: 275
+  EWL_C/src/sun_math/Double_precision/e_log.c Line: 154
+  EWL_C/src/sun_math/Double_precision/e_pow.c Line: 115
+  EWL_C/src/sun_math/Double_precision/e_pow.c Line: 120
+  EWL_C/src/sun_math/Double_precision/e_rem_pio2.c Line: 194
+  EWL_C/src/sun_math/Double_precision/k_rem_pio2.c Line: 269
+  EWL_C/src/sun_math/Double_precision/k_standard.c Line: 496
+  EWL_C/src/sun_math/Double_precision/k_standard.c Line: 501
+  EWL_C/src/sun_math/Double_precision/s_log1p.c Line: 104
+  EWL_C/src/sun_math/Double_precision/s_matherr.c Line: 27
+  EWL_C/src/sun_math/Double_precision/s_nextafter.c Line: 26
+  EWL_C/src/sun_math/Single_precision/e_lgammaf_r.c Line: 136
+  EWL_C/src/sun_math/Single_precision/e_lgammaf_r.c Line: 186
+  EWL_C/src/sun_math/Single_precision/e_lgammaf_r.c Line: 230
+  EWL_C/src/sun_math/Single_precision/e_logf.c Line: 125
+  EWL_C/src/sun_math/Single_precision/e_powf.c Line: 86
+  EWL_C/src/sun_math/Single_precision/e_powf.c Line: 91
+  EWL_C/src/sun_math/Single_precision/e_rem_pio2f.c Line: 227
+  EWL_C/src/sun_math/Single_precision/k_rem_pio2f.c Line: 167
+  EWL_C/src/sun_math/Single_precision/s_log1pf.c Line: 57
+  EWL_C/src/sun_math/Single_precision/s_nextafterf.c Line: 32
+  EWL_C/src/sun_math/ansi_fp.c Line: 979
+
+---
+
+MISRA_EXCEPTION_RULE_13_7 :
+
+MISRA 2004 Rules 13.7 and 14.1: Constant value logical expressions 
+
+Used to allow configuration dependent constant expressions, e.g., "if ((uint_t)math_errhandling & (uint_t)MATH_ERRNO) ...". 
+* MISRA 2004 Rules 13.7 and 14.1: Constant value Boolean 
+* Boolean within 'if' always evaluates to true 
+* The right argument to operator '&&' is certain to be 0 
+
+  EWL_C/src/alloc.c Line: 201
+  EWL_C/src/alloc.c Line: 466
+  EWL_C/src/alloc.c Line: 3142
+  EWL_C/src/math_double.c Line: 113
+  EWL_C/src/math_double.c Line: 117
+  EWL_C/src/math_double.c Line: 122
+  EWL_C/src/math_double.c Line: 153
+  EWL_C/src/math_double.c Line: 156
+  EWL_C/src/math_double.c Line: 162
+  EWL_C/src/math_double.c Line: 165
+  EWL_C/src/math_double.c Line: 241
+  EWL_C/src/math_double.c Line: 246
+  EWL_C/src/math_float.c Line: 69
+  EWL_C/src/math_float.c Line: 72
+  EWL_C/src/math_float.c Line: 77
+  EWL_C/src/math_float.c Line: 82
+  EWL_C/src/math_float.c Line: 87
+  EWL_C/src/math_float.c Line: 243
+  EWL_C/src/math_float.c Line: 247
+  EWL_C/src/math_float.c Line: 252
+  EWL_C/src/math_float.c Line: 308
+  EWL_C/src/math_float.c Line: 313
+  EWL_C/src/math_longdouble.c Line: 51
+  EWL_C/src/math_longdouble.c Line: 56
+  EWL_C/src/math_longdouble.c Line: 108
+  EWL_C/src/math_longdouble.c Line: 175
+  EWL_C/src/math_longdouble.c Line: 180
+  EWL_C/src/printformat.c Line: 1404
+  EWL_C/src/printformat.c Line: 1409
+  EWL_C/src/printformat.c Line: 1414
+  EWL_C/src/printformat.c Line: 1439
+  EWL_C/src/printformat.c Line: 1463
+  EWL_C/src/printformat.c Line: 1494
+  EWL_C/src/sc/asin_StarCore.c Line: 103
+  EWL_C/src/sc/asin_StarCore.c Line: 108
+  EWL_C/src/sc/asin_StarCore.c Line: 128
+  EWL_C/src/sc/asin_StarCore.c Line: 133
+  EWL_C/src/sc/atan2_StarCore.c Line: 23
+  EWL_C/src/sc/atan2_StarCore.c Line: 28
+  EWL_C/src/sc/exp_StarCore.c Line: 119
+  EWL_C/src/sc/exp_StarCore.c Line: 138
+  EWL_C/src/sc/ldexp_StarCore.c Line: 26
+  EWL_C/src/sc/log10_StarCore.c Line: 64
+  EWL_C/src/sc/log10_StarCore.c Line: 74
+  EWL_C/src/sc/log10_StarCore.c Line: 79
+  EWL_C/src/sc/log_StarCore.c Line: 86
+  EWL_C/src/sc/log_StarCore.c Line: 91
+  EWL_C/src/sc/log_StarCore.c Line: 105
+  EWL_C/src/sc/math_StarCore.c Line: 51
+  EWL_C/src/sc/math_StarCore.c Line: 56
+  EWL_C/src/sc/math_StarCore.c Line: 206
+  EWL_C/src/sc/math_StarCore.c Line: 273
+  EWL_C/src/sc/math_StarCore.c Line: 341
+  EWL_C/src/sc/pow_StarCore.c Line: 97
+  EWL_C/src/sc/pow_StarCore.c Line: 102
+  EWL_C/src/sc/pow_StarCore.c Line: 116
+  EWL_C/src/sc/pow_StarCore.c Line: 121
+  EWL_C/src/sc/pow_StarCore.c Line: 150
+  EWL_C/src/sc/pow_StarCore.c Line: 170
+  EWL_C/src/sc/pow_StarCore.c Line: 205
+  EWL_C/src/sc/pow_StarCore.c Line: 219
+  EWL_C/src/sc/sinh_StarCore.c Line: 58
+  EWL_C/src/sc/sqrt_StarCore.c Line: 34
+  EWL_C/src/sc/sqrt_StarCore.c Line: 39
+  EWL_C/src/sc/sqrt_StarCore.c Line: 89
+  EWL_C/src/sc/sqrt_StarCore.c Line: 94
+  EWL_C/src/signal.c Line: 77
+  EWL_C/src/strtold.c Line: 852
+  EWL_C/src/strtold.c Line: 915
+  EWL_C/src/strtold.c Line: 919
+  EWL_C/src/strtold.c Line: 923
+  EWL_C/src/sun_math/Double_precision/e_acos.c Line: 88
+  EWL_C/src/sun_math/Double_precision/e_acos.c Line: 93
+  EWL_C/src/sun_math/Double_precision/e_acosh.c Line: 58
+  EWL_C/src/sun_math/Double_precision/e_acosh.c Line: 63
+  EWL_C/src/sun_math/Double_precision/e_asin.c Line: 93
+  EWL_C/src/sun_math/Double_precision/e_asin.c Line: 98
+  EWL_C/src/sun_math/Double_precision/e_atan2.c Line: 95
+  EWL_C/src/sun_math/Double_precision/e_atan2.c Line: 100
+  EWL_C/src/sun_math/Double_precision/e_atanh.c Line: 66
+  EWL_C/src/sun_math/Double_precision/e_atanh.c Line: 71
+  EWL_C/src/sun_math/Double_precision/e_atanh.c Line: 86
+  EWL_C/src/sun_math/Double_precision/e_cosh.c Line: 105
+  EWL_C/src/sun_math/Double_precision/e_exp.c Line: 133
+  EWL_C/src/sun_math/Double_precision/e_exp.c Line: 144
+  EWL_C/src/sun_math/Double_precision/e_fmod.c Line: 59
+  EWL_C/src/sun_math/Double_precision/e_fmod.c Line: 64
+  EWL_C/src/sun_math/Double_precision/e_lgamma_r.c Line: 230
+  EWL_C/src/sun_math/Double_precision/e_log.c Line: 106
+  EWL_C/src/sun_math/Double_precision/e_log.c Line: 118
+  EWL_C/src/sun_math/Double_precision/e_log.c Line: 123
+  EWL_C/src/sun_math/Double_precision/e_log10.c Line: 83
+  EWL_C/src/sun_math/Double_precision/e_log10.c Line: 100
+  EWL_C/src/sun_math/Double_precision/e_log10.c Line: 105
+  EWL_C/src/sun_math/Double_precision/e_pow.c Line: 134
+  EWL_C/src/sun_math/Double_precision/e_pow.c Line: 139
+  EWL_C/src/sun_math/Double_precision/e_pow.c Line: 146
+  EWL_C/src/sun_math/Double_precision/e_pow.c Line: 151
+  EWL_C/src/sun_math/Double_precision/e_pow.c Line: 170
+  EWL_C/src/sun_math/Double_precision/e_pow.c Line: 270
+  EWL_C/src/sun_math/Double_precision/e_pow.c Line: 275
+  EWL_C/src/sun_math/Double_precision/e_remainder.c Line: 57
+  EWL_C/src/sun_math/Double_precision/e_remainder.c Line: 62
+  EWL_C/src/sun_math/Double_precision/e_sinh.c Line: 101
+  EWL_C/src/sun_math/Double_precision/e_sqrt.c Line: 119
+  EWL_C/src/sun_math/Double_precision/e_sqrt.c Line: 124
+  EWL_C/src/sun_math/Double_precision/e_sqrt.c Line: 147
+  EWL_C/src/sun_math/Double_precision/e_sqrt.c Line: 152
+  EWL_C/src/sun_math/Double_precision/s_expm1.c Line: 166
+  EWL_C/src/sun_math/Double_precision/s_expm1.c Line: 179
+  EWL_C/src/sun_math/Double_precision/s_ilogb.c Line: 43
+  EWL_C/src/sun_math/Double_precision/s_ilogb.c Line: 48
+  EWL_C/src/sun_math/Double_precision/s_ilogb.c Line: 73
+  EWL_C/src/sun_math/Double_precision/s_ilogb.c Line: 78
+  EWL_C/src/sun_math/Double_precision/s_ilogb.c Line: 89
+  EWL_C/src/sun_math/Double_precision/s_ilogb.c Line: 94
+  EWL_C/src/sun_math/Double_precision/s_log1p.c Line: 126
+  EWL_C/src/sun_math/Double_precision/s_log1p.c Line: 136
+  EWL_C/src/sun_math/Double_precision/s_log1p.c Line: 141
+  EWL_C/src/sun_math/Double_precision/s_logb.c Line: 37
+  EWL_C/src/sun_math/Double_precision/s_logb.c Line: 42
+  EWL_C/src/sun_math/Single_precision/e_acosf.c Line: 77
+  EWL_C/src/sun_math/Single_precision/e_acosf.c Line: 82
+  EWL_C/src/sun_math/Single_precision/e_acoshf.c Line: 60
+  EWL_C/src/sun_math/Single_precision/e_acoshf.c Line: 65
+  EWL_C/src/sun_math/Single_precision/e_asinf.c Line: 80
+  EWL_C/src/sun_math/Single_precision/e_asinf.c Line: 85
+  EWL_C/src/sun_math/Single_precision/e_atan2f.c Line: 78
+  EWL_C/src/sun_math/Single_precision/e_atan2f.c Line: 83
+  EWL_C/src/sun_math/Single_precision/e_atanhf.c Line: 66
+  EWL_C/src/sun_math/Single_precision/e_atanhf.c Line: 71
+  EWL_C/src/sun_math/Single_precision/e_atanhf.c Line: 86
+  EWL_C/src/sun_math/Single_precision/e_atanhf.c Line: 91
+  EWL_C/src/sun_math/Single_precision/e_coshf.c Line: 94
+  EWL_C/src/sun_math/Single_precision/e_expf.c Line: 86
+  EWL_C/src/sun_math/Single_precision/e_expf.c Line: 97
+  EWL_C/src/sun_math/Single_precision/e_fmodf.c Line: 50
+  EWL_C/src/sun_math/Single_precision/e_lgammaf_r.c Line: 183
+  EWL_C/src/sun_math/Single_precision/e_log10f.c Line: 67
+  EWL_C/src/sun_math/Single_precision/e_log10f.c Line: 85
+  EWL_C/src/sun_math/Single_precision/e_log10f.c Line: 90
+  EWL_C/src/sun_math/Single_precision/e_logf.c Line: 71
+  EWL_C/src/sun_math/Single_precision/e_logf.c Line: 84
+  EWL_C/src/sun_math/Single_precision/e_logf.c Line: 89
+  EWL_C/src/sun_math/Single_precision/e_powf.c Line: 105
+  EWL_C/src/sun_math/Single_precision/e_powf.c Line: 110
+  EWL_C/src/sun_math/Single_precision/e_powf.c Line: 117
+  EWL_C/src/sun_math/Single_precision/e_powf.c Line: 122
+  EWL_C/src/sun_math/Single_precision/e_powf.c Line: 141
+  EWL_C/src/sun_math/Single_precision/e_powf.c Line: 231
+  EWL_C/src/sun_math/Single_precision/e_powf.c Line: 236
+  EWL_C/src/sun_math/Single_precision/e_remainderf.c Line: 61
+  EWL_C/src/sun_math/Single_precision/e_remainderf.c Line: 66
+  EWL_C/src/sun_math/Single_precision/e_sinhf.c Line: 94
+  EWL_C/src/sun_math/Single_precision/e_sqrtf.c Line: 72
+  EWL_C/src/sun_math/Single_precision/e_sqrtf.c Line: 77
+  EWL_C/src/sun_math/Single_precision/fmodf.c Line: 36
+  EWL_C/src/sun_math/Single_precision/fmodf.c Line: 41
+  EWL_C/src/sun_math/Single_precision/log2f.c Line: 73
+  EWL_C/src/sun_math/Single_precision/log2f.c Line: 80
+  EWL_C/src/sun_math/Single_precision/log2f.c Line: 85
+  EWL_C/src/sun_math/Single_precision/s_expm1f.c Line: 89
+  EWL_C/src/sun_math/Single_precision/s_expm1f.c Line: 102
+  EWL_C/src/sun_math/Single_precision/s_ilogbf.c Line: 50
+  EWL_C/src/sun_math/Single_precision/s_ilogbf.c Line: 55
+  EWL_C/src/sun_math/Single_precision/s_ilogbf.c Line: 79
+  EWL_C/src/sun_math/Single_precision/s_ilogbf.c Line: 84
+  EWL_C/src/sun_math/Single_precision/s_ilogbf.c Line: 95
+  EWL_C/src/sun_math/Single_precision/s_ilogbf.c Line: 100
+  EWL_C/src/sun_math/Single_precision/s_log1pf.c Line: 81
+  EWL_C/src/sun_math/Single_precision/s_log1pf.c Line: 92
+  EWL_C/src/sun_math/Single_precision/s_log1pf.c Line: 97
+  EWL_C/src/sun_math/Single_precision/s_logbf.c Line: 47
+  EWL_C/src/sun_math/Single_precision/s_logbf.c Line: 52
+  EWL_C/src/sun_math/ansi_fp.c Line: 1155
+  EWL_C/src/sun_math/math_sun.c Line: 94
+  EWL_C/src/sun_math/math_sun.c Line: 121
+  EWL_C/src/sun_math/math_sun.c Line: 180
+  EWL_C/src/sun_math/math_sun.c Line: 239
+  EWL_C/src/sun_math/math_sun.c Line: 301
+  EWL_C/src/sun_math/math_sun.c Line: 391
+  EWL_C/src/sun_math/math_sun.c Line: 480
+  EWL_C/src/sun_math/math_sun.c Line: 567
+  EWL_C/src/sun_math/math_sun.c Line: 625
+  EWL_C/src/sun_math/math_sun.c Line: 684
+  EWL_C/src/wcstold.c Line: 791
+  EWL_C/src/wcstold.c Line: 854
+  EWL_C/src/wcstold.c Line: 859
+  EWL_C/src/wcstold.c Line: 864
+  EWL_C/src/wprintf.c Line: 1085
+  EWL_C/src/wprintf.c Line: 1089
+  EWL_C/src/wprintf.c Line: 1093
+  EWL_C/src/wprintf.c Line: 1120
+  EWL_C/src/wprintf.c Line: 1143
+  EWL_C/src/wprintf.c Line: 1168
+  EWL_C/src/wprintformat.c Line: 1227
+  EWL_C/src/wprintformat.c Line: 1232
+  EWL_C/src/wprintformat.c Line: 1237
+  EWL_C/src/wprintformat.c Line: 1270
+  EWL_C/src/wprintformat.c Line: 1299
+  EWL_C/src/wprintformat.c Line: 1333
+
+---
+
+MISRA_EXCEPTION_RULE_14_4 :
+
+MISRA 2004 Rule 14.4: goto stmt 
+
+Used to allow "goto" statements , e.g., for code sharing. 
+
+  EWL_C/src/printformat.c Line: 1736
+  EWL_C/src/printformat.c Line: 1749
+  EWL_C/src/printformat.c Line: 2033
+  EWL_C/src/printformat.c Line: 2042
+  EWL_C/src/printformat.c Line: 2118
+  EWL_C/src/printformat.c Line: 2126
+  EWL_C/src/printformat.c Line: 2170
+  EWL_C/src/printformat.c Line: 2188
+  EWL_C/src/printformat.c Line: 2213
+  EWL_C/src/printformat.c Line: 2340
+  EWL_C/src/printformat.c Line: 2359
+  EWL_C/src/scanformat.c Line: 627
+  EWL_C/src/scanformat.c Line: 643
+  EWL_C/src/scanformat.c Line: 693
+  EWL_C/src/scanformat.c Line: 704
+  EWL_C/src/scanformat.c Line: 742
+  EWL_C/src/scanformat.c Line: 750
+  EWL_C/src/scanformat.c Line: 871
+  EWL_C/src/scanformat.c Line: 876
+  EWL_C/src/scanformat.c Line: 912
+  EWL_C/src/scanformat.c Line: 920
+  EWL_C/src/scanformat.c Line: 1060
+  EWL_C/src/scanformat.c Line: 1065
+  EWL_C/src/scanformat.c Line: 1169
+  EWL_C/src/scanformat.c Line: 1250
+  EWL_C/src/scanformat.c Line: 1275
+  EWL_C/src/scanformat.c Line: 1308
+  EWL_C/src/scanformat.c Line: 1412
+  EWL_C/src/scanformat.c Line: 1531
+  EWL_C/src/string.c Line: 148
+  EWL_C/src/string.c Line: 213
+  EWL_C/src/string.c Line: 236
+  EWL_C/src/string.c Line: 426
+  EWL_C/src/string.c Line: 466
+  EWL_C/src/string.c Line: 479
+  EWL_C/src/string.c Line: 488
+  EWL_C/src/sun_math/Double_precision/k_rem_pio2.c Line: 282
+  EWL_C/src/sun_math/Single_precision/k_rem_pio2f.c Line: 180
+  EWL_C/src/sun_math/ansi_fp.c Line: 322
+  EWL_C/src/sun_math/ansi_fp.c Line: 361
+  EWL_C/src/sun_math/ansi_fp.c Line: 368
+  EWL_C/src/sun_math/ansi_fp.c Line: 674
+  EWL_C/src/sun_math/ansi_fp.c Line: 1006
+  EWL_C/src/sun_math/ansi_fp.c Line: 1017
+  EWL_C/src/wprintf.c Line: 1320
+  EWL_C/src/wprintf.c Line: 1334
+  EWL_C/src/wprintf.c Line: 1578
+  EWL_C/src/wprintf.c Line: 1587
+  EWL_C/src/wprintf.c Line: 1640
+  EWL_C/src/wprintf.c Line: 1649
+  EWL_C/src/wprintf.c Line: 1680
+  EWL_C/src/wprintf.c Line: 1698
+  EWL_C/src/wprintf.c Line: 1763
+  EWL_C/src/wprintformat.c Line: 1616
+  EWL_C/src/wprintformat.c Line: 1632
+  EWL_C/src/wprintformat.c Line: 1921
+  EWL_C/src/wprintformat.c Line: 1931
+  EWL_C/src/wprintformat.c Line: 1991
+  EWL_C/src/wprintformat.c Line: 2001
+  EWL_C/src/wprintformat.c Line: 2029
+  EWL_C/src/wprintformat.c Line: 2049
+  EWL_C/src/wprintformat.c Line: 2131
+  EWL_C/src/wscanf.c Line: 389
+  EWL_C/src/wscanf.c Line: 416
+  EWL_C/src/wscanf.c Line: 426
+  EWL_C/src/wscanf.c Line: 456
+  EWL_C/src/wscanf.c Line: 467
+  EWL_C/src/wscanf.c Line: 535
+  EWL_C/src/wscanf.c Line: 540
+  EWL_C/src/wscanf.c Line: 574
+  EWL_C/src/wscanf.c Line: 584
+  EWL_C/src/wscanf.c Line: 665
+  EWL_C/src/wscanf.c Line: 670
+  EWL_C/src/wscanf.c Line: 729
+  EWL_C/src/wscanf.c Line: 740
+  EWL_C/src/wscanf.c Line: 763
+  EWL_C/src/wscanf.c Line: 782
+  EWL_C/src/wscanf.c Line: 841
+  EWL_C/src/wscanf.c Line: 861
+  EWL_C/src/wscanf.c Line: 933
+
+---
+
+MISRA_EXCEPTION_RULE_14_5 :
+
+MISRA 2004 Rule 14.5: continue stmt 
+
+Used to allow "continue" statements. 
+
+  EWL_C/src/printformat.c Line: 2285
+  EWL_C/src/scanformat.c Line: 635
+  EWL_C/src/scanformat.c Line: 648
+  EWL_C/src/scanformat.c Line: 655
+  EWL_C/src/scanformat.c Line: 1221
+  EWL_C/src/scanformat.c Line: 1257
+  EWL_C/src/scanformat.c Line: 1298
+  EWL_C/src/scanformat.c Line: 1312
+  EWL_C/src/scanformat.c Line: 1379
+  EWL_C/src/scanformat.c Line: 1419
+  EWL_C/src/scanformat.c Line: 1526
+  EWL_C/src/sys/uart_console_io.c Line: 101
+  EWL_C/src/wprintf.c Line: 1798
+  EWL_C/src/wprintformat.c Line: 2167
+  EWL_C/src/wscanf.c Line: 381
+  EWL_C/src/wscanf.c Line: 394
+  EWL_C/src/wscanf.c Line: 401
+  EWL_C/src/wscanf.c Line: 714
+  EWL_C/src/wscanf.c Line: 747
+  EWL_C/src/wscanf.c Line: 772
+  EWL_C/src/wscanf.c Line: 786
+  EWL_C/src/wscanf.c Line: 819
+  EWL_C/src/wscanf.c Line: 848
+  EWL_C/src/wscanf.c Line: 868
+  EWL_C/src/wscanf.c Line: 927
+
+---
+
+MISRA_EXCEPTION_RULE_14_6 :
+
+MISRA 2004 Rule 14.6: More than one break terminates loop 
+
+Used to allow more than one "break;" in a loop. 
+
+  EWL_C/src/alloc.c Line: 2412
+  EWL_C/src/char_io.c Line: 223
+  EWL_C/src/char_io.c Line: 275
+  EWL_C/src/mbstring.c Line: 539
+  EWL_C/src/mbstring.c Line: 580
+  EWL_C/src/mbstring.c Line: 588
+  EWL_C/src/mbstring.c Line: 717
+  EWL_C/src/mbstring.c Line: 761
+  EWL_C/src/mbstring.c Line: 799
+  EWL_C/src/mbstring.c Line: 850
+  EWL_C/src/sun_math/ansi_fp.c Line: 206
+  EWL_C/src/sun_math/ansi_fp.c Line: 1036
+  EWL_C/src/sys/uart_console_io.c Line: 107
+  EWL_C/src/sys/uart_console_io.c Line: 113
+
+---
+
+MISRA_EXCEPTION_RULE_14_7 :
+
+MISRA 2004 Rule 14.7: Return statement before end of function 
+
+Used to allow more than one "return;" in a function 
+
+  EWL_C/src/abort_exit.c Line: 82
+  EWL_C/src/alloc.c Line: 210
+  EWL_C/src/alloc.c Line: 245
+  EWL_C/src/alloc.c Line: 274
+  EWL_C/src/alloc.c Line: 408
+  EWL_C/src/alloc.c Line: 467
+  EWL_C/src/alloc.c Line: 2072
+  EWL_C/src/alloc.c Line: 2256
+  EWL_C/src/alloc.c Line: 2267
+  EWL_C/src/alloc.c Line: 2393
+  EWL_C/src/alloc.c Line: 2408
+  EWL_C/src/alloc.c Line: 2434
+  EWL_C/src/alloc.c Line: 2451
+  EWL_C/src/alloc.c Line: 2618
+  EWL_C/src/alloc.c Line: 2750
+  EWL_C/src/alloc.c Line: 2785
+  EWL_C/src/alloc.c Line: 2789
+  EWL_C/src/alloc.c Line: 2808
+  EWL_C/src/alloc.c Line: 2852
+  EWL_C/src/alloc.c Line: 2886
+  EWL_C/src/alloc.c Line: 2969
+  EWL_C/src/alloc.c Line: 2972
+  EWL_C/src/alloc.c Line: 2978
+  EWL_C/src/alloc.c Line: 2983
+  EWL_C/src/alloc.c Line: 3117
+  EWL_C/src/alloc.c Line: 3125
+  EWL_C/src/arith.c Line: 67
+  EWL_C/src/arith.c Line: 101
+  EWL_C/src/arith.c Line: 113
+  EWL_C/src/arith.c Line: 185
+  EWL_C/src/arith.c Line: 190
+  EWL_C/src/arith.c Line: 206
+  EWL_C/src/arith.c Line: 211
+  EWL_C/src/arith.c Line: 228
+  EWL_C/src/arith.c Line: 233
+  EWL_C/src/arith.c Line: 259
+  EWL_C/src/arith.c Line: 280
+  EWL_C/src/arith.c Line: 303
+  EWL_C/src/bsearch.c Line: 40
+  EWL_C/src/bsearch.c Line: 49
+  EWL_C/src/bsearch.c Line: 54
+  EWL_C/src/bsearch.c Line: 67
+  EWL_C/src/bsearch.c Line: 94
+  EWL_C/src/bsearch.c Line: 99
+  EWL_C/src/bsearch.c Line: 108
+  EWL_C/src/bsearch.c Line: 113
+  EWL_C/src/bsearch.c Line: 127
+  EWL_C/src/buffer_io.c Line: 166
+  EWL_C/src/buffer_io.c Line: 229
+  EWL_C/src/buffer_io.c Line: 255
+  EWL_C/src/buffer_io.c Line: 260
+  EWL_C/src/buffer_io.c Line: 269
+  EWL_C/src/buffer_io.c Line: 296
+  EWL_C/src/buffer_io.c Line: 306
+  EWL_C/src/buffer_io.c Line: 313
+  EWL_C/src/char_io.c Line: 58
+  EWL_C/src/char_io.c Line: 66
+  EWL_C/src/char_io.c Line: 77
+  EWL_C/src/char_io.c Line: 93
+  EWL_C/src/char_io.c Line: 185
+  EWL_C/src/char_io.c Line: 200
+  EWL_C/src/char_io.c Line: 232
+  EWL_C/src/char_io.c Line: 269
+  EWL_C/src/char_io.c Line: 284
+  EWL_C/src/char_io.c Line: 331
+  EWL_C/src/char_io.c Line: 337
+  EWL_C/src/char_io.c Line: 360
+  EWL_C/src/char_io.c Line: 375
+  EWL_C/src/char_io.c Line: 390
+  EWL_C/src/char_io.c Line: 403
+  EWL_C/src/char_io.c Line: 411
+  EWL_C/src/char_io.c Line: 423
+  EWL_C/src/coldfire/fenv_cf.c Line: 231
+  EWL_C/src/coldfire/uart_console_io_cf.c Line: 64
+  EWL_C/src/coldfire/uart_console_io_cf.c Line: 107
+  EWL_C/src/coldfire/uart_console_io_cf.c Line: 114
+  EWL_C/src/direct_io.c Line: 82
+  EWL_C/src/direct_io.c Line: 98
+  EWL_C/src/direct_io.c Line: 106
+  EWL_C/src/direct_io.c Line: 229
+  EWL_C/src/direct_io.c Line: 250
+  EWL_C/src/direct_io.c Line: 264
+  EWL_C/src/file_io.c Line: 165
+  EWL_C/src/file_io.c Line: 183
+  EWL_C/src/file_io.c Line: 187
+  EWL_C/src/file_io.c Line: 203
+  EWL_C/src/file_io.c Line: 209
+  EWL_C/src/file_io.c Line: 212
+  EWL_C/src/file_io.c Line: 228
+  EWL_C/src/file_io.c Line: 233
+  EWL_C/src/file_io.c Line: 238
+  EWL_C/src/file_io.c Line: 252
+  EWL_C/src/file_io.c Line: 271
+  EWL_C/src/file_io.c Line: 309
+  EWL_C/src/file_io.c Line: 327
+  EWL_C/src/file_io.c Line: 335
+  EWL_C/src/file_io.c Line: 347
+  EWL_C/src/file_io.c Line: 368
+  EWL_C/src/file_io.c Line: 376
+  EWL_C/src/file_io.c Line: 386
+  EWL_C/src/file_io.c Line: 394
+  EWL_C/src/file_io.c Line: 406
+  EWL_C/src/file_io.c Line: 432
+  EWL_C/src/file_io.c Line: 460
+  EWL_C/src/file_io.c Line: 468
+  EWL_C/src/file_io.c Line: 589
+  EWL_C/src/file_io.c Line: 593
+  EWL_C/src/file_io.c Line: 597
+  EWL_C/src/file_pos.c Line: 53
+  EWL_C/src/file_pos.c Line: 58
+  EWL_C/src/file_pos.c Line: 180
+  EWL_C/src/file_pos.c Line: 189
+  EWL_C/src/file_pos.c Line: 232
+  EWL_C/src/locale.c Line: 89
+  EWL_C/src/locale.c Line: 95
+  EWL_C/src/locale.c Line: 102
+  EWL_C/src/math_api.c Line: 86
+  EWL_C/src/math_api.c Line: 89
+  EWL_C/src/math_api.c Line: 92
+  EWL_C/src/math_api.c Line: 95
+  EWL_C/src/math_api.c Line: 98
+  EWL_C/src/math_api.c Line: 127
+  EWL_C/src/math_api.c Line: 130
+  EWL_C/src/math_api.c Line: 135
+  EWL_C/src/math_api.c Line: 138
+  EWL_C/src/math_api.c Line: 165
+  EWL_C/src/math_api.c Line: 168
+  EWL_C/src/math_api.c Line: 175
+  EWL_C/src/math_api.c Line: 178
+  EWL_C/src/math_double.c Line: 66
+  EWL_C/src/math_double.c Line: 70
+  EWL_C/src/math_double.c Line: 78
+  EWL_C/src/math_double.c Line: 82
+  EWL_C/src/math_double.c Line: 143
+  EWL_C/src/math_double.c Line: 170
+  EWL_C/src/math_double.c Line: 255
+  EWL_C/src/math_double.c Line: 259
+  EWL_C/src/math_double.c Line: 263
+  EWL_C/src/math_float.c Line: 59
+  EWL_C/src/math_float.c Line: 93
+  EWL_C/src/math_float.c Line: 212
+  EWL_C/src/math_float.c Line: 218
+  EWL_C/src/math_float.c Line: 223
+  EWL_C/src/math_float.c Line: 328
+  EWL_C/src/math_float.c Line: 331
+  EWL_C/src/math_float.c Line: 341
+  EWL_C/src/math_float.c Line: 348
+  EWL_C/src/math_float.c Line: 354
+  EWL_C/src/math_fma.c Line: 66
+  EWL_C/src/math_fma.c Line: 78
+  EWL_C/src/math_fma.c Line: 83
+  EWL_C/src/math_fma.c Line: 89
+  EWL_C/src/math_fma.c Line: 118
+  EWL_C/src/math_fma.c Line: 124
+  EWL_C/src/math_fma.c Line: 132
+  EWL_C/src/math_fma.c Line: 137
+  EWL_C/src/math_fma.c Line: 149
+  EWL_C/src/math_fma.c Line: 153
+  EWL_C/src/math_fma.c Line: 161
+  EWL_C/src/math_fma.c Line: 167
+  EWL_C/src/math_fma.c Line: 170
+  EWL_C/src/math_fma.c Line: 176
+  EWL_C/src/math_fma.c Line: 179
+  EWL_C/src/math_fma.c Line: 192
+  EWL_C/src/math_fma.c Line: 197
+  EWL_C/src/math_fma.c Line: 208
+  EWL_C/src/math_fma.c Line: 213
+  EWL_C/src/math_fma.c Line: 220
+  EWL_C/src/math_fma.c Line: 229
+  EWL_C/src/math_fma.c Line: 294
+  EWL_C/src/math_fma.c Line: 394
+  EWL_C/src/math_fma.c Line: 432
+  EWL_C/src/math_fma.c Line: 440
+  EWL_C/src/math_fma.c Line: 518
+  EWL_C/src/math_fma.c Line: 530
+  EWL_C/src/math_fma.c Line: 535
+  EWL_C/src/math_fma.c Line: 541
+  EWL_C/src/math_fma.c Line: 570
+  EWL_C/src/math_fma.c Line: 576
+  EWL_C/src/math_fma.c Line: 584
+  EWL_C/src/math_fma.c Line: 589
+  EWL_C/src/math_fma.c Line: 600
+  EWL_C/src/math_fma.c Line: 603
+  EWL_C/src/math_fma.c Line: 610
+  EWL_C/src/math_fma.c Line: 616
+  EWL_C/src/math_fma.c Line: 619
+  EWL_C/src/math_fma.c Line: 625
+  EWL_C/src/math_fma.c Line: 628
+  EWL_C/src/math_fma.c Line: 641
+  EWL_C/src/math_fma.c Line: 646
+  EWL_C/src/math_fma.c Line: 657
+  EWL_C/src/math_fma.c Line: 662
+  EWL_C/src/math_fma.c Line: 669
+  EWL_C/src/math_fma.c Line: 678
+  EWL_C/src/math_fma.c Line: 728
+  EWL_C/src/math_fma.c Line: 782
+  EWL_C/src/math_fma.c Line: 813
+  EWL_C/src/math_fma.c Line: 822
+  EWL_C/src/math_longdouble.c Line: 195
+  EWL_C/src/math_longdouble.c Line: 198
+  EWL_C/src/math_longdouble.c Line: 208
+  EWL_C/src/math_longdouble.c Line: 217
+  EWL_C/src/math_longdouble.c Line: 224
+  EWL_C/src/mbstring.c Line: 53
+  EWL_C/src/mbstring.c Line: 56
+  EWL_C/src/mbstring.c Line: 67
+  EWL_C/src/mbstring.c Line: 72
+  EWL_C/src/mbstring.c Line: 77
+  EWL_C/src/mbstring.c Line: 90
+  EWL_C/src/mbstring.c Line: 96
+  EWL_C/src/mbstring.c Line: 101
+  EWL_C/src/mbstring.c Line: 117
+  EWL_C/src/mbstring.c Line: 122
+  EWL_C/src/mbstring.c Line: 128
+  EWL_C/src/mbstring.c Line: 183
+  EWL_C/src/mbstring.c Line: 211
+  EWL_C/src/mbstring.c Line: 343
+  EWL_C/src/mbstring.c Line: 348
+  EWL_C/src/mbstring.c Line: 357
+  EWL_C/src/mbstring.c Line: 367
+  EWL_C/src/mbstring.c Line: 372
+  EWL_C/src/mbstring.c Line: 398
+  EWL_C/src/mbstring.c Line: 412
+  EWL_C/src/mbstring.c Line: 426
+  EWL_C/src/mbstring.c Line: 454
+  EWL_C/src/mbstring.c Line: 481
+  EWL_C/src/mbstring.c Line: 499
+  EWL_C/src/mbstring.c Line: 524
+  EWL_C/src/mbstring.c Line: 561
+  EWL_C/src/mbstring.c Line: 567
+  EWL_C/src/mbstring.c Line: 625
+  EWL_C/src/mbstring.c Line: 643
+  EWL_C/src/mbstring.c Line: 667
+  EWL_C/src/mbstring.c Line: 695
+  EWL_C/src/mbstring.c Line: 740
+  EWL_C/src/mbstring.c Line: 780
+  EWL_C/src/mbstring.c Line: 823
+  EWL_C/src/mbstring.c Line: 829
+  EWL_C/src/mbstring.c Line: 864
+  EWL_C/src/mbstring.c Line: 871
+  EWL_C/src/mbstring.c Line: 874
+  EWL_C/src/mem.c Line: 117
+  EWL_C/src/mem.c Line: 193
+  EWL_C/src/mem.c Line: 203
+  EWL_C/src/mem.c Line: 224
+  EWL_C/src/mem.c Line: 236
+  EWL_C/src/mem.c Line: 258
+  EWL_C/src/mem.c Line: 261
+  EWL_C/src/mem.c Line: 275
+  EWL_C/src/mem.c Line: 278
+  EWL_C/src/mem.c Line: 296
+  EWL_C/src/mem.c Line: 304
+  EWL_C/src/mem.c Line: 317
+  EWL_C/src/mem.c Line: 325
+  EWL_C/src/mem_funcs.c Line: 94
+  EWL_C/src/mem_funcs.c Line: 138
+  EWL_C/src/pa/fenv.ppc.c Line: 77
+  EWL_C/src/pa/fenv.ppc.c Line: 222
+  EWL_C/src/pa/fenv.ppc.c Line: 370
+  EWL_C/src/pa/fenv.ppc.c Line: 373
+  EWL_C/src/pa/fenv.ppc.c Line: 728
+  EWL_C/src/pa/fenv.ppc.c Line: 732
+  EWL_C/src/printf.c Line: 102
+  EWL_C/src/printf.c Line: 132
+  EWL_C/src/printf.c Line: 139
+  EWL_C/src/printf.c Line: 195
+  EWL_C/src/printf.c Line: 309
+  EWL_C/src/printf.c Line: 328
+  EWL_C/src/printf.c Line: 335
+  EWL_C/src/printf.c Line: 357
+  EWL_C/src/printf.c Line: 385
+  EWL_C/src/printf.c Line: 392
+  EWL_C/src/printf.c Line: 445
+  EWL_C/src/printf.c Line: 482
+  EWL_C/src/printformat.c Line: 262
+  EWL_C/src/printformat.c Line: 363
+  EWL_C/src/printformat.c Line: 510
+  EWL_C/src/printformat.c Line: 786
+  EWL_C/src/printformat.c Line: 874
+  EWL_C/src/printformat.c Line: 933
+  EWL_C/src/printformat.c Line: 1009
+  EWL_C/src/printformat.c Line: 1085
+  EWL_C/src/printformat.c Line: 1143
+  EWL_C/src/printformat.c Line: 1219
+  EWL_C/src/printformat.c Line: 1290
+  EWL_C/src/printformat.c Line: 1345
+  EWL_C/src/printformat.c Line: 1364
+  EWL_C/src/printformat.c Line: 1551
+  EWL_C/src/printformat.c Line: 1556
+  EWL_C/src/printformat.c Line: 1598
+  EWL_C/src/printformat.c Line: 1605
+  EWL_C/src/printformat.c Line: 1630
+  EWL_C/src/printformat.c Line: 1680
+  EWL_C/src/printformat.c Line: 1701
+  EWL_C/src/printformat.c Line: 1779
+  EWL_C/src/printformat.c Line: 1834
+  EWL_C/src/printformat.c Line: 1935
+  EWL_C/src/printformat.c Line: 1947
+  EWL_C/src/printformat.c Line: 2205
+  EWL_C/src/printformat.c Line: 2226
+  EWL_C/src/printformat.c Line: 2261
+  EWL_C/src/printformat.c Line: 2383
+  EWL_C/src/printformat.c Line: 2387
+  EWL_C/src/printformat.c Line: 2398
+  EWL_C/src/printformat.c Line: 2408
+  EWL_C/src/printformat.c Line: 2412
+  EWL_C/src/printformat.c Line: 2421
+  EWL_C/src/printformat.c Line: 2431
+  EWL_C/src/printformat.c Line: 2439
+  EWL_C/src/printformat.c Line: 2457
+  EWL_C/src/printformat.c Line: 2461
+  EWL_C/src/qsort.c Line: 117
+  EWL_C/src/qsort.c Line: 135
+  EWL_C/src/qsort.c Line: 179
+  EWL_C/src/qsort.c Line: 184
+  EWL_C/src/qsort.c Line: 201
+  EWL_C/src/scanf.c Line: 51
+  EWL_C/src/scanf.c Line: 56
+  EWL_C/src/scanf.c Line: 59
+  EWL_C/src/scanf.c Line: 65
+  EWL_C/src/scanf.c Line: 70
+  EWL_C/src/scanf.c Line: 84
+  EWL_C/src/scanf.c Line: 104
+  EWL_C/src/scanf.c Line: 108
+  EWL_C/src/scanf.c Line: 118
+  EWL_C/src/scanf.c Line: 122
+  EWL_C/src/scanf.c Line: 126
+  EWL_C/src/scanf.c Line: 149
+  EWL_C/src/scanf.c Line: 156
+  EWL_C/src/scanf.c Line: 167
+  EWL_C/src/scanf.c Line: 174
+  EWL_C/src/scanf.c Line: 206
+  EWL_C/src/scanf.c Line: 213
+  EWL_C/src/scanf.c Line: 225
+  EWL_C/src/scanf.c Line: 232
+  EWL_C/src/scanf.c Line: 253
+  EWL_C/src/scanf.c Line: 275
+  EWL_C/src/scanf.c Line: 289
+  EWL_C/src/scanf.c Line: 310
+  EWL_C/src/scanf.c Line: 317
+  EWL_C/src/scanf.c Line: 329
+  EWL_C/src/scanf.c Line: 335
+  EWL_C/src/scanf.c Line: 379
+  EWL_C/src/scanf.c Line: 388
+  EWL_C/src/scanf.c Line: 411
+  EWL_C/src/scanf.c Line: 418
+  EWL_C/src/scanf.c Line: 438
+  EWL_C/src/scanf.c Line: 450
+  EWL_C/src/scanf.c Line: 469
+  EWL_C/src/scanf.c Line: 484
+  EWL_C/src/scanformat.c Line: 164
+  EWL_C/src/scanformat.c Line: 188
+  EWL_C/src/scanformat.c Line: 1541
+  EWL_C/src/scanformat.c Line: 1550
+  EWL_C/src/signal.c Line: 36
+  EWL_C/src/signal.c Line: 56
+  EWL_C/src/signal.c Line: 73
+  EWL_C/src/string.c Line: 155
+  EWL_C/src/string.c Line: 161
+  EWL_C/src/string.c Line: 246
+  EWL_C/src/string.c Line: 252
+  EWL_C/src/string.c Line: 415
+  EWL_C/src/string.c Line: 432
+  EWL_C/src/string.c Line: 440
+  EWL_C/src/string.c Line: 444
+  EWL_C/src/string.c Line: 497
+  EWL_C/src/string.c Line: 502
+  EWL_C/src/string.c Line: 510
+  EWL_C/src/string.c Line: 514
+  EWL_C/src/string.c Line: 529
+  EWL_C/src/string.c Line: 555
+  EWL_C/src/string.c Line: 572
+  EWL_C/src/string.c Line: 596
+  EWL_C/src/string.c Line: 612
+  EWL_C/src/string.c Line: 681
+  EWL_C/src/string.c Line: 703
+  EWL_C/src/string.c Line: 784
+  EWL_C/src/string.c Line: 805
+  EWL_C/src/string.c Line: 841
+  EWL_C/src/string.c Line: 862
+  EWL_C/src/string.c Line: 1013
+  EWL_C/src/string.c Line: 1055
+  EWL_C/src/string.c Line: 1090
+  EWL_C/src/string.c Line: 1118
+  EWL_C/src/string.c Line: 1160
+  EWL_C/src/string.c Line: 1196
+  EWL_C/src/string.c Line: 1211
+  EWL_C/src/string.c Line: 1228
+  EWL_C/src/string.c Line: 1243
+  EWL_C/src/string.c Line: 1261
+  EWL_C/src/string.c Line: 1281
+  EWL_C/src/string.c Line: 1288
+  EWL_C/src/string.c Line: 1302
+  EWL_C/src/string.c Line: 1310
+  EWL_C/src/string.c Line: 1316
+  EWL_C/src/string.c Line: 1331
+  EWL_C/src/string.c Line: 1339
+  EWL_C/src/string.c Line: 1346
+  EWL_C/src/string.c Line: 1361
+  EWL_C/src/string.c Line: 1369
+  EWL_C/src/string.c Line: 1377
+  EWL_C/src/string.c Line: 1383
+  EWL_C/src/string.c Line: 1409
+  EWL_C/src/string.c Line: 1429
+  EWL_C/src/strtold.c Line: 357
+  EWL_C/src/strtold.c Line: 405
+  EWL_C/src/strtold.c Line: 740
+  EWL_C/src/strtold.c Line: 750
+  EWL_C/src/strtold.c Line: 754
+  EWL_C/src/strtold.c Line: 757
+  EWL_C/src/strtold.c Line: 804
+  EWL_C/src/strtold.c Line: 837
+  EWL_C/src/strtold.c Line: 902
+  EWL_C/src/strtold.c Line: 949
+  EWL_C/src/sun_math/Double_precision/e_acos.c Line: 79
+  EWL_C/src/sun_math/Double_precision/e_acos.c Line: 82
+  EWL_C/src/sun_math/Double_precision/e_acos.c Line: 105
+  EWL_C/src/sun_math/Double_precision/e_acos.c Line: 111
+  EWL_C/src/sun_math/Double_precision/e_acos.c Line: 118
+  EWL_C/src/sun_math/Double_precision/e_acos.c Line: 127
+  EWL_C/src/sun_math/Double_precision/e_acos.c Line: 139
+  EWL_C/src/sun_math/Double_precision/e_acosh.c Line: 69
+  EWL_C/src/sun_math/Double_precision/e_acosh.c Line: 73
+  EWL_C/src/sun_math/Double_precision/e_acosh.c Line: 76
+  EWL_C/src/sun_math/Double_precision/e_acosh.c Line: 80
+  EWL_C/src/sun_math/Double_precision/e_acosh.c Line: 84
+  EWL_C/src/sun_math/Double_precision/e_acosh.c Line: 88
+  EWL_C/src/sun_math/Double_precision/e_asin.c Line: 89
+  EWL_C/src/sun_math/Double_precision/e_asin.c Line: 110
+  EWL_C/src/sun_math/Double_precision/e_asin.c Line: 119
+  EWL_C/src/sun_math/Double_precision/e_asin.c Line: 130
+  EWL_C/src/sun_math/Double_precision/e_asin.c Line: 153
+  EWL_C/src/sun_math/Double_precision/e_asin.c Line: 156
+  EWL_C/src/sun_math/Double_precision/e_atan2.c Line: 81
+  EWL_C/src/sun_math/Double_precision/e_atan2.c Line: 86
+  EWL_C/src/sun_math/Double_precision/e_atan2.c Line: 114
+  EWL_C/src/sun_math/Double_precision/e_atan2.c Line: 117
+  EWL_C/src/sun_math/Double_precision/e_atan2.c Line: 120
+  EWL_C/src/sun_math/Double_precision/e_atan2.c Line: 128
+  EWL_C/src/sun_math/Double_precision/e_atan2.c Line: 137
+  EWL_C/src/sun_math/Double_precision/e_atan2.c Line: 140
+  EWL_C/src/sun_math/Double_precision/e_atan2.c Line: 143
+  EWL_C/src/sun_math/Double_precision/e_atan2.c Line: 146
+  EWL_C/src/sun_math/Double_precision/e_atan2.c Line: 153
+  EWL_C/src/sun_math/Double_precision/e_atan2.c Line: 156
+  EWL_C/src/sun_math/Double_precision/e_atan2.c Line: 159
+  EWL_C/src/sun_math/Double_precision/e_atan2.c Line: 162
+  EWL_C/src/sun_math/Double_precision/e_atan2.c Line: 170
+  EWL_C/src/sun_math/Double_precision/e_atan2.c Line: 186
+  EWL_C/src/sun_math/Double_precision/e_atan2.c Line: 191
+  EWL_C/src/sun_math/Double_precision/e_atan2.c Line: 194
+  EWL_C/src/sun_math/Double_precision/e_atan2.c Line: 197
+  EWL_C/src/sun_math/Double_precision/e_atanh.c Line: 80
+  EWL_C/src/sun_math/Double_precision/e_atanh.c Line: 96
+  EWL_C/src/sun_math/Double_precision/e_atanh.c Line: 100
+  EWL_C/src/sun_math/Double_precision/e_atanh.c Line: 111
+  EWL_C/src/sun_math/Double_precision/e_atanh.c Line: 114
+  EWL_C/src/sun_math/Double_precision/e_cosh.c Line: 62
+  EWL_C/src/sun_math/Double_precision/e_cosh.c Line: 71
+  EWL_C/src/sun_math/Double_precision/e_cosh.c Line: 74
+  EWL_C/src/sun_math/Double_precision/e_cosh.c Line: 81
+  EWL_C/src/sun_math/Double_precision/e_cosh.c Line: 87
+  EWL_C/src/sun_math/Double_precision/e_cosh.c Line: 99
+  EWL_C/src/sun_math/Double_precision/e_exp.c Line: 123
+  EWL_C/src/sun_math/Double_precision/e_exp.c Line: 127
+  EWL_C/src/sun_math/Double_precision/e_exp.c Line: 139
+  EWL_C/src/sun_math/Double_precision/e_exp.c Line: 150
+  EWL_C/src/sun_math/Double_precision/e_exp.c Line: 170
+  EWL_C/src/sun_math/Double_precision/e_exp.c Line: 184
+  EWL_C/src/sun_math/Double_precision/e_exp.c Line: 193
+  EWL_C/src/sun_math/Double_precision/e_exp.c Line: 197
+  EWL_C/src/sun_math/Double_precision/e_fmod.c Line: 71
+  EWL_C/src/sun_math/Double_precision/e_fmod.c Line: 76
+  EWL_C/src/sun_math/Double_precision/e_fmod.c Line: 80
+  EWL_C/src/sun_math/Double_precision/e_fmod.c Line: 155
+  EWL_C/src/sun_math/Double_precision/e_fmod.c Line: 168
+  EWL_C/src/sun_math/Double_precision/e_hypot.c Line: 73
+  EWL_C/src/sun_math/Double_precision/e_hypot.c Line: 82
+  EWL_C/src/sun_math/Double_precision/e_hypot.c Line: 93
+  EWL_C/src/sun_math/Double_precision/e_hypot.c Line: 130
+  EWL_C/src/sun_math/Double_precision/e_hypot.c Line: 133
+  EWL_C/src/sun_math/Double_precision/e_lgamma_r.c Line: 175
+  EWL_C/src/sun_math/Double_precision/e_lgamma_r.c Line: 252
+  EWL_C/src/sun_math/Double_precision/e_lgamma_r.c Line: 256
+  EWL_C/src/sun_math/Double_precision/e_lgamma_r.c Line: 262
+  EWL_C/src/sun_math/Double_precision/e_lgamma_r.c Line: 265
+  EWL_C/src/sun_math/Double_precision/e_lgamma_r.c Line: 271
+  EWL_C/src/sun_math/Double_precision/e_lgamma_r.c Line: 277
+  EWL_C/src/sun_math/Double_precision/e_log.c Line: 112
+  EWL_C/src/sun_math/Double_precision/e_log.c Line: 134
+  EWL_C/src/sun_math/Double_precision/e_log.c Line: 141
+  EWL_C/src/sun_math/Double_precision/e_log.c Line: 157
+  EWL_C/src/sun_math/Double_precision/e_log.c Line: 161
+  EWL_C/src/sun_math/Double_precision/e_log.c Line: 167
+  EWL_C/src/sun_math/Double_precision/e_log.c Line: 171
+  EWL_C/src/sun_math/Double_precision/e_log.c Line: 189
+  EWL_C/src/sun_math/Double_precision/e_log.c Line: 192
+  EWL_C/src/sun_math/Double_precision/e_log.c Line: 197
+  EWL_C/src/sun_math/Double_precision/e_log.c Line: 200
+  EWL_C/src/sun_math/Double_precision/e_log10.c Line: 94
+  EWL_C/src/sun_math/Double_precision/e_log10.c Line: 116
+  EWL_C/src/sun_math/Double_precision/e_log10.c Line: 123
+  EWL_C/src/sun_math/Double_precision/e_pow.c Line: 117
+  EWL_C/src/sun_math/Double_precision/e_pow.c Line: 123
+  EWL_C/src/sun_math/Double_precision/e_pow.c Line: 161
+  EWL_C/src/sun_math/Double_precision/e_pow.c Line: 181
+  EWL_C/src/sun_math/Double_precision/e_pow.c Line: 213
+  EWL_C/src/sun_math/Double_precision/e_pow.c Line: 216
+  EWL_C/src/sun_math/Double_precision/e_pow.c Line: 219
+  EWL_C/src/sun_math/Double_precision/e_pow.c Line: 226
+  EWL_C/src/sun_math/Double_precision/e_pow.c Line: 229
+  EWL_C/src/sun_math/Double_precision/e_pow.c Line: 234
+  EWL_C/src/sun_math/Double_precision/e_pow.c Line: 239
+  EWL_C/src/sun_math/Double_precision/e_pow.c Line: 258
+  EWL_C/src/sun_math/Double_precision/e_pow.c Line: 286
+  EWL_C/src/sun_math/Double_precision/e_pow.c Line: 294
+  EWL_C/src/sun_math/Double_precision/e_pow.c Line: 298
+  EWL_C/src/sun_math/Double_precision/e_pow.c Line: 304
+  EWL_C/src/sun_math/Double_precision/e_pow.c Line: 308
+  EWL_C/src/sun_math/Double_precision/e_pow.c Line: 387
+  EWL_C/src/sun_math/Double_precision/e_pow.c Line: 391
+  EWL_C/src/sun_math/Double_precision/e_pow.c Line: 398
+  EWL_C/src/sun_math/Double_precision/e_pow.c Line: 402
+  EWL_C/src/sun_math/Double_precision/e_rem_pio2.c Line: 101
+  EWL_C/src/sun_math/Double_precision/e_rem_pio2.c Line: 115
+  EWL_C/src/sun_math/Double_precision/e_rem_pio2.c Line: 127
+  EWL_C/src/sun_math/Double_precision/e_rem_pio2.c Line: 167
+  EWL_C/src/sun_math/Double_precision/e_rem_pio2.c Line: 170
+  EWL_C/src/sun_math/Double_precision/e_rem_pio2.c Line: 179
+  EWL_C/src/sun_math/Double_precision/e_rem_pio2.c Line: 200
+  EWL_C/src/sun_math/Double_precision/e_remainder.c Line: 68
+  EWL_C/src/sun_math/Double_precision/e_remainder.c Line: 74
+  EWL_C/src/sun_math/Double_precision/e_remainder.c Line: 81
+  EWL_C/src/sun_math/Double_precision/e_sinh.c Line: 59
+  EWL_C/src/sun_math/Double_precision/e_sinh.c Line: 69
+  EWL_C/src/sun_math/Double_precision/e_sinh.c Line: 75
+  EWL_C/src/sun_math/Double_precision/e_sinh.c Line: 78
+  EWL_C/src/sun_math/Double_precision/e_sinh.c Line: 84
+  EWL_C/src/sun_math/Double_precision/e_sinh.c Line: 95
+  EWL_C/src/sun_math/Double_precision/e_sqrt.c Line: 135
+  EWL_C/src/sun_math/Double_precision/e_sqrt.c Line: 143
+  EWL_C/src/sun_math/Double_precision/e_sqrt.c Line: 163
+  EWL_C/src/sun_math/Double_precision/fminmaxdim.c Line: 16
+  EWL_C/src/sun_math/Double_precision/fminmaxdim.c Line: 20
+  EWL_C/src/sun_math/Double_precision/fminmaxdim.c Line: 26
+  EWL_C/src/sun_math/Double_precision/fminmaxdim.c Line: 30
+  EWL_C/src/sun_math/Double_precision/fminmaxdim.c Line: 38
+  EWL_C/src/sun_math/Double_precision/fminmaxdim.c Line: 42
+  EWL_C/src/sun_math/Double_precision/fminmaxdim.c Line: 48
+  EWL_C/src/sun_math/Double_precision/fminmaxdim.c Line: 52
+  EWL_C/src/sun_math/Double_precision/fminmaxdim.c Line: 61
+  EWL_C/src/sun_math/Double_precision/fminmaxdim.c Line: 65
+  EWL_C/src/sun_math/Double_precision/fminmaxdim.c Line: 71
+  EWL_C/src/sun_math/Double_precision/fminmaxdim.c Line: 75
+  EWL_C/src/sun_math/Double_precision/k_cos.c Line: 78
+  EWL_C/src/sun_math/Double_precision/k_cos.c Line: 85
+  EWL_C/src/sun_math/Double_precision/k_cos.c Line: 96
+  EWL_C/src/sun_math/Double_precision/k_sin.c Line: 70
+  EWL_C/src/sun_math/Double_precision/k_sin.c Line: 77
+  EWL_C/src/sun_math/Double_precision/k_sin.c Line: 81
+  EWL_C/src/sun_math/Double_precision/k_tan.c Line: 91
+  EWL_C/src/sun_math/Double_precision/k_tan.c Line: 94
+  EWL_C/src/sun_math/Double_precision/k_tan.c Line: 120
+  EWL_C/src/sun_math/Double_precision/k_tan.c Line: 124
+  EWL_C/src/sun_math/Double_precision/k_tan.c Line: 136
+  EWL_C/src/sun_math/Double_precision/s_asinh.c Line: 52
+  EWL_C/src/sun_math/Double_precision/s_asinh.c Line: 57
+  EWL_C/src/sun_math/Double_precision/s_asinh.c Line: 72
+  EWL_C/src/sun_math/Double_precision/s_asinh.c Line: 75
+  EWL_C/src/sun_math/Double_precision/s_atan.c Line: 100
+  EWL_C/src/sun_math/Double_precision/s_atan.c Line: 104
+  EWL_C/src/sun_math/Double_precision/s_atan.c Line: 107
+  EWL_C/src/sun_math/Double_precision/s_atan.c Line: 113
+  EWL_C/src/sun_math/Double_precision/s_atan.c Line: 141
+  EWL_C/src/sun_math/Double_precision/s_atan.c Line: 145
+  EWL_C/src/sun_math/Double_precision/s_cbrt.c Line: 57
+  EWL_C/src/sun_math/Double_precision/s_cbrt.c Line: 61
+  EWL_C/src/sun_math/Double_precision/s_ceil.c Line: 58
+  EWL_C/src/sun_math/Double_precision/s_ceil.c Line: 73
+  EWL_C/src/sun_math/Double_precision/s_ceil.c Line: 77
+  EWL_C/src/sun_math/Double_precision/s_ceil.c Line: 83
+  EWL_C/src/sun_math/Double_precision/s_cos.c Line: 66
+  EWL_C/src/sun_math/Double_precision/s_cos.c Line: 71
+  EWL_C/src/sun_math/Double_precision/s_cos.c Line: 82
+  EWL_C/src/sun_math/Double_precision/s_cos.c Line: 85
+  EWL_C/src/sun_math/Double_precision/s_cos.c Line: 92
+  EWL_C/src/sun_math/Double_precision/s_cos.c Line: 95
+  EWL_C/src/sun_math/Double_precision/s_cos.c Line: 102
+  EWL_C/src/sun_math/Double_precision/s_cos.c Line: 105
+  EWL_C/src/sun_math/Double_precision/s_cos.c Line: 112
+  EWL_C/src/sun_math/Double_precision/s_cos.c Line: 115
+  EWL_C/src/sun_math/Double_precision/s_erf.c Line: 210
+  EWL_C/src/sun_math/Double_precision/s_erf.c Line: 213
+  EWL_C/src/sun_math/Double_precision/s_erf.c Line: 221
+  EWL_C/src/sun_math/Double_precision/s_erf.c Line: 224
+  EWL_C/src/sun_math/Double_precision/s_erf.c Line: 231
+  EWL_C/src/sun_math/Double_precision/s_erf.c Line: 239
+  EWL_C/src/sun_math/Double_precision/s_erf.c Line: 242
+  EWL_C/src/sun_math/Double_precision/s_erf.c Line: 248
+  EWL_C/src/sun_math/Double_precision/s_erf.c Line: 251
+  EWL_C/src/sun_math/Double_precision/s_erf.c Line: 273
+  EWL_C/src/sun_math/Double_precision/s_erf.c Line: 276
+  EWL_C/src/sun_math/Double_precision/s_erf.c Line: 298
+  EWL_C/src/sun_math/Double_precision/s_erf.c Line: 301
+  EWL_C/src/sun_math/Double_precision/s_erf.c Line: 308
+  EWL_C/src/sun_math/Double_precision/s_erf.c Line: 316
+  EWL_C/src/sun_math/Double_precision/s_erf.c Line: 321
+  EWL_C/src/sun_math/Double_precision/s_erf.c Line: 331
+  EWL_C/src/sun_math/Double_precision/s_erf.c Line: 335
+  EWL_C/src/sun_math/Double_precision/s_erf.c Line: 349
+  EWL_C/src/sun_math/Double_precision/s_erf.c Line: 362
+  EWL_C/src/sun_math/Double_precision/s_erf.c Line: 365
+  EWL_C/src/sun_math/Double_precision/s_erf.c Line: 376
+  EWL_C/src/sun_math/Double_precision/s_erf.c Line: 379
+  EWL_C/src/sun_math/Double_precision/s_expm1.c Line: 157
+  EWL_C/src/sun_math/Double_precision/s_expm1.c Line: 160
+  EWL_C/src/sun_math/Double_precision/s_expm1.c Line: 172
+  EWL_C/src/sun_math/Double_precision/s_expm1.c Line: 185
+  EWL_C/src/sun_math/Double_precision/s_expm1.c Line: 211
+  EWL_C/src/sun_math/Double_precision/s_expm1.c Line: 225
+  EWL_C/src/sun_math/Double_precision/s_expm1.c Line: 231
+  EWL_C/src/sun_math/Double_precision/s_expm1.c Line: 236
+  EWL_C/src/sun_math/Double_precision/s_expm1.c Line: 239
+  EWL_C/src/sun_math/Double_precision/s_expm1.c Line: 247
+  EWL_C/src/sun_math/Double_precision/s_floor.c Line: 59
+  EWL_C/src/sun_math/Double_precision/s_floor.c Line: 69
+  EWL_C/src/sun_math/Double_precision/s_floor.c Line: 72
+  EWL_C/src/sun_math/Double_precision/s_floor.c Line: 78
+  EWL_C/src/sun_math/Double_precision/s_frexp.c Line: 48
+  EWL_C/src/sun_math/Double_precision/s_ilogb.c Line: 54
+  EWL_C/src/sun_math/Double_precision/s_ilogb.c Line: 64
+  EWL_C/src/sun_math/Double_precision/s_ilogb.c Line: 68
+  EWL_C/src/sun_math/Double_precision/s_ilogb.c Line: 84
+  EWL_C/src/sun_math/Double_precision/s_ilogb.c Line: 100
+  EWL_C/src/sun_math/Double_precision/s_ldexp.c Line: 31
+  EWL_C/src/sun_math/Double_precision/s_ldexp.c Line: 42
+  EWL_C/src/sun_math/Double_precision/s_ldexp.c Line: 50
+  EWL_C/src/sun_math/Double_precision/s_ldexp.c Line: 55
+  EWL_C/src/sun_math/Double_precision/s_ldexp.c Line: 60
+  EWL_C/src/sun_math/Double_precision/s_ldexp.c Line: 65
+  EWL_C/src/sun_math/Double_precision/s_ldexp.c Line: 70
+  EWL_C/src/sun_math/Double_precision/s_ldexp.c Line: 73
+  EWL_C/src/sun_math/Double_precision/s_log1p.c Line: 132
+  EWL_C/src/sun_math/Double_precision/s_log1p.c Line: 147
+  EWL_C/src/sun_math/Double_precision/s_log1p.c Line: 154
+  EWL_C/src/sun_math/Double_precision/s_log1p.c Line: 157
+  EWL_C/src/sun_math/Double_precision/s_log1p.c Line: 166
+  EWL_C/src/sun_math/Double_precision/s_log1p.c Line: 198
+  EWL_C/src/sun_math/Double_precision/s_log1p.c Line: 202
+  EWL_C/src/sun_math/Double_precision/s_log1p.c Line: 208
+  EWL_C/src/sun_math/Double_precision/s_log1p.c Line: 211
+  EWL_C/src/sun_math/Double_precision/s_log1p.c Line: 219
+  EWL_C/src/sun_math/Double_precision/s_log1p.c Line: 222
+  EWL_C/src/sun_math/Double_precision/s_logb.c Line: 48
+  EWL_C/src/sun_math/Double_precision/s_logb.c Line: 52
+  EWL_C/src/sun_math/Double_precision/s_logb.c Line: 56
+  EWL_C/src/sun_math/Double_precision/s_logb.c Line: 60
+  EWL_C/src/sun_math/Double_precision/s_matherr.c Line: 29
+  EWL_C/src/sun_math/Double_precision/s_modf.c Line: 55
+  EWL_C/src/sun_math/Double_precision/s_modf.c Line: 63
+  EWL_C/src/sun_math/Double_precision/s_modf.c Line: 69
+  EWL_C/src/sun_math/Double_precision/s_modf.c Line: 78
+  EWL_C/src/sun_math/Double_precision/s_modf.c Line: 86
+  EWL_C/src/sun_math/Double_precision/s_modf.c Line: 92
+  EWL_C/src/sun_math/Double_precision/s_nextafter.c Line: 47
+  EWL_C/src/sun_math/Double_precision/s_nextafter.c Line: 51
+  EWL_C/src/sun_math/Double_precision/s_nextafter.c Line: 59
+  EWL_C/src/sun_math/Double_precision/s_nextafter.c Line: 62
+  EWL_C/src/sun_math/Double_precision/s_nextafter.c Line: 88
+  EWL_C/src/sun_math/Double_precision/s_nextafter.c Line: 96
+  EWL_C/src/sun_math/Double_precision/s_rint.c Line: 63
+  EWL_C/src/sun_math/Double_precision/s_rint.c Line: 76
+  EWL_C/src/sun_math/Double_precision/s_rint.c Line: 81
+  EWL_C/src/sun_math/Double_precision/s_rint.c Line: 96
+  EWL_C/src/sun_math/Double_precision/s_rint.c Line: 100
+  EWL_C/src/sun_math/Double_precision/s_rint.c Line: 106
+  EWL_C/src/sun_math/Double_precision/s_sin.c Line: 64
+  EWL_C/src/sun_math/Double_precision/s_sin.c Line: 69
+  EWL_C/src/sun_math/Double_precision/s_sin.c Line: 80
+  EWL_C/src/sun_math/Double_precision/s_sin.c Line: 83
+  EWL_C/src/sun_math/Double_precision/s_sin.c Line: 90
+  EWL_C/src/sun_math/Double_precision/s_sin.c Line: 93
+  EWL_C/src/sun_math/Double_precision/s_sin.c Line: 100
+  EWL_C/src/sun_math/Double_precision/s_sin.c Line: 103
+  EWL_C/src/sun_math/Double_precision/s_sin.c Line: 110
+  EWL_C/src/sun_math/Double_precision/s_sin.c Line: 113
+  EWL_C/src/sun_math/Double_precision/s_tan.c Line: 64
+  EWL_C/src/sun_math/Double_precision/s_tan.c Line: 69
+  EWL_C/src/sun_math/Double_precision/s_tan.c Line: 76
+  EWL_C/src/sun_math/Double_precision/s_tanh.c Line: 64
+  EWL_C/src/sun_math/Double_precision/s_tanh.c Line: 67
+  EWL_C/src/sun_math/Double_precision/s_tanh.c Line: 75
+  EWL_C/src/sun_math/Single_precision/e_acosf.c Line: 69
+  EWL_C/src/sun_math/Single_precision/e_acosf.c Line: 72
+  EWL_C/src/sun_math/Single_precision/e_acosf.c Line: 94
+  EWL_C/src/sun_math/Single_precision/e_acosf.c Line: 99
+  EWL_C/src/sun_math/Single_precision/e_acosf.c Line: 106
+  EWL_C/src/sun_math/Single_precision/e_acosf.c Line: 115
+  EWL_C/src/sun_math/Single_precision/e_acosf.c Line: 129
+  EWL_C/src/sun_math/Single_precision/e_acoshf.c Line: 71
+  EWL_C/src/sun_math/Single_precision/e_acoshf.c Line: 75
+  EWL_C/src/sun_math/Single_precision/e_acoshf.c Line: 78
+  EWL_C/src/sun_math/Single_precision/e_acoshf.c Line: 82
+  EWL_C/src/sun_math/Single_precision/e_acoshf.c Line: 86
+  EWL_C/src/sun_math/Single_precision/e_acoshf.c Line: 90
+  EWL_C/src/sun_math/Single_precision/e_asinf.c Line: 75
+  EWL_C/src/sun_math/Single_precision/e_asinf.c Line: 97
+  EWL_C/src/sun_math/Single_precision/e_asinf.c Line: 106
+  EWL_C/src/sun_math/Single_precision/e_asinf.c Line: 117
+  EWL_C/src/sun_math/Single_precision/e_asinf.c Line: 142
+  EWL_C/src/sun_math/Single_precision/e_asinf.c Line: 145
+  EWL_C/src/sun_math/Single_precision/e_atan2f.c Line: 65
+  EWL_C/src/sun_math/Single_precision/e_atan2f.c Line: 69
+  EWL_C/src/sun_math/Single_precision/e_atan2f.c Line: 96
+  EWL_C/src/sun_math/Single_precision/e_atan2f.c Line: 99
+  EWL_C/src/sun_math/Single_precision/e_atan2f.c Line: 102
+  EWL_C/src/sun_math/Single_precision/e_atan2f.c Line: 109
+  EWL_C/src/sun_math/Single_precision/e_atan2f.c Line: 118
+  EWL_C/src/sun_math/Single_precision/e_atan2f.c Line: 121
+  EWL_C/src/sun_math/Single_precision/e_atan2f.c Line: 124
+  EWL_C/src/sun_math/Single_precision/e_atan2f.c Line: 127
+  EWL_C/src/sun_math/Single_precision/e_atan2f.c Line: 134
+  EWL_C/src/sun_math/Single_precision/e_atan2f.c Line: 137
+  EWL_C/src/sun_math/Single_precision/e_atan2f.c Line: 140
+  EWL_C/src/sun_math/Single_precision/e_atan2f.c Line: 143
+  EWL_C/src/sun_math/Single_precision/e_atan2f.c Line: 151
+  EWL_C/src/sun_math/Single_precision/e_atan2f.c Line: 167
+  EWL_C/src/sun_math/Single_precision/e_atan2f.c Line: 175
+  EWL_C/src/sun_math/Single_precision/e_atan2f.c Line: 178
+  EWL_C/src/sun_math/Single_precision/e_atan2f.c Line: 181
+  EWL_C/src/sun_math/Single_precision/e_atanhf.c Line: 80
+  EWL_C/src/sun_math/Single_precision/e_atanhf.c Line: 102
+  EWL_C/src/sun_math/Single_precision/e_atanhf.c Line: 106
+  EWL_C/src/sun_math/Single_precision/e_atanhf.c Line: 117
+  EWL_C/src/sun_math/Single_precision/e_atanhf.c Line: 120
+  EWL_C/src/sun_math/Single_precision/e_coshf.c Line: 55
+  EWL_C/src/sun_math/Single_precision/e_coshf.c Line: 64
+  EWL_C/src/sun_math/Single_precision/e_coshf.c Line: 67
+  EWL_C/src/sun_math/Single_precision/e_coshf.c Line: 74
+  EWL_C/src/sun_math/Single_precision/e_coshf.c Line: 80
+  EWL_C/src/sun_math/Single_precision/e_coshf.c Line: 88
+  EWL_C/src/sun_math/Single_precision/e_expf.c Line: 77
+  EWL_C/src/sun_math/Single_precision/e_expf.c Line: 81
+  EWL_C/src/sun_math/Single_precision/e_expf.c Line: 92
+  EWL_C/src/sun_math/Single_precision/e_expf.c Line: 103
+  EWL_C/src/sun_math/Single_precision/e_expf.c Line: 123
+  EWL_C/src/sun_math/Single_precision/e_expf.c Line: 136
+  EWL_C/src/sun_math/Single_precision/e_expf.c Line: 147
+  EWL_C/src/sun_math/Single_precision/e_expf.c Line: 153
+  EWL_C/src/sun_math/Single_precision/e_fmodf.c Line: 81
+  EWL_C/src/sun_math/Single_precision/e_fmodf.c Line: 85
+  EWL_C/src/sun_math/Single_precision/e_fmodf.c Line: 89
+  EWL_C/src/sun_math/Single_precision/e_fmodf.c Line: 134
+  EWL_C/src/sun_math/Single_precision/e_fmodf.c Line: 147
+  EWL_C/src/sun_math/Single_precision/e_hypotf.c Line: 57
+  EWL_C/src/sun_math/Single_precision/e_hypotf.c Line: 70
+  EWL_C/src/sun_math/Single_precision/e_hypotf.c Line: 81
+  EWL_C/src/sun_math/Single_precision/e_hypotf.c Line: 118
+  EWL_C/src/sun_math/Single_precision/e_hypotf.c Line: 121
+  EWL_C/src/sun_math/Single_precision/e_lgammaf_r.c Line: 126
+  EWL_C/src/sun_math/Single_precision/e_lgammaf_r.c Line: 205
+  EWL_C/src/sun_math/Single_precision/e_lgammaf_r.c Line: 210
+  EWL_C/src/sun_math/Single_precision/e_lgammaf_r.c Line: 216
+  EWL_C/src/sun_math/Single_precision/e_lgammaf_r.c Line: 219
+  EWL_C/src/sun_math/Single_precision/e_lgammaf_r.c Line: 226
+  EWL_C/src/sun_math/Single_precision/e_lgammaf_r.c Line: 233
+  EWL_C/src/sun_math/Single_precision/e_log10f.c Line: 79
+  EWL_C/src/sun_math/Single_precision/e_log10f.c Line: 102
+  EWL_C/src/sun_math/Single_precision/e_log10f.c Line: 105
+  EWL_C/src/sun_math/Single_precision/e_log10f.c Line: 113
+  EWL_C/src/sun_math/Single_precision/e_logf.c Line: 78
+  EWL_C/src/sun_math/Single_precision/e_logf.c Line: 101
+  EWL_C/src/sun_math/Single_precision/e_logf.c Line: 104
+  EWL_C/src/sun_math/Single_precision/e_logf.c Line: 112
+  EWL_C/src/sun_math/Single_precision/e_logf.c Line: 128
+  EWL_C/src/sun_math/Single_precision/e_logf.c Line: 132
+  EWL_C/src/sun_math/Single_precision/e_logf.c Line: 138
+  EWL_C/src/sun_math/Single_precision/e_logf.c Line: 142
+  EWL_C/src/sun_math/Single_precision/e_logf.c Line: 160
+  EWL_C/src/sun_math/Single_precision/e_logf.c Line: 163
+  EWL_C/src/sun_math/Single_precision/e_logf.c Line: 168
+  EWL_C/src/sun_math/Single_precision/e_logf.c Line: 171
+  EWL_C/src/sun_math/Single_precision/e_powf.c Line: 88
+  EWL_C/src/sun_math/Single_precision/e_powf.c Line: 94
+  EWL_C/src/sun_math/Single_precision/e_powf.c Line: 132
+  EWL_C/src/sun_math/Single_precision/e_powf.c Line: 152
+  EWL_C/src/sun_math/Single_precision/e_powf.c Line: 176
+  EWL_C/src/sun_math/Single_precision/e_powf.c Line: 179
+  EWL_C/src/sun_math/Single_precision/e_powf.c Line: 182
+  EWL_C/src/sun_math/Single_precision/e_powf.c Line: 188
+  EWL_C/src/sun_math/Single_precision/e_powf.c Line: 191
+  EWL_C/src/sun_math/Single_precision/e_powf.c Line: 196
+  EWL_C/src/sun_math/Single_precision/e_powf.c Line: 201
+  EWL_C/src/sun_math/Single_precision/e_powf.c Line: 220
+  EWL_C/src/sun_math/Single_precision/e_powf.c Line: 248
+  EWL_C/src/sun_math/Single_precision/e_powf.c Line: 251
+  EWL_C/src/sun_math/Single_precision/e_powf.c Line: 263
+  EWL_C/src/sun_math/Single_precision/e_powf.c Line: 267
+  EWL_C/src/sun_math/Single_precision/e_powf.c Line: 343
+  EWL_C/src/sun_math/Single_precision/e_powf.c Line: 347
+  EWL_C/src/sun_math/Single_precision/e_powf.c Line: 351
+  EWL_C/src/sun_math/Single_precision/e_powf.c Line: 355
+  EWL_C/src/sun_math/Single_precision/e_rem_pio2f.c Line: 127
+  EWL_C/src/sun_math/Single_precision/e_rem_pio2f.c Line: 129
+  EWL_C/src/sun_math/Single_precision/e_rem_pio2f.c Line: 144
+  EWL_C/src/sun_math/Single_precision/e_rem_pio2f.c Line: 157
+  EWL_C/src/sun_math/Single_precision/e_rem_pio2f.c Line: 201
+  EWL_C/src/sun_math/Single_precision/e_rem_pio2f.c Line: 204
+  EWL_C/src/sun_math/Single_precision/e_rem_pio2f.c Line: 213
+  EWL_C/src/sun_math/Single_precision/e_rem_pio2f.c Line: 233
+  EWL_C/src/sun_math/Single_precision/e_remainderf.c Line: 72
+  EWL_C/src/sun_math/Single_precision/e_remainderf.c Line: 77
+  EWL_C/src/sun_math/Single_precision/e_remainderf.c Line: 83
+  EWL_C/src/sun_math/Single_precision/e_sinhf.c Line: 55
+  EWL_C/src/sun_math/Single_precision/e_sinhf.c Line: 65
+  EWL_C/src/sun_math/Single_precision/e_sinhf.c Line: 71
+  EWL_C/src/sun_math/Single_precision/e_sinhf.c Line: 74
+  EWL_C/src/sun_math/Single_precision/e_sinhf.c Line: 80
+  EWL_C/src/sun_math/Single_precision/e_sinhf.c Line: 88
+  EWL_C/src/sun_math/Single_precision/e_sqrtf.c Line: 59
+  EWL_C/src/sun_math/Single_precision/e_sqrtf.c Line: 66
+  EWL_C/src/sun_math/Single_precision/e_sqrtf.c Line: 89
+  EWL_C/src/sun_math/Single_precision/e_sqrtf.c Line: 92
+  EWL_C/src/sun_math/Single_precision/fminmaxdimf.c Line: 17
+  EWL_C/src/sun_math/Single_precision/fminmaxdimf.c Line: 21
+  EWL_C/src/sun_math/Single_precision/fminmaxdimf.c Line: 27
+  EWL_C/src/sun_math/Single_precision/fminmaxdimf.c Line: 31
+  EWL_C/src/sun_math/Single_precision/fminmaxdimf.c Line: 37
+  EWL_C/src/sun_math/Single_precision/fminmaxdimf.c Line: 41
+  EWL_C/src/sun_math/Single_precision/fminmaxdimf.c Line: 46
+  EWL_C/src/sun_math/Single_precision/fminmaxdimf.c Line: 50
+  EWL_C/src/sun_math/Single_precision/fminmaxdimf.c Line: 60
+  EWL_C/src/sun_math/Single_precision/fminmaxdimf.c Line: 64
+  EWL_C/src/sun_math/Single_precision/fminmaxdimf.c Line: 70
+  EWL_C/src/sun_math/Single_precision/fminmaxdimf.c Line: 74
+  EWL_C/src/sun_math/Single_precision/fminmaxdimf.c Line: 80
+  EWL_C/src/sun_math/Single_precision/fminmaxdimf.c Line: 84
+  EWL_C/src/sun_math/Single_precision/fminmaxdimf.c Line: 89
+  EWL_C/src/sun_math/Single_precision/fminmaxdimf.c Line: 93
+  EWL_C/src/sun_math/Single_precision/fminmaxdimf.c Line: 101
+  EWL_C/src/sun_math/Single_precision/fminmaxdimf.c Line: 105
+  EWL_C/src/sun_math/Single_precision/fminmaxdimf.c Line: 111
+  EWL_C/src/sun_math/Single_precision/fminmaxdimf.c Line: 115
+  EWL_C/src/sun_math/Single_precision/k_cosf.c Line: 58
+  EWL_C/src/sun_math/Single_precision/k_cosf.c Line: 65
+  EWL_C/src/sun_math/Single_precision/k_cosf.c Line: 75
+  EWL_C/src/sun_math/Single_precision/k_sinf.c Line: 58
+  EWL_C/src/sun_math/Single_precision/k_sinf.c Line: 66
+  EWL_C/src/sun_math/Single_precision/k_sinf.c Line: 70
+  EWL_C/src/sun_math/Single_precision/k_tanf.c Line: 72
+  EWL_C/src/sun_math/Single_precision/k_tanf.c Line: 75
+  EWL_C/src/sun_math/Single_precision/k_tanf.c Line: 101
+  EWL_C/src/sun_math/Single_precision/k_tanf.c Line: 105
+  EWL_C/src/sun_math/Single_precision/k_tanf.c Line: 122
+  EWL_C/src/sun_math/Single_precision/s_asinhf.c Line: 56
+  EWL_C/src/sun_math/Single_precision/s_asinhf.c Line: 61
+  EWL_C/src/sun_math/Single_precision/s_asinhf.c Line: 76
+  EWL_C/src/sun_math/Single_precision/s_asinhf.c Line: 79
+  EWL_C/src/sun_math/Single_precision/s_atanf.c Line: 95
+  EWL_C/src/sun_math/Single_precision/s_atanf.c Line: 99
+  EWL_C/src/sun_math/Single_precision/s_atanf.c Line: 102
+  EWL_C/src/sun_math/Single_precision/s_atanf.c Line: 108
+  EWL_C/src/sun_math/Single_precision/s_atanf.c Line: 136
+  EWL_C/src/sun_math/Single_precision/s_atanf.c Line: 140
+  EWL_C/src/sun_math/Single_precision/s_cbrtf.c Line: 73
+  EWL_C/src/sun_math/Single_precision/s_cbrtf.c Line: 77
+  EWL_C/src/sun_math/Single_precision/s_ceilf.c Line: 61
+  EWL_C/src/sun_math/Single_precision/s_ceilf.c Line: 75
+  EWL_C/src/sun_math/Single_precision/s_ceilf.c Line: 79
+  EWL_C/src/sun_math/Single_precision/s_cosf.c Line: 48
+  EWL_C/src/sun_math/Single_precision/s_cosf.c Line: 53
+  EWL_C/src/sun_math/Single_precision/s_cosf.c Line: 65
+  EWL_C/src/sun_math/Single_precision/s_cosf.c Line: 68
+  EWL_C/src/sun_math/Single_precision/s_cosf.c Line: 76
+  EWL_C/src/sun_math/Single_precision/s_cosf.c Line: 79
+  EWL_C/src/sun_math/Single_precision/s_cosf.c Line: 87
+  EWL_C/src/sun_math/Single_precision/s_cosf.c Line: 90
+  EWL_C/src/sun_math/Single_precision/s_cosf.c Line: 98
+  EWL_C/src/sun_math/Single_precision/s_cosf.c Line: 101
+  EWL_C/src/sun_math/Single_precision/s_erff.c Line: 130
+  EWL_C/src/sun_math/Single_precision/s_erff.c Line: 138
+  EWL_C/src/sun_math/Single_precision/s_erff.c Line: 141
+  EWL_C/src/sun_math/Single_precision/s_erff.c Line: 148
+  EWL_C/src/sun_math/Single_precision/s_erff.c Line: 156
+  EWL_C/src/sun_math/Single_precision/s_erff.c Line: 159
+  EWL_C/src/sun_math/Single_precision/s_erff.c Line: 165
+  EWL_C/src/sun_math/Single_precision/s_erff.c Line: 168
+  EWL_C/src/sun_math/Single_precision/s_erff.c Line: 190
+  EWL_C/src/sun_math/Single_precision/s_erff.c Line: 193
+  EWL_C/src/sun_math/Single_precision/s_erff.c Line: 214
+  EWL_C/src/sun_math/Single_precision/s_erff.c Line: 220
+  EWL_C/src/sun_math/Single_precision/s_erff.c Line: 228
+  EWL_C/src/sun_math/Single_precision/s_erff.c Line: 233
+  EWL_C/src/sun_math/Single_precision/s_erff.c Line: 243
+  EWL_C/src/sun_math/Single_precision/s_erff.c Line: 247
+  EWL_C/src/sun_math/Single_precision/s_erff.c Line: 261
+  EWL_C/src/sun_math/Single_precision/s_erff.c Line: 274
+  EWL_C/src/sun_math/Single_precision/s_erff.c Line: 277
+  EWL_C/src/sun_math/Single_precision/s_erff.c Line: 288
+  EWL_C/src/sun_math/Single_precision/s_erff.c Line: 291
+  EWL_C/src/sun_math/Single_precision/s_expm1f.c Line: 80
+  EWL_C/src/sun_math/Single_precision/s_expm1f.c Line: 84
+  EWL_C/src/sun_math/Single_precision/s_expm1f.c Line: 95
+  EWL_C/src/sun_math/Single_precision/s_expm1f.c Line: 108
+  EWL_C/src/sun_math/Single_precision/s_expm1f.c Line: 134
+  EWL_C/src/sun_math/Single_precision/s_expm1f.c Line: 148
+  EWL_C/src/sun_math/Single_precision/s_expm1f.c Line: 154
+  EWL_C/src/sun_math/Single_precision/s_expm1f.c Line: 159
+  EWL_C/src/sun_math/Single_precision/s_expm1f.c Line: 162
+  EWL_C/src/sun_math/Single_precision/s_expm1f.c Line: 173
+  EWL_C/src/sun_math/Single_precision/s_floorf.c Line: 71
+  EWL_C/src/sun_math/Single_precision/s_floorf.c Line: 81
+  EWL_C/src/sun_math/Single_precision/s_floorf.c Line: 84
+  EWL_C/src/sun_math/Single_precision/s_frexpf.c Line: 52
+  EWL_C/src/sun_math/Single_precision/s_ilogbf.c Line: 62
+  EWL_C/src/sun_math/Single_precision/s_ilogbf.c Line: 70
+  EWL_C/src/sun_math/Single_precision/s_ilogbf.c Line: 74
+  EWL_C/src/sun_math/Single_precision/s_ilogbf.c Line: 90
+  EWL_C/src/sun_math/Single_precision/s_ilogbf.c Line: 106
+  EWL_C/src/sun_math/Single_precision/s_ldexpf.c Line: 39
+  EWL_C/src/sun_math/Single_precision/s_log1pf.c Line: 88
+  EWL_C/src/sun_math/Single_precision/s_log1pf.c Line: 103
+  EWL_C/src/sun_math/Single_precision/s_log1pf.c Line: 110
+  EWL_C/src/sun_math/Single_precision/s_log1pf.c Line: 113
+  EWL_C/src/sun_math/Single_precision/s_log1pf.c Line: 122
+  EWL_C/src/sun_math/Single_precision/s_log1pf.c Line: 155
+  EWL_C/src/sun_math/Single_precision/s_log1pf.c Line: 159
+  EWL_C/src/sun_math/Single_precision/s_log1pf.c Line: 165
+  EWL_C/src/sun_math/Single_precision/s_log1pf.c Line: 168
+  EWL_C/src/sun_math/Single_precision/s_log1pf.c Line: 176
+  EWL_C/src/sun_math/Single_precision/s_log1pf.c Line: 179
+  EWL_C/src/sun_math/Single_precision/s_logbf.c Line: 58
+  EWL_C/src/sun_math/Single_precision/s_logbf.c Line: 62
+  EWL_C/src/sun_math/Single_precision/s_logbf.c Line: 66
+  EWL_C/src/sun_math/Single_precision/s_logbf.c Line: 70
+  EWL_C/src/sun_math/Single_precision/s_modff.c Line: 53
+  EWL_C/src/sun_math/Single_precision/s_modff.c Line: 62
+  EWL_C/src/sun_math/Single_precision/s_modff.c Line: 66
+  EWL_C/src/sun_math/Single_precision/s_modff.c Line: 75
+  EWL_C/src/sun_math/Single_precision/s_nextafterf.c Line: 51
+  EWL_C/src/sun_math/Single_precision/s_nextafterf.c Line: 55
+  EWL_C/src/sun_math/Single_precision/s_nextafterf.c Line: 62
+  EWL_C/src/sun_math/Single_precision/s_nextafterf.c Line: 65
+  EWL_C/src/sun_math/Single_precision/s_nextafterf.c Line: 85
+  EWL_C/src/sun_math/Single_precision/s_nextafterf.c Line: 92
+  EWL_C/src/sun_math/Single_precision/s_rintf.c Line: 61
+  EWL_C/src/sun_math/Single_precision/s_rintf.c Line: 74
+  EWL_C/src/sun_math/Single_precision/s_rintf.c Line: 79
+  EWL_C/src/sun_math/Single_precision/s_rintf.c Line: 90
+  EWL_C/src/sun_math/Single_precision/s_rintf.c Line: 94
+  EWL_C/src/sun_math/Single_precision/s_scalbnf.c Line: 54
+  EWL_C/src/sun_math/Single_precision/s_scalbnf.c Line: 61
+  EWL_C/src/sun_math/Single_precision/s_scalbnf.c Line: 66
+  EWL_C/src/sun_math/Single_precision/s_scalbnf.c Line: 71
+  EWL_C/src/sun_math/Single_precision/s_scalbnf.c Line: 77
+  EWL_C/src/sun_math/Single_precision/s_scalbnf.c Line: 82
+  EWL_C/src/sun_math/Single_precision/s_scalbnf.c Line: 85
+  EWL_C/src/sun_math/Single_precision/s_sinf.c Line: 49
+  EWL_C/src/sun_math/Single_precision/s_sinf.c Line: 53
+  EWL_C/src/sun_math/Single_precision/s_sinf.c Line: 65
+  EWL_C/src/sun_math/Single_precision/s_sinf.c Line: 68
+  EWL_C/src/sun_math/Single_precision/s_sinf.c Line: 76
+  EWL_C/src/sun_math/Single_precision/s_sinf.c Line: 79
+  EWL_C/src/sun_math/Single_precision/s_sinf.c Line: 87
+  EWL_C/src/sun_math/Single_precision/s_sinf.c Line: 90
+  EWL_C/src/sun_math/Single_precision/s_sinf.c Line: 98
+  EWL_C/src/sun_math/Single_precision/s_sinf.c Line: 101
+  EWL_C/src/sun_math/Single_precision/s_tanf.c Line: 48
+  EWL_C/src/sun_math/Single_precision/s_tanf.c Line: 53
+  EWL_C/src/sun_math/Single_precision/s_tanf.c Line: 60
+  EWL_C/src/sun_math/Single_precision/s_tanhf.c Line: 55
+  EWL_C/src/sun_math/Single_precision/s_tanhf.c Line: 58
+  EWL_C/src/sun_math/Single_precision/s_tanhf.c Line: 66
+  EWL_C/src/sun_math/ansi_fp.c Line: 163
+  EWL_C/src/sun_math/ansi_fp.c Line: 167
+  EWL_C/src/sun_math/ansi_fp.c Line: 175
+  EWL_C/src/sun_math/ansi_fp.c Line: 182
+  EWL_C/src/sun_math/ansi_fp.c Line: 224
+  EWL_C/src/sun_math/ansi_fp.c Line: 230
+  EWL_C/src/sun_math/ansi_fp.c Line: 328
+  EWL_C/src/sun_math/ansi_fp.c Line: 357
+  EWL_C/src/sun_math/ansi_fp.c Line: 373
+  EWL_C/src/sun_math/ansi_fp.c Line: 400
+  EWL_C/src/sun_math/ansi_fp.c Line: 404
+  EWL_C/src/sun_math/ansi_fp.c Line: 408
+  EWL_C/src/sun_math/ansi_fp.c Line: 412
+  EWL_C/src/sun_math/ansi_fp.c Line: 416
+  EWL_C/src/sun_math/ansi_fp.c Line: 420
+  EWL_C/src/sun_math/ansi_fp.c Line: 424
+  EWL_C/src/sun_math/ansi_fp.c Line: 428
+  EWL_C/src/sun_math/ansi_fp.c Line: 432
+  EWL_C/src/sun_math/ansi_fp.c Line: 436
+  EWL_C/src/sun_math/ansi_fp.c Line: 440
+  EWL_C/src/sun_math/ansi_fp.c Line: 445
+  EWL_C/src/sun_math/ansi_fp.c Line: 449
+  EWL_C/src/sun_math/ansi_fp.c Line: 453
+  EWL_C/src/sun_math/ansi_fp.c Line: 458
+  EWL_C/src/sun_math/ansi_fp.c Line: 462
+  EWL_C/src/sun_math/ansi_fp.c Line: 466
+  EWL_C/src/sun_math/ansi_fp.c Line: 470
+  EWL_C/src/sun_math/ansi_fp.c Line: 474
+  EWL_C/src/sun_math/ansi_fp.c Line: 478
+  EWL_C/src/sun_math/ansi_fp.c Line: 482
+  EWL_C/src/sun_math/ansi_fp.c Line: 513
+  EWL_C/src/sun_math/ansi_fp.c Line: 516
+  EWL_C/src/sun_math/ansi_fp.c Line: 521
+  EWL_C/src/sun_math/ansi_fp.c Line: 524
+  EWL_C/src/sun_math/ansi_fp.c Line: 536
+  EWL_C/src/sun_math/ansi_fp.c Line: 545
+  EWL_C/src/sun_math/ansi_fp.c Line: 549
+  EWL_C/src/sun_math/ansi_fp.c Line: 564
+  EWL_C/src/sun_math/ansi_fp.c Line: 567
+  EWL_C/src/sun_math/ansi_fp.c Line: 571
+  EWL_C/src/sun_math/ansi_fp.c Line: 583
+  EWL_C/src/sun_math/ansi_fp.c Line: 587
+  EWL_C/src/sun_math/ansi_fp.c Line: 594
+  EWL_C/src/sun_math/ansi_fp.c Line: 599
+  EWL_C/src/sun_math/ansi_fp.c Line: 603
+  EWL_C/src/sun_math/ansi_fp.c Line: 606
+  EWL_C/src/sun_math/ansi_fp.c Line: 623
+  EWL_C/src/sun_math/ansi_fp.c Line: 745
+  EWL_C/src/sun_math/ansi_fp.c Line: 754
+  EWL_C/src/sun_math/ansi_fp.c Line: 781
+  EWL_C/src/sun_math/ansi_fp.c Line: 806
+  EWL_C/src/sun_math/ansi_fp.c Line: 812
+  EWL_C/src/sun_math/ansi_fp.c Line: 815
+  EWL_C/src/sun_math/ansi_fp.c Line: 924
+  EWL_C/src/sun_math/ansi_fp.c Line: 953
+  EWL_C/src/sun_math/ansi_fp.c Line: 1059
+  EWL_C/src/sun_math/ansi_fp.c Line: 1125
+  EWL_C/src/sun_math/ansi_fp.c Line: 1132
+  EWL_C/src/sun_math/ansi_fp.c Line: 1308
+  EWL_C/src/sun_math/ansi_fp.c Line: 1313
+  EWL_C/src/sun_math/ansi_fp.c Line: 1319
+  EWL_C/src/sun_math/ansi_fp.c Line: 1322
+  EWL_C/src/sun_math/ansi_fp.c Line: 1402
+  EWL_C/src/sun_math/ansi_fp.c Line: 1405
+  EWL_C/src/sun_math/math_sun.c Line: 114
+  EWL_C/src/sun_math/math_sun.c Line: 130
+  EWL_C/src/sun_math/math_sun.c Line: 173
+  EWL_C/src/sun_math/math_sun.c Line: 189
+  EWL_C/src/sun_math/math_sun.c Line: 232
+  EWL_C/src/sun_math/math_sun.c Line: 248
+  EWL_C/src/sun_math/math_sun.c Line: 294
+  EWL_C/src/sun_math/math_sun.c Line: 310
+  EWL_C/src/sun_math/math_sun.c Line: 384
+  EWL_C/src/sun_math/math_sun.c Line: 400
+  EWL_C/src/sun_math/math_sun.c Line: 473
+  EWL_C/src/sun_math/math_sun.c Line: 489
+  EWL_C/src/sun_math/math_sun.c Line: 560
+  EWL_C/src/sun_math/math_sun.c Line: 576
+  EWL_C/src/sun_math/math_sun.c Line: 618
+  EWL_C/src/sun_math/math_sun.c Line: 634
+  EWL_C/src/sun_math/math_sun.c Line: 677
+  EWL_C/src/sun_math/math_sun.c Line: 693
+  EWL_C/src/sun_math/math_sun.c Line: 733
+  EWL_C/src/sun_math/math_sun.c Line: 787
+  EWL_C/src/sun_math/math_sun.c Line: 842
+  EWL_C/src/sun_math/math_sun.c Line: 1002
+  EWL_C/src/sun_math/math_sun.c Line: 1030
+  EWL_C/src/sun_math/math_sun.c Line: 1057
+  EWL_C/src/sun_math/math_sun.c Line: 1107
+  EWL_C/src/sun_math/math_sun.c Line: 1110
+  EWL_C/src/sun_math/math_sun.c Line: 1134
+  EWL_C/src/sun_math/math_sun.c Line: 1137
+  EWL_C/src/sun_math/math_sun.c Line: 1162
+  EWL_C/src/sun_math/math_sun.c Line: 1165
+  EWL_C/src/sys/uart_console_io.c Line: 75
+  EWL_C/src/sys/uart_console_io.c Line: 147
+  EWL_C/src/sys/uart_console_io.c Line: 153
+  EWL_C/src/time.c Line: 179
+  EWL_C/src/time.c Line: 256
+  EWL_C/src/time.c Line: 342
+  EWL_C/src/time.c Line: 422
+  EWL_C/src/time.c Line: 430
+  EWL_C/src/time.c Line: 468
+  EWL_C/src/time.c Line: 541
+  EWL_C/src/time.c Line: 558
+  EWL_C/src/time.c Line: 566
+  EWL_C/src/time.c Line: 583
+  EWL_C/src/time.c Line: 591
+  EWL_C/src/time.c Line: 612
+  EWL_C/src/time.c Line: 620
+  EWL_C/src/time.c Line: 636
+  EWL_C/src/time.c Line: 644
+  EWL_C/src/time.c Line: 665
+  EWL_C/src/time.c Line: 693
+  EWL_C/src/time.c Line: 809
+  EWL_C/src/time.c Line: 838
+  EWL_C/src/time.c Line: 852
+  EWL_C/src/time.c Line: 1124
+  EWL_C/src/time.c Line: 1135
+  EWL_C/src/wchar_io.c Line: 62
+  EWL_C/src/wchar_io.c Line: 68
+  EWL_C/src/wchar_io.c Line: 84
+  EWL_C/src/wchar_io.c Line: 91
+  EWL_C/src/wchar_io.c Line: 162
+  EWL_C/src/wchar_io.c Line: 166
+  EWL_C/src/wchar_io.c Line: 171
+  EWL_C/src/wchar_io.c Line: 204
+  EWL_C/src/wchar_io.c Line: 210
+  EWL_C/src/wchar_io.c Line: 269
+  EWL_C/src/wchar_io.c Line: 274
+  EWL_C/src/wchar_io.c Line: 317
+  EWL_C/src/wchar_io.c Line: 373
+  EWL_C/src/wchar_io.c Line: 378
+  EWL_C/src/wchar_io.c Line: 424
+  EWL_C/src/wcstold.c Line: 326
+  EWL_C/src/wcstold.c Line: 367
+  EWL_C/src/wcstold.c Line: 724
+  EWL_C/src/wcstold.c Line: 729
+  EWL_C/src/wcstold.c Line: 732
+  EWL_C/src/wcstold.c Line: 758
+  EWL_C/src/wcstold.c Line: 841
+  EWL_C/src/wcstold.c Line: 891
+  EWL_C/src/wctrans.c Line: 45
+  EWL_C/src/wctrans.c Line: 48
+  EWL_C/src/wctrans.c Line: 59
+  EWL_C/src/wctype.c Line: 290
+  EWL_C/src/wctype.c Line: 294
+  EWL_C/src/wctype.c Line: 298
+  EWL_C/src/wctype.c Line: 302
+  EWL_C/src/wctype.c Line: 306
+  EWL_C/src/wctype.c Line: 310
+  EWL_C/src/wctype.c Line: 314
+  EWL_C/src/wctype.c Line: 318
+  EWL_C/src/wctype.c Line: 322
+  EWL_C/src/wctype.c Line: 326
+  EWL_C/src/wctype.c Line: 330
+  EWL_C/src/wmem.c Line: 43
+  EWL_C/src/wmem.c Line: 50
+  EWL_C/src/wmem.c Line: 67
+  EWL_C/src/wmem.c Line: 74
+  EWL_C/src/wmem.c Line: 99
+  EWL_C/src/wprintf.c Line: 190
+  EWL_C/src/wprintf.c Line: 262
+  EWL_C/src/wprintf.c Line: 530
+  EWL_C/src/wprintf.c Line: 604
+  EWL_C/src/wprintf.c Line: 647
+  EWL_C/src/wprintf.c Line: 721
+  EWL_C/src/wprintf.c Line: 795
+  EWL_C/src/wprintf.c Line: 835
+  EWL_C/src/wprintf.c Line: 893
+  EWL_C/src/wprintf.c Line: 967
+  EWL_C/src/wprintf.c Line: 996
+  EWL_C/src/wprintf.c Line: 1020
+  EWL_C/src/wprintf.c Line: 1045
+  EWL_C/src/wprintf.c Line: 1216
+  EWL_C/src/wprintf.c Line: 1266
+  EWL_C/src/wprintf.c Line: 1289
+  EWL_C/src/wprintf.c Line: 1363
+  EWL_C/src/wprintf.c Line: 1417
+  EWL_C/src/wprintf.c Line: 1515
+  EWL_C/src/wprintf.c Line: 1527
+  EWL_C/src/wprintf.c Line: 1715
+  EWL_C/src/wprintf.c Line: 1740
+  EWL_C/src/wprintf.c Line: 1774
+  EWL_C/src/wprintf.c Line: 1826
+  EWL_C/src/wprintf.c Line: 1830
+  EWL_C/src/wprintf.c Line: 1841
+  EWL_C/src/wprintf.c Line: 1850
+  EWL_C/src/wprintf.c Line: 1854
+  EWL_C/src/wprintf.c Line: 1863
+  EWL_C/src/wprintf.c Line: 1872
+  EWL_C/src/wprintf.c Line: 1880
+  EWL_C/src/wprintf.c Line: 1940
+  EWL_C/src/wprintf.c Line: 1969
+  EWL_C/src/wprintf.c Line: 1974
+  EWL_C/src/wprintf.c Line: 2027
+  EWL_C/src/wprintf.c Line: 2067
+  EWL_C/src/wprintf.c Line: 2072
+  EWL_C/src/wprintf.c Line: 2127
+  EWL_C/src/wprintf.c Line: 2142
+  EWL_C/src/wprintf.c Line: 2146
+  EWL_C/src/wprintf.c Line: 2181
+  EWL_C/src/wprintf.c Line: 2207
+  EWL_C/src/wprintf.c Line: 2211
+  EWL_C/src/wprintf.c Line: 2340
+  EWL_C/src/wprintf.c Line: 2361
+  EWL_C/src/wprintformat.c Line: 191
+  EWL_C/src/wprintformat.c Line: 274
+  EWL_C/src/wprintformat.c Line: 577
+  EWL_C/src/wprintformat.c Line: 670
+  EWL_C/src/wprintformat.c Line: 720
+  EWL_C/src/wprintformat.c Line: 808
+  EWL_C/src/wprintformat.c Line: 890
+  EWL_C/src/wprintformat.c Line: 933
+  EWL_C/src/wprintformat.c Line: 999
+  EWL_C/src/wprintformat.c Line: 1082
+  EWL_C/src/wprintformat.c Line: 1122
+  EWL_C/src/wprintformat.c Line: 1154
+  EWL_C/src/wprintformat.c Line: 1186
+  EWL_C/src/wprintformat.c Line: 1386
+  EWL_C/src/wprintformat.c Line: 1392
+  EWL_C/src/wprintformat.c Line: 1447
+  EWL_C/src/wprintformat.c Line: 1455
+  EWL_C/src/wprintformat.c Line: 1484
+  EWL_C/src/wprintformat.c Line: 1545
+  EWL_C/src/wprintformat.c Line: 1577
+  EWL_C/src/wprintformat.c Line: 1663
+  EWL_C/src/wprintformat.c Line: 1729
+  EWL_C/src/wprintformat.c Line: 1838
+  EWL_C/src/wprintformat.c Line: 1852
+  EWL_C/src/wprintformat.c Line: 2066
+  EWL_C/src/wprintformat.c Line: 2101
+  EWL_C/src/wprintformat.c Line: 2145
+  EWL_C/src/wprintformat.c Line: 2202
+  EWL_C/src/wprintformat.c Line: 2206
+  EWL_C/src/wprintformat.c Line: 2220
+  EWL_C/src/wprintformat.c Line: 2232
+  EWL_C/src/wprintformat.c Line: 2237
+  EWL_C/src/wprintformat.c Line: 2248
+  EWL_C/src/wprintformat.c Line: 2259
+  EWL_C/src/wprintformat.c Line: 2271
+  EWL_C/src/wscanf.c Line: 133
+  EWL_C/src/wscanf.c Line: 154
+  EWL_C/src/wscanf.c Line: 942
+  EWL_C/src/wscanf.c Line: 957
+  EWL_C/src/wscanf.c Line: 960
+  EWL_C/src/wscanf.c Line: 964
+  EWL_C/src/wscanf.c Line: 967
+  EWL_C/src/wscanf.c Line: 971
+  EWL_C/src/wscanf.c Line: 987
+  EWL_C/src/wscanf.c Line: 991
+  EWL_C/src/wscanf.c Line: 1001
+  EWL_C/src/wscanf.c Line: 1005
+  EWL_C/src/wscanf.c Line: 1009
+  EWL_C/src/wscanf.c Line: 1058
+  EWL_C/src/wscanf.c Line: 1093
+  EWL_C/src/wscanf.c Line: 1097
+  EWL_C/src/wscanf.c Line: 1142
+  EWL_C/src/wscanf.c Line: 1170
+  EWL_C/src/wscanf.c Line: 1174
+  EWL_C/src/wscanf.c Line: 1216
+  EWL_C/src/wscanf.c Line: 1231
+  EWL_C/src/wscanf.c Line: 1235
+  EWL_C/src/wscanf.c Line: 1270
+  EWL_C/src/wscanf.c Line: 1274
+  EWL_C/src/wscanf.c Line: 1296
+  EWL_C/src/wscanf.c Line: 1300
+  EWL_C/src/wscanf.c Line: 1341
+  EWL_C/src/wscanf.c Line: 1356
+  EWL_C/src/wstring.c Line: 90
+  EWL_C/src/wstring.c Line: 137
+  EWL_C/src/wstring.c Line: 145
+  EWL_C/src/wstring.c Line: 206
+  EWL_C/src/wstring.c Line: 215
+  EWL_C/src/wstring.c Line: 221
+  EWL_C/src/wstring.c Line: 270
+  EWL_C/src/wstring.c Line: 279
+  EWL_C/src/wstring.c Line: 286
+  EWL_C/src/wstring.c Line: 352
+  EWL_C/src/wstring.c Line: 361
+  EWL_C/src/wstring.c Line: 370
+  EWL_C/src/wstring.c Line: 376
+  EWL_C/src/wstring.c Line: 400
+  EWL_C/src/wstring.c Line: 414
+  EWL_C/src/wstring.c Line: 437
+  EWL_C/src/wstring.c Line: 454
+  EWL_C/src/wstring.c Line: 478
+  EWL_C/src/wstring.c Line: 493
+  EWL_C/src/wstring.c Line: 539
+  EWL_C/src/wstring.c Line: 560
+  EWL_C/src/wstring.c Line: 580
+  EWL_C/src/wstring.c Line: 593
+  EWL_C/src/wstring.c Line: 614
+  EWL_C/src/wstring.c Line: 626
+  EWL_C/src/wstring.c Line: 721
+  EWL_C/src/wstring.c Line: 738
+  EWL_C/src/wstring.c Line: 771
+  EWL_C/src/wstring.c Line: 814
+  EWL_C/src/wstring.c Line: 828
+  EWL_C/src/wstring.c Line: 844
+  EWL_C/src/wstring.c Line: 860
+  EWL_C/src/wtime.c Line: 45
+  EWL_C/src/wtime.c Line: 58
+
+---
+
+MISRA_EXCEPTION_RULE_15_2 :
+
+MISRA 2004 Rule 15.2: fall-throught 
+
+Used to allow fall-throught in switch statements. 
+
+  EWL_C/src/mbstring.c Line: 238
+  EWL_C/src/mbstring.c Line: 242
+  EWL_C/src/mbstring.c Line: 246
+  EWL_C/src/mbstring.c Line: 250
+  EWL_C/src/mbstring.c Line: 254
+  EWL_C/src/mbstring.c Line: 298
+  EWL_C/src/mbstring.c Line: 306
+  EWL_C/src/mbstring.c Line: 314
+  EWL_C/src/mbstring.c Line: 322
+  EWL_C/src/mbstring.c Line: 330
+  EWL_C/src/printformat.c Line: 604
+  EWL_C/src/printformat.c Line: 1754
+  EWL_C/src/printformat.c Line: 1813
+  EWL_C/src/sc/file_io_StarCore.c Line: 99
+  EWL_C/src/sc/file_io_StarCore.c Line: 101
+  EWL_C/src/scanformat.c Line: 1345
+  EWL_C/src/strtold.c Line: 315
+  EWL_C/src/wcstold.c Line: 284
+  EWL_C/src/wprintf.c Line: 434
+  EWL_C/src/wprintformat.c Line: 463
+  EWL_C/src/wprintformat.c Line: 1706
+  EWL_C/src/wscanf.c Line: 803
+
+---
+
+MISRA_EXCEPTION_RULE_16_1 :
+
+MISRA 2004 Rule 16.1: Variable arg list 
+
+Used to allow variable argument lists, e.g., "int printf(const char* format, ...);". 
+
+  EWL_C/src/printf.c Line: 93
+  EWL_C/src/printf.c Line: 125
+  EWL_C/src/printf.c Line: 163
+  EWL_C/src/printf.c Line: 165
+  EWL_C/src/printf.c Line: 185
+  EWL_C/src/printf.c Line: 187
+  EWL_C/src/printf.c Line: 215
+  EWL_C/src/printf.c Line: 255
+  EWL_C/src/printf.c Line: 494
+  EWL_C/src/printf.c Line: 507
+  EWL_C/src/printf.c Line: 520
+  EWL_C/src/printf.c Line: 533
+  EWL_C/src/scanf.c Line: 131
+  EWL_C/src/scanf.c Line: 187
+  EWL_C/src/scanf.c Line: 265
+  EWL_C/src/scanf.c Line: 302
+  EWL_C/src/scanf.c Line: 349
+  EWL_C/src/scanf.c Line: 351
+  EWL_C/src/scanf.c Line: 368
+  EWL_C/src/scanf.c Line: 370
+  EWL_C/src/scanf.c Line: 495
+  EWL_C/src/scanf.c Line: 508
+  EWL_C/src/time.c Line: 654
+  EWL_C/src/wprintf.c Line: 1934
+  EWL_C/src/wprintf.c Line: 1961
+  EWL_C/src/wprintf.c Line: 2019
+  EWL_C/src/wprintf.c Line: 2058
+  EWL_C/src/wprintf.c Line: 2251
+  EWL_C/src/wprintf.c Line: 2263
+  EWL_C/src/wprintf.c Line: 2275
+  EWL_C/src/wscanf.c Line: 1040
+  EWL_C/src/wscanf.c Line: 1074
+  EWL_C/src/wscanf.c Line: 1132
+  EWL_C/src/wscanf.c Line: 1158
+  EWL_C/src/wscanf.c Line: 1388
+  EWL_C/src/wscanf.c Line: 1400
+  EWL_C/src/wtime.c Line: 36
+
+---
+
+MISRA_EXCEPTION_RULE_16_2 :
+
+MISRA 2004 Rule 16.2: Functions shall not call themselves, directly or indirectly 
+
+Used to allow calls through function pointers
+
+  EWL_C/src/abort_exit.c Line: 95
+  EWL_C/src/arm/arith_aeabi.c Line: 26
+  EWL_C/src/arm/errno_aeabi.c Line: 23
+  EWL_C/src/arm/fenv_arm.c Line: 188
+  EWL_C/src/arm/float_exceptions.c Line: 103
+  EWL_C/src/bsearch.c Line: 28
+  EWL_C/src/buffer_io.c Line: 199
+  EWL_C/src/file_io.c Line: 175
+  EWL_C/src/file_pos.c Line: 29
+  EWL_C/src/mbstring.c Line: 193
+  EWL_C/src/printformat.c Line: 1894
+  EWL_C/src/qsort.c Line: 105
+  EWL_C/src/scanformat.c Line: 537
+  EWL_C/src/secure_error.c Line: 27
+  EWL_C/src/signal.c Line: 50
+  EWL_C/src/strtold.c Line: 256
+  EWL_C/src/strtoul.c Line: 108
+  EWL_C/src/sun_math/ansi_fp.c Line: 385
+  EWL_C/src/time.c Line: 791
+  EWL_C/src/wcstold.c Line: 229
+  EWL_C/src/wcstoul.c Line: 117
+  EWL_C/src/wprintf.c Line: 1475
+  EWL_C/src/wprintformat.c Line: 1798
+  EWL_C/src/wscanf.c Line: 331
+  EWL_C/src/wtime.c Line: 59
+
+---
+
+MISRA_EXCEPTION_RULE_16_7 :
+
+MISRA 2004 Rule 16.7: Pointer parameter could be declared as pointing to const 
+
+Used when implementing a C std routine which could use const arguments. 
+
+  EWL_C/src/alloc.c Line: 2458
+  EWL_C/src/alloc.c Line: 2801
+  EWL_C/src/alloc.c Line: 2880
+  EWL_C/src/coldfire/uart_console_io_cf.c Line: 93
+  EWL_C/src/coldfire/uart_console_io_cf.c Line: 120
+  EWL_C/src/file_pos.c Line: 118
+  EWL_C/src/mbstring.c Line: 634
+  EWL_C/src/mbstring.c Line: 649
+  EWL_C/src/mbstring.c Line: 683
+  EWL_C/src/misc_io.c Line: 50
+  EWL_C/src/misc_io.c Line: 60
+  EWL_C/src/pa/fenv.ppc.c Line: 427
+  EWL_C/src/pa/fenv.ppc.c Line: 482
+  EWL_C/src/printf.c Line: 71
+  EWL_C/src/printformat.c Line: 242
+  EWL_C/src/sc/console_io_StarCore.c Line: 29
+  EWL_C/src/sc/console_io_StarCore.c Line: 55
+  EWL_C/src/sc/console_io_StarCore.c Line: 80
+  EWL_C/src/sc/file_io_StarCore.c Line: 167
+  EWL_C/src/sc/file_io_StarCore.c Line: 198
+  EWL_C/src/sc/file_io_StarCore.c Line: 227
+  EWL_C/src/sc/file_io_StarCore.c Line: 312
+  EWL_C/src/scanf.c Line: 88
+  EWL_C/src/scanformat.c Line: 1558
+  EWL_C/src/secure_error.c Line: 68
+  EWL_C/src/secure_error.c Line: 76
+  EWL_C/src/secure_error.c Line: 93
+  EWL_C/src/sun_math/Double_precision/s_matherr.c Line: 19
+  EWL_C/src/sys/uart_console_io.c Line: 57
+  EWL_C/src/sys/uart_console_io.c Line: 127
+  EWL_C/src/wprintf.c Line: 171
+  EWL_C/src/wprintformat.c Line: 171
+  EWL_C/src/wscanf.c Line: 948
+
+---
+
+MISRA_EXCEPTION_RULE_17_3 :
+
+MISRA 2004 Rule 17.2 and 17.3: Pointer operations 
+
+Used when pointer arithmetic is required, e.g. "buffer_len = file->buffer_ptr - file->buffer;" . 
+
+  EWL_C/src/alloc.c Line: 200
+  EWL_C/src/alloc.c Line: 236
+  EWL_C/src/alloc.c Line: 259
+  EWL_C/src/alloc.c Line: 3143
+  EWL_C/src/buffer_io.c Line: 207
+  EWL_C/src/char_io.c Line: 407
+  EWL_C/src/direct_io.c Line: 272
+  EWL_C/src/direct_io.c Line: 287
+  EWL_C/src/file_pos.c Line: 62
+  EWL_C/src/printformat.c Line: 872
+  EWL_C/src/printformat.c Line: 1007
+  EWL_C/src/printformat.c Line: 1565
+  EWL_C/src/printformat.c Line: 1777
+  EWL_C/src/printformat.c Line: 1941
+  EWL_C/src/printformat.c Line: 2047
+  EWL_C/src/printformat.c Line: 2131
+  EWL_C/src/printformat.c Line: 2174
+  EWL_C/src/printformat.c Line: 2192
+  EWL_C/src/printformat.c Line: 2241
+  EWL_C/src/string.c Line: 708
+  EWL_C/src/string.c Line: 712
+  EWL_C/src/string.c Line: 735
+  EWL_C/src/string.c Line: 740
+  EWL_C/src/string.c Line: 746
+  EWL_C/src/string.c Line: 896
+  EWL_C/src/string.c Line: 918
+  EWL_C/src/string.c Line: 949
+  EWL_C/src/string.c Line: 971
+  EWL_C/src/string.c Line: 1269
+  EWL_C/src/strtold.c Line: 860
+  EWL_C/src/sun_math/ansi_fp.c Line: 172
+  EWL_C/src/sun_math/ansi_fp.c Line: 255
+  EWL_C/src/sun_math/ansi_fp.c Line: 309
+  EWL_C/src/sun_math/ansi_fp.c Line: 315
+  EWL_C/src/sun_math/ansi_fp.c Line: 319
+  EWL_C/src/sun_math/ansi_fp.c Line: 644
+  EWL_C/src/sun_math/ansi_fp.c Line: 647
+  EWL_C/src/sun_math/ansi_fp.c Line: 665
+  EWL_C/src/sun_math/ansi_fp.c Line: 704
+  EWL_C/src/sun_math/ansi_fp.c Line: 711
+  EWL_C/src/sun_math/ansi_fp.c Line: 721
+  EWL_C/src/sun_math/ansi_fp.c Line: 728
+  EWL_C/src/sun_math/ansi_fp.c Line: 936
+  EWL_C/src/sun_math/ansi_fp.c Line: 960
+  EWL_C/src/sun_math/ansi_fp.c Line: 965
+  EWL_C/src/time.c Line: 78
+  EWL_C/src/time.c Line: 828
+  EWL_C/src/wcstold.c Line: 799
+  EWL_C/src/wprintf.c Line: 602
+  EWL_C/src/wprintf.c Line: 719
+  EWL_C/src/wprintf.c Line: 1361
+  EWL_C/src/wprintf.c Line: 1521
+  EWL_C/src/wprintf.c Line: 1596
+  EWL_C/src/wprintf.c Line: 1659
+  EWL_C/src/wprintf.c Line: 1684
+  EWL_C/src/wprintf.c Line: 1702
+  EWL_C/src/wprintf.c Line: 1730
+  EWL_C/src/wprintf.c Line: 1755
+  EWL_C/src/wprintformat.c Line: 667
+  EWL_C/src/wprintformat.c Line: 805
+  EWL_C/src/wprintformat.c Line: 1402
+  EWL_C/src/wprintformat.c Line: 1660
+  EWL_C/src/wprintformat.c Line: 1845
+  EWL_C/src/wprintformat.c Line: 1936
+  EWL_C/src/wprintformat.c Line: 2006
+  EWL_C/src/wprintformat.c Line: 2032
+  EWL_C/src/wprintformat.c Line: 2052
+  EWL_C/src/wprintformat.c Line: 2086
+  EWL_C/src/wprintformat.c Line: 2121
+  EWL_C/src/wscanf.c Line: 99
+  EWL_C/src/wstring.c Line: 98
+  EWL_C/src/wstring.c Line: 650
+  EWL_C/src/wstring.c Line: 662
+  EWL_C/src/wstring.c Line: 683
+  EWL_C/src/wstring.c Line: 696
+  EWL_C/src/wtime.c Line: 119
+
+---
+
+MISRA_EXCEPTION_RULE_19_6 :
+
+save -e960 MISRA 2004 Rule 19.6: Use of '#undef' is discouraged 
+
+Used when #undef has to used to control compilation. 
+
+  EWL_C/include/ansi_parms.h Line: 456
+  EWL_C/src/arm/ctype_aeabi.c Line: 11
+  EWL_C/src/arm/math_ARM.c Line: 13
+  EWL_C/src/bsearch.c Line: 16
+  EWL_C/src/mbstring.c Line: 29
+  EWL_C/src/mem.c Line: 21
+  EWL_C/src/printf.c Line: 35
+  EWL_C/src/qsort.c Line: 56
+  EWL_C/src/scanf.c Line: 23
+  EWL_C/src/secure_error.c Line: 9
+  EWL_C/src/string.c Line: 44
+  EWL_C/src/time.c Line: 30
+  EWL_C/src/wmem.c Line: 21
+  EWL_C/src/wprintf.c Line: 29
+  EWL_C/src/wscanf.c Line: 26
+  EWL_C/src/wstring.c Line: 38
+
+---
+
+MISRA_EXCEPTION_RULE_19_7 :
+
+save -e961 MISRA 2004 Rule 19.7: Function-like macro 
+
+Used when a function-like macro is defined. 
+
+  EWL_C/src/alloc.c Line: 14
+  EWL_C/src/alloc.c Line: 63
+  EWL_C/src/alloc.c Line: 1973
+  EWL_C/src/alloc.c Line: 2493
+  EWL_C/src/alloc.c Line: 2559
+  EWL_C/src/bsearch.c Line: 24
+  EWL_C/src/buffer_io.c Line: 121
+  EWL_C/src/coldfire/fenv_cf.c Line: 31
+  EWL_C/src/mem_funcs.c Line: 72
+  EWL_C/src/qsort.c Line: 64
+  EWL_C/src/scanformat.c Line: 140
+  EWL_C/src/string.c Line: 816
+  EWL_C/src/strtold.c Line: 232
+  EWL_C/src/strtoul.c Line: 98
+  EWL_C/src/sun_math/Double_precision/k_standard.c Line: 19
+  EWL_C/src/wcstold.c Line: 202
+  EWL_C/src/wcstoul.c Line: 107
+
+---
+
+MISRA_EXCEPTION_RULE_1_2a :
+
+MISRA 2004 Rule 1.2: Cast from pointer to void 
+
+Used to silence "function result not used" warnings. 
+
+  EWL_C/src/alloc.c Line: 2077
+  EWL_C/src/string.c Line: 1412
+  EWL_C/src/wprintf.c Line: 980
+  EWL_C/src/wprintf.c Line: 983
+  EWL_C/src/wprintf.c Line: 989
+  EWL_C/src/wprintf.c Line: 992
+  EWL_C/src/wprintf.c Line: 1004
+  EWL_C/src/wprintf.c Line: 1007
+  EWL_C/src/wprintf.c Line: 1013
+  EWL_C/src/wprintf.c Line: 1016
+  EWL_C/src/wprintf.c Line: 1029
+  EWL_C/src/wprintf.c Line: 1032
+  EWL_C/src/wprintf.c Line: 1038
+  EWL_C/src/wprintf.c Line: 1041
+  EWL_C/src/wprintf.c Line: 1250
+  EWL_C/src/wprintf.c Line: 1253
+  EWL_C/src/wprintf.c Line: 1259
+  EWL_C/src/wprintf.c Line: 1262
+  EWL_C/src/wprintf.c Line: 1273
+  EWL_C/src/wprintf.c Line: 1276
+  EWL_C/src/wprintf.c Line: 1282
+  EWL_C/src/wprintf.c Line: 1285
+  EWL_C/src/wprintformat.c Line: 1099
+  EWL_C/src/wprintformat.c Line: 1104
+  EWL_C/src/wprintformat.c Line: 1113
+  EWL_C/src/wprintformat.c Line: 1118
+  EWL_C/src/wprintformat.c Line: 1131
+  EWL_C/src/wprintformat.c Line: 1136
+  EWL_C/src/wprintformat.c Line: 1145
+  EWL_C/src/wprintformat.c Line: 1150
+  EWL_C/src/wprintformat.c Line: 1163
+  EWL_C/src/wprintformat.c Line: 1168
+  EWL_C/src/wprintformat.c Line: 1177
+  EWL_C/src/wprintformat.c Line: 1182
+  EWL_C/src/wprintformat.c Line: 1522
+  EWL_C/src/wprintformat.c Line: 1527
+  EWL_C/src/wprintformat.c Line: 1536
+  EWL_C/src/wprintformat.c Line: 1541
+  EWL_C/src/wprintformat.c Line: 1554
+  EWL_C/src/wprintformat.c Line: 1559
+  EWL_C/src/wprintformat.c Line: 1568
+  EWL_C/src/wprintformat.c Line: 1573
+  EWL_C/src/wstring.c Line: 149
+  EWL_C/src/wstring.c Line: 213
+  EWL_C/src/wstring.c Line: 225
+  EWL_C/src/wstring.c Line: 290
+  EWL_C/src/wstring.c Line: 368
+  EWL_C/src/wstring.c Line: 380
+  EWL_C/src/wstring.c Line: 512
+
+---
+
+MISRA_EXCEPTION_RULE_1_2b :
+
+MISRA 2004 Rule 1.2: Both sides have side effects 
+
+Used to generate more efficient copy code, e.g., "if (*p1++ != *p2++)". 
+
+  EWL_C/src/coldfire/fenv_cf.c Line: 154
+  EWL_C/src/mem.c Line: 255
+  EWL_C/src/mem.c Line: 272
+  EWL_C/src/string.c Line: 553
+  EWL_C/src/string.c Line: 570
+  EWL_C/src/string.c Line: 1206
+  EWL_C/src/string.c Line: 1238
+  EWL_C/src/sun_math/Double_precision/s_asinh.c Line: 68
+  EWL_C/src/sun_math/Double_precision/s_erf.c Line: 270
+  EWL_C/src/sun_math/Double_precision/s_erf.c Line: 359
+  EWL_C/src/sun_math/Single_precision/s_asinhf.c Line: 72
+  EWL_C/src/sun_math/Single_precision/s_erff.c Line: 187
+  EWL_C/src/sun_math/Single_precision/s_erff.c Line: 271
+  EWL_C/src/wstring.c Line: 397
+  EWL_C/src/wstring.c Line: 411
+  EWL_C/src/wstring.c Line: 435
+  EWL_C/src/wstring.c Line: 452
+  EWL_C/src/wstring.c Line: 824
+  EWL_C/src/wstring.c Line: 856
+
+---
+
+MISRA_EXCEPTION_RULE_1_2c :
+
+MISRA 2004 Rule 1.2: Unusual pointer cast (incompatible indirect types) 
+
+Used in vararg handling or to generate floating point values from bit patterns. 
+
+  EWL_C/src/arm/file_io_aeabi.c Line: 34
+  EWL_C/src/arm/file_io_aeabi.c Line: 38
+  EWL_C/src/arm/file_io_aeabi.c Line: 42
+  EWL_C/src/arm/math_ARM.c Line: 48
+  EWL_C/src/math_api.c Line: 112
+  EWL_C/src/math_api.c Line: 122
+  EWL_C/src/math_double.c Line: 55
+  EWL_C/src/math_double.c Line: 58
+  EWL_C/src/math_double.c Line: 92
+  EWL_C/src/math_float.c Line: 63
+  EWL_C/src/math_float.c Line: 200
+  EWL_C/src/math_float.c Line: 203
+  EWL_C/src/math_fma.c Line: 485
+  EWL_C/src/math_fma.c Line: 488
+  EWL_C/src/math_fma.c Line: 491
+  EWL_C/src/math_fma.c Line: 779
+  EWL_C/src/math_fma.c Line: 810
+  EWL_C/src/math_fma.c Line: 819
+  EWL_C/src/math_fma.c Line: 850
+  EWL_C/src/pa/math_ppc.c Line: 151
+  EWL_C/src/printformat.c Line: 1954
+  EWL_C/src/sun_math/Double_precision/e_cosh.c Line: 92
+  EWL_C/src/sun_math/Double_precision/e_sinh.c Line: 89
+  EWL_C/src/sun_math/ansi_fp.c Line: 135
+  EWL_C/src/sun_math/ansi_fp.c Line: 821
+  EWL_C/src/sun_math/ansi_fp.c Line: 1001
+  EWL_C/src/sun_math/ansi_fp.c Line: 1047
+  EWL_C/src/wprintf.c Line: 1534
+  EWL_C/src/wprintf.c Line: 1780
+  EWL_C/src/wprintformat.c Line: 1858
+  EWL_C/src/wscanf.c Line: 497
+  EWL_C/src/wscanf.c Line: 615
+  EWL_C/src/wscanf.c Line: 679
+  EWL_C/src/wscanf.c Line: 910
+
+---
+
+MISRA_EXCEPTION_RULE_1_2d :
+
+MISRA 2004 Rule 1.2: Division by zero 
+
+Used to generate FP NaN results. 
+
+  EWL_C/src/coldfire/fenv_cf.c Line: 155
+  EWL_C/src/sun_math/Single_precision/e_atanhf.c Line: 101
+  EWL_C/src/sun_math/Single_precision/e_lgammaf_r.c Line: 209
+  EWL_C/src/sun_math/Single_precision/e_lgammaf_r.c Line: 225
+  EWL_C/src/sun_math/Single_precision/e_lgammaf_r.c Line: 232
+  EWL_C/src/sun_math/Single_precision/e_log10f.c Line: 78
+  EWL_C/src/sun_math/Single_precision/e_logf.c Line: 77
+  EWL_C/src/sun_math/Single_precision/s_log1pf.c Line: 87
+
+---
+
+MISRA_EXCEPTION_RULE_20_11 :
+
+MISRA 2004 Rule 20.11: abort shall not be used 
+
+Used when abort() has to be used. 
+
+  EWL_C/src/arm/assert_aeabi.c Line: 50
+  EWL_C/src/assert.c Line: 53
+  EWL_C/src/sc/assert_StarCore.c Line: 12
+  EWL_C/src/sc/signal_StarCore.c Line: 292
+  EWL_C/src/secure_error.c Line: 65
+  EWL_C/src/signal.c Line: 79
+
+---
+
+MISRA_EXCEPTION_RULE_20_12 :
+
+MISRA 2004 Rule 20.12: mktime shall not be used 
+
+Used when mktime() has to be used. 
+
+  EWL_C/src/time.c Line: 339
+  EWL_C/src/time.c Line: 485
+  EWL_C/src/time.c Line: 739
+  EWL_C/src/time.c Line: 747
+  EWL_C/src/time.c Line: 772
+  EWL_C/src/time.c Line: 783
+  EWL_C/src/time.c Line: 818
+  EWL_C/src/time.c Line: 903
+  EWL_C/src/time.c Line: 917
+  EWL_C/src/time.c Line: 978
+  EWL_C/src/time.c Line: 989
+  EWL_C/src/time.c Line: 1003
+  EWL_C/src/time.c Line: 1037
+  EWL_C/src/time.c Line: 1047
+  EWL_C/src/time.c Line: 1072
+  EWL_C/src/time.c Line: 1080
+  EWL_C/src/time.c Line: 1082
+  EWL_C/src/time.c Line: 1084
+  EWL_C/src/wtime.c Line: 93
+  EWL_C/src/wtime.c Line: 357
+
+---
+
+MISRA_EXCEPTION_RULE_20_4 :
+
+MISRA 2004 Rule 20.4: malloc shall not be used 
+
+Used when malloc() has to be used. 
+
+  EWL_C/src/alloc.c Line: 417
+  EWL_C/src/alloc.c Line: 437
+  EWL_C/src/alloc.c Line: 462
+  EWL_C/src/alloc.c Line: 470
+  EWL_C/src/ansi_files.c Line: 246
+  EWL_C/src/ansi_files.c Line: 303
+  EWL_C/src/buffer_io.c Line: 266
+  EWL_C/src/buffer_io.c Line: 302
+  EWL_C/src/file_io.c Line: 200
+  EWL_C/src/file_io.c Line: 344
+  EWL_C/src/file_io.c Line: 403
+  EWL_C/src/file_io.c Line: 659
+  EWL_C/src/sc/file_io_StarCore.c Line: 139
+  EWL_C/src/sc/file_io_StarCore.c Line: 301
+  EWL_C/src/sc/thread_local_data_StarCore.c Line: 118
+  EWL_C/src/string.c Line: 636
+  EWL_C/src/string.c Line: 638
+  EWL_C/src/string.c Line: 645
+  EWL_C/src/string.c Line: 647
+  EWL_C/src/string.c Line: 686
+  EWL_C/src/string.c Line: 692
+  EWL_C/src/string.c Line: 694
+  EWL_C/src/string.c Line: 697
+  EWL_C/src/string.c Line: 752
+  EWL_C/src/string.c Line: 754
+  EWL_C/src/string.c Line: 760
+
+---
+
+MISRA_EXCEPTION_RULE_20_5 :
+
+MISRA 2004 Rule 20.5: errno shall not be used 
+
+Used when errno has to be used. 
+
+  EWL_C/src/file_pos.c Line: 50
+  EWL_C/src/file_pos.c Line: 104
+  EWL_C/src/file_pos.c Line: 178
+  EWL_C/src/file_pos.c Line: 187
+  EWL_C/src/file_pos.c Line: 230
+  EWL_C/src/file_pos.c Line: 245
+  EWL_C/src/math_double.c Line: 119
+  EWL_C/src/math_double.c Line: 243
+  EWL_C/src/math_double.c Line: 248
+  EWL_C/src/math_float.c Line: 74
+  EWL_C/src/math_float.c Line: 84
+  EWL_C/src/math_float.c Line: 157
+  EWL_C/src/math_float.c Line: 249
+  EWL_C/src/math_float.c Line: 310
+  EWL_C/src/math_float.c Line: 315
+  EWL_C/src/math_float.c Line: 320
+  EWL_C/src/math_longdouble.c Line: 53
+  EWL_C/src/math_longdouble.c Line: 58
+  EWL_C/src/math_longdouble.c Line: 87
+  EWL_C/src/math_longdouble.c Line: 113
+  EWL_C/src/math_longdouble.c Line: 117
+  EWL_C/src/math_longdouble.c Line: 177
+  EWL_C/src/math_longdouble.c Line: 182
+  EWL_C/src/math_longdouble.c Line: 187
+  EWL_C/src/math_longdouble.c Line: 215
+  EWL_C/src/math_longdouble.c Line: 222
+  EWL_C/src/mbstring.c Line: 622
+  EWL_C/src/misc_io.c Line: 72
+  EWL_C/src/sc/asin_StarCore.c Line: 105
+  EWL_C/src/sc/asin_StarCore.c Line: 110
+  EWL_C/src/sc/asin_StarCore.c Line: 114
+  EWL_C/src/sc/asin_StarCore.c Line: 130
+  EWL_C/src/sc/asin_StarCore.c Line: 135
+  EWL_C/src/sc/asin_StarCore.c Line: 139
+  EWL_C/src/sc/atan2_StarCore.c Line: 25
+  EWL_C/src/sc/atan2_StarCore.c Line: 30
+  EWL_C/src/sc/atan2_StarCore.c Line: 34
+  EWL_C/src/sc/exp_StarCore.c Line: 32
+  EWL_C/src/sc/exp_StarCore.c Line: 37
+  EWL_C/src/sc/exp_StarCore.c Line: 121
+  EWL_C/src/sc/exp_StarCore.c Line: 125
+  EWL_C/src/sc/exp_StarCore.c Line: 140
+  EWL_C/src/sc/exp_StarCore.c Line: 144
+  EWL_C/src/sc/file_io_StarCore.c Line: 118
+  EWL_C/src/sc/file_io_StarCore.c Line: 178
+  EWL_C/src/sc/file_io_StarCore.c Line: 209
+  EWL_C/src/sc/file_io_StarCore.c Line: 241
+  EWL_C/src/sc/file_io_StarCore.c Line: 272
+  EWL_C/src/sc/file_io_StarCore.c Line: 377
+  EWL_C/src/sc/ldexp_StarCore.c Line: 28
+  EWL_C/src/sc/ldexp_StarCore.c Line: 32
+  EWL_C/src/sc/log10_StarCore.c Line: 33
+  EWL_C/src/sc/log10_StarCore.c Line: 38
+  EWL_C/src/sc/log10_StarCore.c Line: 59
+  EWL_C/src/sc/log10_StarCore.c Line: 66
+  EWL_C/src/sc/log10_StarCore.c Line: 76
+  EWL_C/src/sc/log10_StarCore.c Line: 81
+  EWL_C/src/sc/log_StarCore.c Line: 32
+  EWL_C/src/sc/log_StarCore.c Line: 37
+  EWL_C/src/sc/log_StarCore.c Line: 88
+  EWL_C/src/sc/log_StarCore.c Line: 93
+  EWL_C/src/sc/log_StarCore.c Line: 97
+  EWL_C/src/sc/log_StarCore.c Line: 107
+  EWL_C/src/sc/log_StarCore.c Line: 111
+  EWL_C/src/sc/math_StarCore.c Line: 53
+  EWL_C/src/sc/math_StarCore.c Line: 58
+  EWL_C/src/sc/math_StarCore.c Line: 62
+  EWL_C/src/sc/math_StarCore.c Line: 160
+  EWL_C/src/sc/math_StarCore.c Line: 208
+  EWL_C/src/sc/math_StarCore.c Line: 227
+  EWL_C/src/sc/math_StarCore.c Line: 275
+  EWL_C/src/sc/math_StarCore.c Line: 294
+  EWL_C/src/sc/math_StarCore.c Line: 343
+  EWL_C/src/sc/pow_StarCore.c Line: 99
+  EWL_C/src/sc/pow_StarCore.c Line: 104
+  EWL_C/src/sc/pow_StarCore.c Line: 108
+  EWL_C/src/sc/pow_StarCore.c Line: 118
+  EWL_C/src/sc/pow_StarCore.c Line: 123
+  EWL_C/src/sc/pow_StarCore.c Line: 152
+  EWL_C/src/sc/pow_StarCore.c Line: 156
+  EWL_C/src/sc/pow_StarCore.c Line: 172
+  EWL_C/src/sc/pow_StarCore.c Line: 176
+  EWL_C/src/sc/pow_StarCore.c Line: 207
+  EWL_C/src/sc/pow_StarCore.c Line: 211
+  EWL_C/src/sc/pow_StarCore.c Line: 221
+  EWL_C/src/sc/pow_StarCore.c Line: 225
+  EWL_C/src/sc/signal_StarCore.c Line: 122
+  EWL_C/src/sc/signal_StarCore.c Line: 139
+  EWL_C/src/sc/signal_StarCore.c Line: 152
+  EWL_C/src/sc/signal_StarCore.c Line: 214
+  EWL_C/src/sc/sinh_StarCore.c Line: 60
+  EWL_C/src/sc/sinh_StarCore.c Line: 64
+  EWL_C/src/sc/sqrt_StarCore.c Line: 36
+  EWL_C/src/sc/sqrt_StarCore.c Line: 41
+  EWL_C/src/sc/sqrt_StarCore.c Line: 45
+  EWL_C/src/sc/sqrt_StarCore.c Line: 91
+  EWL_C/src/sc/sqrt_StarCore.c Line: 96
+  EWL_C/src/sc/sqrt_StarCore.c Line: 100
+  EWL_C/src/sc/time_StarCore.c Line: 60
+  EWL_C/src/signal.c Line: 33
+  EWL_C/src/strtold.c Line: 767
+  EWL_C/src/strtold.c Line: 772
+  EWL_C/src/strtold.c Line: 974
+  EWL_C/src/strtold.c Line: 999
+  EWL_C/src/strtold.c Line: 1026
+  EWL_C/src/strtoul.c Line: 273
+  EWL_C/src/strtoul.c Line: 307
+  EWL_C/src/strtoul.c Line: 316
+  EWL_C/src/strtoul.c Line: 352
+  EWL_C/src/strtoul.c Line: 538
+  EWL_C/src/strtoul.c Line: 546
+  EWL_C/src/sun_math/Double_precision/e_acos.c Line: 90
+  EWL_C/src/sun_math/Double_precision/e_acos.c Line: 95
+  EWL_C/src/sun_math/Double_precision/e_acos.c Line: 100
+  EWL_C/src/sun_math/Double_precision/e_acosh.c Line: 60
+  EWL_C/src/sun_math/Double_precision/e_acosh.c Line: 65
+  EWL_C/src/sun_math/Double_precision/e_asin.c Line: 95
+  EWL_C/src/sun_math/Double_precision/e_asin.c Line: 100
+  EWL_C/src/sun_math/Double_precision/e_asin.c Line: 105
+  EWL_C/src/sun_math/Double_precision/e_atan2.c Line: 97
+  EWL_C/src/sun_math/Double_precision/e_atan2.c Line: 102
+  EWL_C/src/sun_math/Double_precision/e_atanh.c Line: 68
+  EWL_C/src/sun_math/Double_precision/e_atanh.c Line: 73
+  EWL_C/src/sun_math/Double_precision/e_atanh.c Line: 77
+  EWL_C/src/sun_math/Double_precision/e_atanh.c Line: 88
+  EWL_C/src/sun_math/Double_precision/e_cosh.c Line: 107
+  EWL_C/src/sun_math/Double_precision/e_exp.c Line: 135
+  EWL_C/src/sun_math/Double_precision/e_exp.c Line: 146
+  EWL_C/src/sun_math/Double_precision/e_fmod.c Line: 61
+  EWL_C/src/sun_math/Double_precision/e_fmod.c Line: 66
+  EWL_C/src/sun_math/Double_precision/e_lgamma_r.c Line: 235
+  EWL_C/src/sun_math/Double_precision/e_lgamma_r.c Line: 239
+  EWL_C/src/sun_math/Double_precision/e_log.c Line: 108
+  EWL_C/src/sun_math/Double_precision/e_log.c Line: 120
+  EWL_C/src/sun_math/Double_precision/e_log.c Line: 125
+  EWL_C/src/sun_math/Double_precision/e_log.c Line: 130
+  EWL_C/src/sun_math/Double_precision/e_log10.c Line: 85
+  EWL_C/src/sun_math/Double_precision/e_log10.c Line: 90
+  EWL_C/src/sun_math/Double_precision/e_log10.c Line: 102
+  EWL_C/src/sun_math/Double_precision/e_log10.c Line: 107
+  EWL_C/src/sun_math/Double_precision/e_log10.c Line: 112
+  EWL_C/src/sun_math/Double_precision/e_pow.c Line: 136
+  EWL_C/src/sun_math/Double_precision/e_pow.c Line: 141
+  EWL_C/src/sun_math/Double_precision/e_pow.c Line: 148
+  EWL_C/src/sun_math/Double_precision/e_pow.c Line: 153
+  EWL_C/src/sun_math/Double_precision/e_pow.c Line: 172
+  EWL_C/src/sun_math/Double_precision/e_pow.c Line: 177
+  EWL_C/src/sun_math/Double_precision/e_pow.c Line: 272
+  EWL_C/src/sun_math/Double_precision/e_pow.c Line: 277
+  EWL_C/src/sun_math/Double_precision/e_pow.c Line: 282
+  EWL_C/src/sun_math/Double_precision/e_remainder.c Line: 59
+  EWL_C/src/sun_math/Double_precision/e_remainder.c Line: 64
+  EWL_C/src/sun_math/Double_precision/e_sinh.c Line: 103
+  EWL_C/src/sun_math/Double_precision/e_sqrt.c Line: 121
+  EWL_C/src/sun_math/Double_precision/e_sqrt.c Line: 131
+  EWL_C/src/sun_math/Double_precision/e_sqrt.c Line: 149
+  EWL_C/src/sun_math/Double_precision/e_sqrt.c Line: 154
+  EWL_C/src/sun_math/Double_precision/e_sqrt.c Line: 159
+  EWL_C/src/sun_math/Double_precision/k_standard.c Line: 111
+  EWL_C/src/sun_math/Double_precision/k_standard.c Line: 117
+  EWL_C/src/sun_math/Double_precision/k_standard.c Line: 128
+  EWL_C/src/sun_math/Double_precision/k_standard.c Line: 134
+  EWL_C/src/sun_math/Double_precision/k_standard.c Line: 147
+  EWL_C/src/sun_math/Double_precision/k_standard.c Line: 153
+  EWL_C/src/sun_math/Double_precision/k_standard.c Line: 168
+  EWL_C/src/sun_math/Double_precision/k_standard.c Line: 171
+  EWL_C/src/sun_math/Double_precision/k_standard.c Line: 186
+  EWL_C/src/sun_math/Double_precision/k_standard.c Line: 189
+  EWL_C/src/sun_math/Double_precision/k_standard.c Line: 204
+  EWL_C/src/sun_math/Double_precision/k_standard.c Line: 207
+  EWL_C/src/sun_math/Double_precision/k_standard.c Line: 218
+  EWL_C/src/sun_math/Double_precision/k_standard.c Line: 221
+  EWL_C/src/sun_math/Double_precision/k_standard.c Line: 236
+  EWL_C/src/sun_math/Double_precision/k_standard.c Line: 242
+  EWL_C/src/sun_math/Double_precision/k_standard.c Line: 257
+  EWL_C/src/sun_math/Double_precision/k_standard.c Line: 263
+  EWL_C/src/sun_math/Double_precision/k_standard.c Line: 278
+  EWL_C/src/sun_math/Double_precision/k_standard.c Line: 284
+  EWL_C/src/sun_math/Double_precision/k_standard.c Line: 299
+  EWL_C/src/sun_math/Double_precision/k_standard.c Line: 305
+  EWL_C/src/sun_math/Double_precision/k_standard.c Line: 320
+  EWL_C/src/sun_math/Double_precision/k_standard.c Line: 326
+  EWL_C/src/sun_math/Double_precision/k_standard.c Line: 341
+  EWL_C/src/sun_math/Double_precision/k_standard.c Line: 347
+  EWL_C/src/sun_math/Double_precision/k_standard.c Line: 362
+  EWL_C/src/sun_math/Double_precision/k_standard.c Line: 365
+  EWL_C/src/sun_math/Double_precision/k_standard.c Line: 380
+  EWL_C/src/sun_math/Double_precision/k_standard.c Line: 386
+  EWL_C/src/sun_math/Double_precision/k_standard.c Line: 401
+  EWL_C/src/sun_math/Double_precision/k_standard.c Line: 407
+  EWL_C/src/sun_math/Double_precision/k_standard.c Line: 421
+  EWL_C/src/sun_math/Double_precision/k_standard.c Line: 427
+  EWL_C/src/sun_math/Double_precision/k_standard.c Line: 442
+  EWL_C/src/sun_math/Double_precision/k_standard.c Line: 448
+  EWL_C/src/sun_math/Double_precision/k_standard.c Line: 463
+  EWL_C/src/sun_math/Double_precision/k_standard.c Line: 469
+  EWL_C/src/sun_math/Double_precision/k_standard.c Line: 484
+  EWL_C/src/sun_math/Double_precision/k_standard.c Line: 505
+  EWL_C/src/sun_math/Double_precision/k_standard.c Line: 508
+  EWL_C/src/sun_math/Double_precision/k_standard.c Line: 519
+  EWL_C/src/sun_math/Double_precision/k_standard.c Line: 522
+  EWL_C/src/sun_math/Double_precision/k_standard.c Line: 537
+  EWL_C/src/sun_math/Double_precision/k_standard.c Line: 543
+  EWL_C/src/sun_math/Double_precision/k_standard.c Line: 558
+  EWL_C/src/sun_math/Double_precision/k_standard.c Line: 564
+  EWL_C/src/sun_math/Double_precision/k_standard.c Line: 578
+  EWL_C/src/sun_math/Double_precision/k_standard.c Line: 581
+  EWL_C/src/sun_math/Double_precision/k_standard.c Line: 595
+  EWL_C/src/sun_math/Double_precision/k_standard.c Line: 601
+  EWL_C/src/sun_math/Double_precision/k_standard.c Line: 615
+  EWL_C/src/sun_math/Double_precision/k_standard.c Line: 621
+  EWL_C/src/sun_math/Double_precision/k_standard.c Line: 632
+  EWL_C/src/sun_math/Double_precision/k_standard.c Line: 638
+  EWL_C/src/sun_math/Double_precision/k_standard.c Line: 649
+  EWL_C/src/sun_math/Double_precision/k_standard.c Line: 655
+  EWL_C/src/sun_math/Double_precision/k_standard.c Line: 666
+  EWL_C/src/sun_math/Double_precision/k_standard.c Line: 672
+  EWL_C/src/sun_math/Double_precision/k_standard.c Line: 682
+  EWL_C/src/sun_math/Double_precision/k_standard.c Line: 688
+  EWL_C/src/sun_math/Double_precision/k_standard.c Line: 698
+  EWL_C/src/sun_math/Double_precision/k_standard.c Line: 701
+  EWL_C/src/sun_math/Double_precision/k_standard.c Line: 712
+  EWL_C/src/sun_math/Double_precision/k_standard.c Line: 715
+  EWL_C/src/sun_math/Double_precision/k_standard.c Line: 726
+  EWL_C/src/sun_math/Double_precision/k_standard.c Line: 733
+  EWL_C/src/sun_math/Double_precision/k_standard.c Line: 744
+  EWL_C/src/sun_math/Double_precision/k_standard.c Line: 751
+  EWL_C/src/sun_math/Double_precision/k_standard.c Line: 762
+  EWL_C/src/sun_math/Double_precision/k_standard.c Line: 769
+  EWL_C/src/sun_math/Double_precision/k_standard.c Line: 780
+  EWL_C/src/sun_math/Double_precision/k_standard.c Line: 787
+  EWL_C/src/sun_math/Double_precision/k_standard.c Line: 798
+  EWL_C/src/sun_math/Double_precision/k_standard.c Line: 805
+  EWL_C/src/sun_math/Double_precision/k_standard.c Line: 816
+  EWL_C/src/sun_math/Double_precision/k_standard.c Line: 823
+  EWL_C/src/sun_math/Double_precision/k_standard.c Line: 838
+  EWL_C/src/sun_math/Double_precision/k_standard.c Line: 841
+  EWL_C/src/sun_math/Double_precision/k_standard.c Line: 856
+  EWL_C/src/sun_math/Double_precision/k_standard.c Line: 862
+  EWL_C/src/sun_math/Double_precision/k_standard.c Line: 877
+  EWL_C/src/sun_math/Double_precision/s_erf.c Line: 371
+  EWL_C/src/sun_math/Double_precision/s_expm1.c Line: 168
+  EWL_C/src/sun_math/Double_precision/s_expm1.c Line: 181
+  EWL_C/src/sun_math/Double_precision/s_ilogb.c Line: 45
+  EWL_C/src/sun_math/Double_precision/s_ilogb.c Line: 50
+  EWL_C/src/sun_math/Double_precision/s_ilogb.c Line: 75
+  EWL_C/src/sun_math/Double_precision/s_ilogb.c Line: 80
+  EWL_C/src/sun_math/Double_precision/s_ilogb.c Line: 91
+  EWL_C/src/sun_math/Double_precision/s_ilogb.c Line: 96
+  EWL_C/src/sun_math/Double_precision/s_log1p.c Line: 128
+  EWL_C/src/sun_math/Double_precision/s_log1p.c Line: 138
+  EWL_C/src/sun_math/Double_precision/s_log1p.c Line: 143
+  EWL_C/src/sun_math/Double_precision/s_logb.c Line: 39
+  EWL_C/src/sun_math/Double_precision/s_logb.c Line: 44
+  EWL_C/src/sun_math/Single_precision/e_acosf.c Line: 79
+  EWL_C/src/sun_math/Single_precision/e_acosf.c Line: 84
+  EWL_C/src/sun_math/Single_precision/e_acosf.c Line: 89
+  EWL_C/src/sun_math/Single_precision/e_acoshf.c Line: 62
+  EWL_C/src/sun_math/Single_precision/e_acoshf.c Line: 67
+  EWL_C/src/sun_math/Single_precision/e_asinf.c Line: 82
+  EWL_C/src/sun_math/Single_precision/e_asinf.c Line: 87
+  EWL_C/src/sun_math/Single_precision/e_asinf.c Line: 92
+  EWL_C/src/sun_math/Single_precision/e_atan2f.c Line: 80
+  EWL_C/src/sun_math/Single_precision/e_atan2f.c Line: 85
+  EWL_C/src/sun_math/Single_precision/e_atanhf.c Line: 68
+  EWL_C/src/sun_math/Single_precision/e_atanhf.c Line: 73
+  EWL_C/src/sun_math/Single_precision/e_atanhf.c Line: 77
+  EWL_C/src/sun_math/Single_precision/e_atanhf.c Line: 88
+  EWL_C/src/sun_math/Single_precision/e_atanhf.c Line: 93
+  EWL_C/src/sun_math/Single_precision/e_coshf.c Line: 96
+  EWL_C/src/sun_math/Single_precision/e_expf.c Line: 88
+  EWL_C/src/sun_math/Single_precision/e_expf.c Line: 99
+  EWL_C/src/sun_math/Single_precision/e_fmodf.c Line: 51
+  EWL_C/src/sun_math/Single_precision/e_lgammaf_r.c Line: 188
+  EWL_C/src/sun_math/Single_precision/e_lgammaf_r.c Line: 192
+  EWL_C/src/sun_math/Single_precision/e_log10f.c Line: 69
+  EWL_C/src/sun_math/Single_precision/e_log10f.c Line: 74
+  EWL_C/src/sun_math/Single_precision/e_log10f.c Line: 87
+  EWL_C/src/sun_math/Single_precision/e_log10f.c Line: 92
+  EWL_C/src/sun_math/Single_precision/e_log10f.c Line: 97
+  EWL_C/src/sun_math/Single_precision/e_logf.c Line: 73
+  EWL_C/src/sun_math/Single_precision/e_logf.c Line: 86
+  EWL_C/src/sun_math/Single_precision/e_logf.c Line: 91
+  EWL_C/src/sun_math/Single_precision/e_logf.c Line: 96
+  EWL_C/src/sun_math/Single_precision/e_powf.c Line: 107
+  EWL_C/src/sun_math/Single_precision/e_powf.c Line: 112
+  EWL_C/src/sun_math/Single_precision/e_powf.c Line: 119
+  EWL_C/src/sun_math/Single_precision/e_powf.c Line: 124
+  EWL_C/src/sun_math/Single_precision/e_powf.c Line: 143
+  EWL_C/src/sun_math/Single_precision/e_powf.c Line: 148
+  EWL_C/src/sun_math/Single_precision/e_powf.c Line: 233
+  EWL_C/src/sun_math/Single_precision/e_powf.c Line: 238
+  EWL_C/src/sun_math/Single_precision/e_powf.c Line: 243
+  EWL_C/src/sun_math/Single_precision/e_remainderf.c Line: 63
+  EWL_C/src/sun_math/Single_precision/e_remainderf.c Line: 68
+  EWL_C/src/sun_math/Single_precision/e_sinhf.c Line: 96
+  EWL_C/src/sun_math/Single_precision/e_sqrtf.c Line: 56
+  EWL_C/src/sun_math/Single_precision/e_sqrtf.c Line: 74
+  EWL_C/src/sun_math/Single_precision/e_sqrtf.c Line: 79
+  EWL_C/src/sun_math/Single_precision/e_sqrtf.c Line: 84
+  EWL_C/src/sun_math/Single_precision/fmodf.c Line: 38
+  EWL_C/src/sun_math/Single_precision/fmodf.c Line: 43
+  EWL_C/src/sun_math/Single_precision/log2f.c Line: 75
+  EWL_C/src/sun_math/Single_precision/log2f.c Line: 82
+  EWL_C/src/sun_math/Single_precision/log2f.c Line: 87
+  EWL_C/src/sun_math/Single_precision/s_erff.c Line: 283
+  EWL_C/src/sun_math/Single_precision/s_expm1f.c Line: 91
+  EWL_C/src/sun_math/Single_precision/s_expm1f.c Line: 104
+  EWL_C/src/sun_math/Single_precision/s_ilogbf.c Line: 52
+  EWL_C/src/sun_math/Single_precision/s_ilogbf.c Line: 57
+  EWL_C/src/sun_math/Single_precision/s_ilogbf.c Line: 81
+  EWL_C/src/sun_math/Single_precision/s_ilogbf.c Line: 86
+  EWL_C/src/sun_math/Single_precision/s_ilogbf.c Line: 97
+  EWL_C/src/sun_math/Single_precision/s_ilogbf.c Line: 102
+  EWL_C/src/sun_math/Single_precision/s_ldexpf.c Line: 43
+  EWL_C/src/sun_math/Single_precision/s_log1pf.c Line: 83
+  EWL_C/src/sun_math/Single_precision/s_log1pf.c Line: 94
+  EWL_C/src/sun_math/Single_precision/s_log1pf.c Line: 99
+  EWL_C/src/sun_math/Single_precision/s_logbf.c Line: 49
+  EWL_C/src/sun_math/Single_precision/s_logbf.c Line: 54
+  EWL_C/src/sun_math/math_sun.c Line: 96
+  EWL_C/src/sun_math/math_sun.c Line: 123
+  EWL_C/src/sun_math/math_sun.c Line: 127
+  EWL_C/src/sun_math/math_sun.c Line: 182
+  EWL_C/src/sun_math/math_sun.c Line: 186
+  EWL_C/src/sun_math/math_sun.c Line: 241
+  EWL_C/src/sun_math/math_sun.c Line: 245
+  EWL_C/src/sun_math/math_sun.c Line: 303
+  EWL_C/src/sun_math/math_sun.c Line: 307
+  EWL_C/src/sun_math/math_sun.c Line: 393
+  EWL_C/src/sun_math/math_sun.c Line: 397
+  EWL_C/src/sun_math/math_sun.c Line: 482
+  EWL_C/src/sun_math/math_sun.c Line: 486
+  EWL_C/src/sun_math/math_sun.c Line: 569
+  EWL_C/src/sun_math/math_sun.c Line: 573
+  EWL_C/src/sun_math/math_sun.c Line: 627
+  EWL_C/src/sun_math/math_sun.c Line: 631
+  EWL_C/src/sun_math/math_sun.c Line: 686
+  EWL_C/src/sun_math/math_sun.c Line: 690
+  EWL_C/src/wcstold.c Line: 914
+  EWL_C/src/wcstold.c Line: 939
+  EWL_C/src/wcstold.c Line: 964
+  EWL_C/src/wcstoul.c Line: 420
+  EWL_C/src/wcstoul.c Line: 452
+  EWL_C/src/wcstoul.c Line: 487
+  EWL_C/src/wcstoul.c Line: 494
+  EWL_C/src/wcstoul.c Line: 531
+  EWL_C/src/wcstoul.c Line: 538
+
+---
+
+MISRA_EXCEPTION_RULE_20_8 :
+
+MISRA 2004 Rule 20.8: raise shall not be used 
+
+Used when raise() has to be used. 
+
+  EWL_C/src/abort_exit.c Line: 34
+  EWL_C/src/arm/fenv_arm.c Line: 126
+  EWL_C/src/arm/fenv_arm.c Line: 137
+  EWL_C/src/arm/fenv_arm.c Line: 148
+  EWL_C/src/arm/fenv_arm.c Line: 159
+  EWL_C/src/arm/fenv_arm.c Line: 170
+  EWL_C/src/arm/float_exceptions.c Line: 91
+
+---
+
+MISRA_EXCEPTION_RULE_20_9 :
+
+MISRA 2004 Rule 20.9: <stdio.h> shall not be used 
+
+Used when <stdio.h> has to be included. 
+
+  EWL_C/src/arm/assert_aeabi.c Line: 20
+  EWL_C/src/assert.c Line: 24
+  EWL_C/src/math_float.c Line: 34
+  EWL_C/src/string.c Line: 53
+  EWL_C/src/strtoul.c Line: 80
+  EWL_C/src/time.c Line: 40
+  EWL_C/src/wchar_io.c Line: 43
+  EWL_C/src/wcstoul.c Line: 88
+  EWL_C/src/wctype.c Line: 41
+  EWL_C/src/wprintf.c Line: 42
+  EWL_C/src/wprintformat.c Line: 29
+  EWL_C/src/wscanf.c Line: 38
+  EWL_C/src/wstring.c Line: 47
+  EWL_C/src/wtime.c Line: 28
+
+---
+
+MISRA_EXCEPTION_RULE_9_1 :
+
+MISRA 2004 Rule 9.1: Possible uninitialized symbol 
+
+Used when the symbol usage is consistent with its initialization 
+
+  EWL_C/src/sun_math/Double_precision/e_exp.c Line: 182
+  EWL_C/src/sun_math/Double_precision/k_rem_pio2.c Line: 191
+  EWL_C/src/sun_math/Double_precision/k_rem_pio2.c Line: 204
+  EWL_C/src/sun_math/Double_precision/k_rem_pio2.c Line: 223
+  EWL_C/src/sun_math/Double_precision/k_rem_pio2.c Line: 322
+  EWL_C/src/sun_math/Single_precision/k_rem_pio2f.c Line: 96
+  EWL_C/src/sun_math/Single_precision/k_rem_pio2f.c Line: 108
+  EWL_C/src/sun_math/Single_precision/k_rem_pio2f.c Line: 123
+  EWL_C/src/sun_math/Single_precision/k_rem_pio2f.c Line: 220
+
+---
+
+MISRA_EXCEPTION_STDARG_MACROS :
+
+macro( (826) , __va_start) -emacro(923 926 928 970, __va_start) 
+
+Used to implement __va_start 
+* Suspicious pointer-to-pointer conversion 
+* MISRA 2004 Rule 11.3: Cast pointer/non-pointer 
+* MISRA 2004 Rule 11.4: Cast from pointer to pointer 
+* MISRA 2004 Rule 6.3: Use of modifier or type outside of a typedef 
+
+  EWL_C/include/ansi_parms.h Line: 462
+  EWL_C/include/arm/stdarg.ARM.h Line: 16
+  EWL_C/include/coldfire/stdarg.cf.h Line: 20
+
+---
+
+MISRA_EXCEPTION_STDIO_MACROS :
+
+macro(929 960 970, __getc, __putc) 
+
+Used to implement __getc and __putc macros. 
+* MISRA 2004 Rule 11.4: Cast from pointer to pointer 
+* MISRA 2004 Rule 10.1: Cast/conversion of complex integer expression 
+* MISRA 2004 Rule 6.3: Use of modifier or type outside of a typedef 
+
+  EWL_C/include/ansi_parms.h Line: 459
+  EWL_C/include/stdio_api.h Line: 64
+
+---
+
+MISRA_EXCEPTION_STD_TYPE :
+
+MISRA 2004 Rule 6.3: Use of modifier or type outside of a typedef 
+
+Used when standard types/qualifiers have to used in headers. 
+
+  EWL_C/include/ansi_parms.h Line: 455
+  EWL_C/src/wscanf.c Line: 77
+  EWL_C/src/wscanf.c Line: 79
+
+---
+
+MISRA_RESTORE :
+
+restore Used to restore saved options 
+
+  EWL_C/include/ansi_parms.h Line: 463
+  EWL_C/src/alloc.c Line: 17
+  EWL_C/src/alloc.c Line: 65
+  EWL_C/src/alloc.c Line: 2025
+  EWL_C/src/alloc.c Line: 2505
+  EWL_C/src/alloc.c Line: 2565
+  EWL_C/src/bsearch.c Line: 18
+  EWL_C/src/bsearch.c Line: 26
+  EWL_C/src/buffer_io.c Line: 124
+  EWL_C/src/coldfire/fenv_cf.c Line: 36
+  EWL_C/src/mbstring.c Line: 31
+  EWL_C/src/mem.c Line: 23
+  EWL_C/src/mem_funcs.c Line: 78
+  EWL_C/src/printf.c Line: 37
+  EWL_C/src/qsort.c Line: 58
+  EWL_C/src/qsort.c Line: 103
+  EWL_C/src/scanf.c Line: 25
+  EWL_C/src/scanformat.c Line: 143
+  EWL_C/src/secure_error.c Line: 11
+  EWL_C/src/string.c Line: 46
+  EWL_C/src/string.c Line: 819
+  EWL_C/src/strtold.c Line: 254
+  EWL_C/src/strtoul.c Line: 106
+  EWL_C/src/sun_math/Double_precision/k_standard.c Line: 32
+  EWL_C/src/time.c Line: 32
+  EWL_C/src/wcstold.c Line: 226
+  EWL_C/src/wcstoul.c Line: 115
+  EWL_C/src/wmem.c Line: 23
+  EWL_C/src/wprintf.c Line: 31
+  EWL_C/src/wscanf.c Line: 28
+  EWL_C/src/wstring.c Line: 40
+
+---
+

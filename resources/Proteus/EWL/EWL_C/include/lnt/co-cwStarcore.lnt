@@ -1,0 +1,56 @@
+//    co-cwStarcore.lnt
+//    Compiler Options for Freescale Starcore Compiler
+
+//    This file contains options to allow PC-lint to process source
+//    files for your compiler.  It is used as follows:
+//
+//    lint  co-cwStarcore.lnt  source-file(s)
+//
+
+// Inherit from basis CW compiler option file common options
+
+co-cw_base.lnt
+
+//-cwh        // allow for @far and @hex-constant
+
+-sc1        // sizeof(char) is 1
+-ss2        // sizeof(short) is 2
+-si4        // sizeof(int) is 4
+-sl4        // sizeof(long) is 4
+-sll8       // sizeof(long long) is 8
+-sf4        // sizeof(float) is 4
+-sd8        // sizeof(double) is 8
+-sld8       // sizeof(long double)  is 8
+
+-spN4       // sizeof(near pointer) is 4
+-spF4       // sizeof(far pointer) is 4
+
+-d__declspec=_to_brackets +rw(_to_brackets)
+-d__attribute__=_to_brackets +rw(_to_brackets)
+
+// we have to ignore the asm keyword in front of a function
+-dasm=_ignore_init
++rw(_ignore_init)
++rw(restrict)
++rw(__inline, _inline, inline)	// enable the (non-standard) _inline keyword by ignoring it
+-rw(__syscall)
+
+// handle __option macro in preprocessor
+-d__option()=0
+
+
+// ## the following defines are defined internally in the compiler.
+// ## you can create the information below with the compiler option -Ldf
+// ## which produces a header file with the needed information.
+// we are a SC compiler
+-dBIG_ENDIAN=1
+-d_ENTERPRISE_C_=1
+-d_ENTERPRISE_MWFE_=1
+-d_SC3450_=0
+-d_SC3850_=0
+-d_SC8156_=1
+-d_MSC8156_=1
+-d__CWCC__=1
+-d__STDC__=1
+-d__STARCORE__=1
+-d__attribute__()

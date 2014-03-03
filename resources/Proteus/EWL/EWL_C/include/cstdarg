@@ -1,0 +1,49 @@
+/* EWL
+ * Copyright © 1995-2009 Freescale Corporation.  All rights reserved.
+ *
+ * $Date: 2012/06/01 15:39:37 $
+ * $Revision: 1.1 $
+ */
+
+#ifndef _EWL_CSTDARG
+#define _EWL_CSTDARG
+
+#include <ansi_parms.h>
+
+#if !_EWL_USING_CW_C_HEADERS_
+	#include <stdarg.h>
+
+	#if _EWL_PUT_THIRD_PARTY_C_IN_STD
+		#include <ewl_cpp_std_stdarg.h>
+	#endif
+#else
+
+#include <va_list.h>
+
+#if __dest_os == __win32_os
+	#include <x86/stdarg.win32.h>
+#elif __dest_os == __pa_eabi
+	#include <pa/stdarg.EPPC.h>
+#elif __dest_os == __hc_bare
+	#include <hc/stdarg.hc.h>
+#elif __dest_os == __m56800_os
+	#include <dsp/stdarg.56800.h>
+#elif __dest_os == __m56800E_os
+	#include <dsp/stdarg.56800E.h>
+#elif __dest_os == __arm_bare
+	#include <arm/stdarg.ARM.h>
+#elif __dest_os == __starcore
+	#include <sc/stdarg_StarCore.h>
+#elif __dest_os == __emb_coldfire
+	#include <coldfire/stdarg.cf.h>
+#else
+	#error Unknown platform
+#endif
+
+#if defined(_EWL_EXPORT_CNAMES) && defined(__cplusplus) && defined(_EWL_USING_NAMESPACE)
+#include <stdarg.h>
+#endif /*  defined(_EWL_EXPORT_CNAMES) && defined(__cplusplus) && defined(_EWL_USING_NAMESPACE) */
+
+#endif /* _EWL_USING_CW_C_HEADERS_ */
+
+#endif /* _EWL_CSTDARG */

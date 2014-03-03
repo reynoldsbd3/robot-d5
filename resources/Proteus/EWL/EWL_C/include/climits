@@ -1,0 +1,63 @@
+/* EWL
+ * Copyright © 1995-2009 Freescale Corporation.  All rights reserved.
+ *
+ * $Date: 2012/06/01 15:39:37 $
+ * $Revision: 1.1 $
+ */
+
+#ifndef _EWL_CLIMITS
+#define _EWL_CLIMITS
+
+#include <ansi_parms.h>
+
+#if !_EWL_USING_CW_C_HEADERS_
+	#include <limits.h>
+#else
+
+#include <limits_api.h>
+
+/* Build macros based  on platform configuration */
+
+#if !defined(_AEABI_PORTABILITY_LEVEL) || (_AEABI_PORTABILITY_LEVEL == 0)
+#define MB_LEN_MAX					_EWL_MB_LEN_MAX
+#endif
+
+#define CHAR_BIT					_EWL_CHAR_BIT
+
+#define SCHAR_MAX					_EWL_SCHAR_MAX
+#define UCHAR_MAX					_EWL_UCHAR_MAX
+#define SCHAR_MIN					_EWL_SCHAR_MIN
+
+#define CHAR_MIN					_EWL_CHAR_MIN
+#define CHAR_MAX					_EWL_CHAR_MAX
+
+#define SHRT_MAX					_EWL_SHRT_MAX
+#define USHRT_MAX					_EWL_USHRT_MAX
+#define SHRT_MIN					_EWL_SHRT_MIN
+
+#define INT_MAX						_EWL_INT_MAX
+#define UINT_MAX					_EWL_UINT_MAX
+#define INT_MIN						_EWL_INT_MIN
+
+#define LONG_MAX					_EWL_LONG_MAX
+#define ULONG_MAX					_EWL_ULONG_MAX
+#define LONG_MIN					_EWL_LONG_MIN
+
+#if _EWL_LONGLONG
+	#define LLONG_MAX				_EWL_LLONG_MAX
+	#define ULLONG_MAX				_EWL_ULLONG_MAX
+	#define LLONG_MIN				_EWL_LLONG_MIN
+
+/* CodeWarrior extension */
+	#define LONGLONG_MAX			_EWL_LLONG_MAX
+	#define ULONGLONG_MAX			_EWL_ULLONG_MAX
+	#define LONGLONG_MIN			_EWL_LLONG_MIN
+#endif /* _EWL_LONGLONG && _EWL_C99 */
+
+#if defined(_EWL_EXPORT_CNAMES) && defined(__cplusplus) && defined(_EWL_USING_NAMESPACE)
+#include <limits.h>
+#endif /*  defined(_EWL_EXPORT_CNAMES) && defined(__cplusplus) && defined(_EWL_USING_NAMESPACE) */
+
+#endif /* _EWL_USING_CW_C_HEADERS_ */
+
+#endif /* _EWL_CLIMITS */

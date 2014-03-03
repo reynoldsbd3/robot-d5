@@ -1,0 +1,12 @@
+/* EWL
+ * Copyright © 1995-2009 Freescale Corporation.  All rights reserved.
+ *
+ * $Date: 2012/06/01 15:39:38 $
+ * $Revision: 1.1 $
+ */
+
+#define _EWL_FLOATING_POINT			1
+#define _EWL_C99					1
+#define __BUILD_FDLIBM				1
+#define _EMBEDDED_WARRIOR_CTYPE		0
+#define _REENTRANT					0

@@ -1,0 +1,160 @@
+===============================================================================
+StarCore EWL C Release Notes
+===============================================================================
+
+Version:			15.1
+Date:   			September 14, 2010
+Authors:  			Anca Burlacu-Zane, Monica Galatanu, Andreas Hommel
+
+(C) 2010 Freescale Semiconductor, Inc.
+
+===============================================================================
+Current version is:                              (__EWL__ == 0x00015001).
+These release notes document changes since 		 (__EWL__ == 0x00015000).
+===============================================================================
+
+===============================================================================
+New Features / Fixes in this release
+===============================================================================
+
+- Added support for system() syscall. 
+
+  #include <stdlib.h>
+
+  int system(const char *);
+
+  It is supported for SC and x86.
+
+
+===============================================================================
+New Features / Fixes in previous releases
+===============================================================================
+
+EWL for Starcore fully supports the functions in the C99 standard.
+
+--------------------------------
+
+EWL Extras Library:
+
+#include <extras/dirent.h>
+
+	closedir()
+	opendir()
+	readdir()
+	readdir_r()
+	rewinddir()
+
+Is not supported for SC or any other EWL target.
+
+---
+
+#include <extras/extras_io.h>
+
+	chsize()?
+	filelength()
+	tell()
+
+Supported for SC.
+
+---
+
+#include <extras/extras_malloc.h>
+
+	heapmin()
+
+Supported for SC.
+
+---
+
+#include <extras/extras_stdlib.h>
+
+	gcvt()
+	rand_r()
+	ultoa()
+
+Supported for SC.
+
+---
+
+#include <extras/extras_string.h>
+
+	strcmpi()
+	strdup()
+	strerror_r()
+	stricmp()
+	stricoll()
+	strlwr()
+	strncasecmp()
+	strncmpi()
+	strncoll()
+	strnicmp()
+	strnicoll()
+	strnset()
+	strrev()
+	strset()
+	strspnp()
+	strupr()
+	strtok_r()
+
+Supported for SC.
+
+---
+
+#include <extras/extras_time.h>
+
+	asctime_r()
+	ctime_r()
+	gmtime_r()
+	localtime_r()
+	strdate()
+
+Supported for SC.
+
+---
+
+#include <extras/extras_wchar.h>
+
+	wchar_t *itow(int n, wchar_t *str, int radix);
+	double watof(const wchar_t *str);     
+	wchar_t *wcsdup(const wchar_t *str);
+	int wcsicmp(const wchar_t *s1, const wchar_t *s2); 
+	int wcsicoll(const wchar_t *s1, const wchar_t *s2);
+	wchar_t *wcslwr(wchar_t *str); 
+	int wcsncoll(const wchar_t *s1, const wchar_t *s2, size_t max);
+	int wcsnicmp(const wchar_t *s1, const wchar_t *s2, size_t n); 
+	int wcsnicoll(const wchar_t *s1, const wchar_t *s2, size_t max);
+	wchar_t *wcsnset(wchar_t *str, wchar_t wc, size_t n); 
+	wchar_t *wcsrev(wchar_t *str);
+	wchar_t *wcsset(wchar_t *str, wchar_t wc); 
+	wchar_t *wcsspnp(const wchar_t *s1, const wchar_t *s2);
+	wchar_t *wcsupr(wchar_t *str);
+	wchar_t *wstrrev(wchar_t * str); 
+	int wtoi(const wchar_t *a);
+
+Supported for SC.
+
+---
+
+#include <extras/fcntl.h>
+
+	creat(), _creat(), _wcreat()
+	fcntl(), _fcntl()
+	open(), _wopen()
+
+Is not supported for SC or any other EWL target.
+
+---
+
+#include <extras/sys/stat.h>
+
+	rmdir()
+	mkdir()
+
+Supported for SC but not any other EWL target.
+
+	chmod()
+	fstat()
+	stat()
+	umask()
+
+Is not supported for SC or any other EWL target.

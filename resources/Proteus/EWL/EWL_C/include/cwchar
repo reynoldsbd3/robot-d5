@@ -1,0 +1,1051 @@
+/* EWL
+ * Copyright © 1995-2009 Freescale Corporation.  All rights reserved.
+ *
+ * $Date: 2012/06/01 15:39:37 $
+ * $Revision: 1.1 $
+ */
+
+#ifndef _EWL_CWCHAR
+#define _EWL_CWCHAR
+
+#include <ansi_parms.h>
+
+#if !_EWL_USING_CW_C_HEADERS_
+	#include <wchar.h>
+
+	#if _EWL_PUT_THIRD_PARTY_C_IN_STD
+		#include <ewl_cpp_std_wchar.h>
+	#endif
+#else
+
+#if _EWL_WIDE_CHAR
+
+#include <ewl_lib_ext1.h>
+#include <ewl_rsize_t.h>
+#include <null.h>  /* ISO 9899-1: 4.6.1 */
+#include <file_struc.h>
+#include <stdarg.h>
+
+#include <eof.h>
+#include <weof.h>
+#include <wtime.h>
+
+#if _EWL_NEEDS_EXTRAS
+	#include <extras_wchar.h>
+#endif
+
+_EWL_BEGIN_NAMESPACE_STD
+
+_EWL_BEGIN_EXTERN_C
+
+
+	/** The fwscanf function reads input from the stream pointed to by stream, under control
+	 *	of the wide string pointed to by format that specifies the admissible input sequences and how
+	 *	they are to be converted for assignment, using subsequent arguments as pointers to the
+	 *	objects to receive the converted input. If there are insufficient arguments for the format,
+	 *	the behavior is undefined. If the format is exhausted while arguments remain, the excess
+	 *	arguments are evaluated (as always) but are otherwise ignored.
+	 *	
+	 *	The format is composed of zero or more directives: one or more white-space
+	 *	characters, an ordinary multibyte character (neither '%' nor a white-space character), or a
+	 *	conversion specification. Each conversion specification is introduced by the character '%'.
+	 *
+	 *	After the '%', the following appear in sequence:
+	 *
+	 *		An optional assignment-suppressing character '*'.
+	 *
+	 *		An optional decimal integer greater than zero that specifies the maximum field width
+	 *			(in characters).
+	 *
+	 *		An optional length modifier that specifies the size of the receiving object.
+	 *
+	 *		A conversion specifier character that specifies the type of conversion to be applied.
+	 *
+	 *	The fwscanf function executes each directive of the format in turn. If a directive fails, as
+	 *	detailed below, the function returns. Failures are described as input failures (due to the
+	 *	occurrence of an encoding error or the unavailability of input characters), or matching
+	 *	failures (due to inappropriate input).
+	 *
+	 *	A directive composed of white-space character(s) is executed by reading input up to the
+	 *	first non-white-space character (which remains unread), or until no more characters can
+	 *	be read.
+	 *
+	 *	A directive that is an ordinary multibyte character is executed by reading the next
+	 *	characters of the stream. If any of those characters differ from the ones composing the
+	 *	directive, the directive fails and the differing and subsequent characters remain unread.
+	 *	Similarly, if end-of-file, an encoding error, or a read error prevents a character from being
+	 *	read, the directive fails.
+	 *
+	 *	A directive that is a conversion specification defines a set of matching input sequences, as
+	 *	described below for each specifier. A conversion specification is executed in the
+	 *	following steps:
+	 *
+	 *	Input white-space characters (as specified by the isspace function) are skipped, unless
+	 *	the specification includes a '[', 'c', or 'n' specifier.
+	 *
+	 *	An input item is read from the stream, unless the specification includes an n specifier. An
+	 *	input item is defined as the longest sequence of input characters which does not exceed
+	 *	any specified field width and which is, or is a prefix of, a matching input sequence.
+	 *	The first character, if any, after the input item remains unread. If the length of the input
+	 *	item is zero, the execution of the directive fails; this condition is a matching failure unless
+	 *	end-of-file, an encoding error, or a read error prevented input from the stream, in which
+	 *	case it is an input failure.
+	 *
+	 *	Except in the case of a '%' specifier, the input item (or, in the case of a %n directive, the
+	 *	count of input characters) is converted to a type appropriate to the conversion specifier. If
+	 *	the input item is not a matching sequence, the execution of the directive fails: this
+	 *	condition is a matching failure. Unless assignment suppression was indicated by a '*', the
+	 *	result of the conversion is placed in the object pointed to by the first argument following
+	 *	the format argument that has not already received a conversion result. If this object
+	 *	does not have an appropriate type, or if the result of the conversion cannot be represented
+	 *	in the object, the behavior is undefined.
+	 *
+	 *	The length modifiers and their meanings are:
+	 *
+	 *	 hh Specifies that a following 'd', 'i', 'o', 'u', 'x', 'X', or 'n' conversion specifier applies
+	 *		to an argument with type pointer to signed char or unsigned char.
+	 *
+	 *	 h Specifies that a following 'd', 'i', 'o', 'u', 'x', 'X', or 'n' conversion specifier applies
+	 *		to an argument with type pointer to short int or unsigned short int.
+	 *
+	 *	 l Specifies that a following 'd', 'i', 'o', 'u', 'x', 'X', or 'n' conversion specifier applies
+	 *		to an argument with type pointer to long int or unsigned long
+	 *		int; that a following 'a', 'A', 'e', 'E', 'f', 'F', 'g', or 'G' conversion specifier applies to
+	 *		an argument with type pointer to double; or that a following 'c', 's', or '['
+	 *		conversion specifier applies to an argument with type pointer to wchar_t.
+	 *
+	 *	 ll Specifies that a following 'd', 'i', 'o', 'u', 'x', 'X', or 'n' conversion specifier applies
+	 *		to an argument with type pointer to long long int or unsigned
+	 *		long long int.
+	 *		(Available only when _EWL_C99_PRINTF_SCANF or _EWL_LONGLONG_PRINTF_SCANF is set).
+	 *
+	 *   j Specifies that a following 'd', 'i', 'o', 'u', 'x', 'X', or 'n' conversion specifier applies
+	 *		to an argument with type pointer to intmax_t or uintmax_t.
+	 *		(Available only when _EWL_C99_PRINTF_SCANF is set).
+	 *
+	 *	 z Specifies that a following 'd', 'i', 'o', 'u', 'x', 'X', or 'n' conversion specifier applies
+	 *		to an argument with type pointer to size_t or the corresponding signed
+	 *		integer type.
+	 *		(Available only when _EWL_C99_PRINTF_SCANF is set).
+	 *
+	 *	 t Specifies that a following 'd', 'i', 'o', 'u', 'x', 'X', or 'n' conversion specifier applies
+	 *		to an argument with type pointer to ptrdiff_t or the corresponding
+	 *		unsigned integer type.
+	 *		(Available only when _EWL_C99_PRINTF_SCANF is set).
+	 *
+	 * 	 L Specifies that a following 'a', 'A', 'e', 'E', 'f', 'F', 'g', or 'G' conversion specifier
+	 *		applies to an argument with type pointer to long double.
+	 *		(Available only when _EWL_FLOATING_POINT_PRINTF_SCANF is set).
+	 *
+	 *	If a length modifier appears with any conversion specifier other than as specified above,
+	 *	the behavior is undefined.
+	 *
+	 *	The conversion specifiers and their meanings are:
+	 *
+	 *	 d Matches an optionally signed decimal integer, whose format is the same as
+	 *		expected for the subject sequence of the strtol function with the value 10
+	 *		for the base argument. The corresponding argument shall be a pointer to
+	 *		signed integer.
+	 *
+	 *	 i Matches an optionally signed integer, whose format is the same as expected
+	 *		for the subject sequence of the strtol function with the value 0 for the
+	 *		base argument. The corresponding argument shall be a pointer to signed
+	 *		integer.
+	 *
+	 *	 o Matches an optionally signed octal integer, whose format is the same as
+	 *		expected for the subject sequence of the strtoul function with the value 8
+	 *		for the base argument. The corresponding argument shall be a pointer to
+	 *		unsigned integer.
+	 *
+	 *	 u Matches an optionally signed decimal integer, whose format is the same as
+	 *		expected for the subject sequence of the strtoul function with the value 10
+	 *		for the base argument. The corresponding argument shall be a pointer to
+	 *		unsigned integer.
+	 *
+	 *	 x Matches an optionally signed hexadecimal integer, whose format is the same
+	 *		as expected for the subject sequence of the strtoul function with the value
+	 *		16 for the base argument. The corresponding argument shall be a pointer to
+	 *		unsigned integer.
+	 *
+	 *	 a,e,f,g Matches an optionally signed floating-point number, infinity, or NaN, whose
+	 *		format is the same as expected for the subject sequence of the strtod
+	 *		function. The corresponding argument shall be a pointer to floating.
+	 *		(Available only when _EWL_FLOATING_POINT_PRINTF_SCANF is set).
+	 *
+	 *	 c Matches a sequence of characters of exactly the number specified by the field
+	 *		width (1 if no field width is present in the directive).
+	 *
+	 *		If no 'l' length modifier is present, the corresponding argument shall be a
+	 *		pointer to the initial element of a character array large enough to accept the
+	 *		sequence. No null character is added.
+	 *
+	 *		If an 'l' length modifier is present, the input shall be a sequence of multibyte
+	 *		characters that begins in the initial shift state. Each multibyte character in the
+	 *		sequence is converted to a wide character as if by a call to the mbrtowc
+	 *		function, with the conversion state described by an mbstate_t object
+	 *		initialized to zero before the first multibyte character is converted. The
+	 *		corresponding argument shall be a pointer to the initial element of an array of
+	 *		wchar_t large enough to accept the resulting sequence of wide characters.
+	 *		No null wide character is added.
+	 *		(Available only when _EWL_WIDE_CHAR is set).
+	 *
+	 *	 s Matches a sequence of non-white-space characters.
+	 *
+	 *		If no 'l' length modifier is present, the corresponding argument shall be a
+	 *		pointer to the initial element of a character array large enough to accept the
+	 *		sequence and a terminating null character, which will be added automatically.
+	 *
+	 *		If an 'l' length modifier is present, the input shall be a sequence of multibyte
+	 *		characters that begins in the initial shift state. Each multibyte character is
+	 *		converted to a wide character as if by a call to the mbrtowc function, with
+	 *		the conversion state described by an mbstate_t object initialized to zero
+	 *		before the first multibyte character is converted. The corresponding argument
+	 *		shall be a pointer to the initial element of an array of wchar_t large enough
+	 *		to accept the sequence and the terminating null wide character, which will be
+	 *		added automatically.
+	 *		(Available only when _EWL_WIDE_CHAR is set).
+	 *
+	 *	 [ Matches a nonempty sequence of characters from a set of expected characters
+	 *		(the scanset).
+	 *
+	 *		If no 'l' length modifier is present, the corresponding argument shall be a
+	 *		pointer to the initial element of a character array large enough to accept the
+	 *		sequence and a terminating null character, which will be added automatically.
+	 *
+	 *		If an 'l' length modifier is present, the input shall be a sequence of multibyte
+	 *		characters that begins in the initial shift state. Each multibyte character is
+	 *		converted to a wide character as if by a call to the mbrtowc function, with
+	 *		the conversion state described by an mbstate_t object initialized to zero
+	 *		before the first multibyte character is converted. The corresponding argument
+	 *		shall be a pointer to the initial element of an array of wchar_t large enough
+	 *		to accept the sequence and the terminating null wide character, which will be
+	 *		added automatically.
+	 *		(Available only when _EWL_WIDE_CHAR is set).
+	 *
+	 *		The conversion specifier includes all subsequent characters in the format
+	 *		string, up to and including the matching right bracket (]). The characters
+	 *		between the brackets (the scanlist) compose the scanset, unless the character
+	 *		after the left bracket is a circumflex (^), in which case the scanset contains all
+	 *		characters that do not appear in the scanlist between the circumflex and the
+	 *		right bracket. If the conversion specifier begins with [] or [^], the right
+	 *		bracket character is in the scanlist and the next following right bracket
+	 *		character is the matching right bracket that ends the specification; otherwise
+	 *		the first following right bracket character is the one that ends the
+	 *		specification. If a '- 'character is in the scanlist and is not the first, nor the
+	 *		second where the first character is a '^', nor the last character, the behavior is
+	 *		implementation-defined.
+	 *
+	 *	 p Matches an implementation-defined set of sequences, which should be the
+	 *		same as the set of sequences that may be produced by the %p conversion of
+	 *		the fprintf function. The corresponding argument shall be a pointer to a
+	 *		pointer to void. The input item is converted to a pointer value in an
+	 *		implementation-defined manner. If the input item is a value converted earlier
+	 *		during the same program execution, the pointer that results shall compare
+	 *		equal to that value; otherwise the behavior of the %p conversion is undefined.
+	 *
+	 *	 n No input is consumed. The corresponding argument shall be a pointer to
+	 *		signed integer into which is to be written the number of characters read from
+	 *		the input stream so far by this call to the fscanf function. Execution of a
+	 *		%n directive does not increment the assignment count returned at the
+	 *		completion of execution of the fscanf function. No argument is converted,
+	 *		but one is consumed. If the conversion specification includes an assignmentsuppressing
+	 *		character or a field width, the behavior is undefined.
+	 *
+	 *	 % Matches a single % character; no conversion or assignment occurs. The
+	 *		complete conversion specification shall be %%.
+	 *	
+	 *	If a conversion specification is invalid, the behavior is undefined.
+	 *	
+	 *	The conversion specifiers 'A', 'E', 'F', 'G', and 'X' are also valid and behave the same as,
+	 *	respectively, 'a', 'e', 'f', 'g', and 'x'.
+	 *	
+	 *	Trailing white space (including new-line characters) is left unread unless matched by a
+	 *	directive. The success of literal matches and suppressed assignments is not directly
+	 *	determinable other than via the %n directive.
+	 *
+	 *	Returns the value of the macro EOF if an input failure occurs before any conversion.
+	 *	Otherwise, the function returns the number of input items assigned, which can be fewer
+	 *	than provided for, or even zero, in the event of an early matching failure.
+	 */
+	_EWL_IMP_EXP_C int _EWL_CDECL fwscanf(FILE * _EWL_RESTRICT stream, const wchar_t * _EWL_RESTRICT format, ...) _EWL_CANT_THROW;
+	
+	/** The wscanf function is equivalent to fwscanf with the argument stdin interposed
+	 *	before the arguments to wscanf.
+	 *	Returns the value of the macro EOF if an input failure occurs
+	 *	before any conversion. Otherwise, the wscanf function returns the number of input
+	 *	items assigned, which can be fewer than provided for, or even zero, in the event of an
+	 *	early matching failure.
+	 */
+	_EWL_IMP_EXP_C int _EWL_CDECL wscanf(const wchar_t * _EWL_RESTRICT format, ...) _EWL_CANT_THROW;
+
+	/** The swscanf function is equivalent to fwscanf, except that the argument s specifies a
+	 *	wide string from which the input is to be obtained, rather than from a stream. Reaching
+	 *	the end of the wide string is equivalent to encountering end-of-file for the fwscanf
+	 *	function.
+	 *	Returns returns the value of the macro EOF if an input failure occurs
+	 *	before any conversion. Otherwise, the swscanf function returns the number of input
+	 *	items assigned, which can be fewer than provided for, or even zero, in the event of an
+	 *	early matching failure.
+	 */
+	_EWL_IMP_EXP_C int _EWL_CDECL swscanf(const wchar_t * _EWL_RESTRICT s, const wchar_t * _EWL_RESTRICT format, ...) _EWL_CANT_THROW;
+	
+	/** The vswscanf function is equivalent to swscanf, with the variable argument list
+	 *	replaced by arg, which shall have been initialized by the va_start macro (and
+	 *	possibly subsequent va_arg calls). The vswscanf function does not invoke the
+	 *	va_end macro.
+	 *	Returns the value of the macro EOF if an input failure occurs
+	 *	before any conversion. Otherwise, the vswscanf function returns the number of input
+	 *	items assigned, which can be fewer than provided for, or even zero, in the event of an
+	 *	early matching failure.
+	 */
+	_EWL_IMP_EXP_C int _EWL_CDECL vswscanf(const wchar_t * _EWL_RESTRICT s, const wchar_t * _EWL_RESTRICT format, va_list arg) _EWL_CANT_THROW;
+	
+	/** The vfwscanf function is equivalent to fwscanf, with the variable argument list
+	 *	replaced by arg, which shall have been initialized by the va_start macro (and
+	 *	possibly subsequent va_arg calls). The vfwscanf function does not invoke the
+	 *	va_end macro.
+	 *	Returns the value of the macro EOF if an input failure occurs
+	 *	before any conversion. Otherwise, the vfwscanf function returns the number of input
+	 *	items assigned, which can be fewer than provided for, or even zero, in the event of an
+	 *	early matching failure.
+	 */
+	_EWL_IMP_EXP_C int _EWL_CDECL vfwscanf(FILE * _EWL_RESTRICT stream, const wchar_t * _EWL_RESTRICT format, va_list arg) _EWL_CANT_THROW;
+
+	/** The vwscanf function is equivalent to wscanf, with the variable argument list
+	 *	replaced by arg, which shall have been initialized by the va_start macro (and
+	 *	possibly subsequent va_arg calls). The vwscanf function does not invoke the
+	 *	va_end macro.
+	 *	Returns the value of the macro EOF if an input failure occurs
+	 *	before any conversion. Otherwise, the vwscanf function returns the number of input
+	 *	items assigned, which can be fewer than provided for, or even zero, in the event of an
+	 *	early matching failure.
+	 */
+	_EWL_IMP_EXP_C int _EWL_CDECL vwscanf(const wchar_t * _EWL_RESTRICT stream, va_list arg) _EWL_CANT_THROW;
+
+#if defined(__STDC_WANT_LIB_EXT1__) && __STDC_WANT_LIB_EXT1__
+	_EWL_IMP_EXP_C int _EWL_CDECL fwscanf_s(FILE * _EWL_RESTRICT stream, const wchar_t * _EWL_RESTRICT format, ...) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C int _EWL_CDECL wscanf_s(const wchar_t * _EWL_RESTRICT format, ...) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C int _EWL_CDECL swscanf_s(const wchar_t * _EWL_RESTRICT s, const wchar_t * _EWL_RESTRICT format, ...) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C int _EWL_CDECL vswscanf_s(const wchar_t * _EWL_RESTRICT s, const wchar_t * _EWL_RESTRICT format, va_list arg) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C int _EWL_CDECL vfwscanf_s(FILE * _EWL_RESTRICT stream, const wchar_t * _EWL_RESTRICT format, va_list arg) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C int _EWL_CDECL vwscanf_s(const wchar_t * _EWL_RESTRICT format, va_list arg) _EWL_CANT_THROW;
+#endif /* __STDC_WANT_LIB_EXT1__ */
+
+
+	/** The fwprintf function writes output to the stream pointed to by stream, under control
+	 *	of the wide string pointed to by format that specifies how subsequent arguments are
+	 *	converted for output. If there are insufficient arguments for the format, the behavior is
+	 *	undefined. If the format is exhausted while arguments remain, the excess arguments are
+	 *	evaluated (as always) but are otherwise ignored. The fwprintf function returns when
+	 *	the end of the format string is encountered.
+	 *
+	 *	The format is composed of zero or more directives: ordinary multibyte characters (not %),
+	 *	which are copied unchanged to the output stream; and conversion
+	 *	specifications, each of which results in fetching zero or more subsequent arguments,
+	 *	converting them, if applicable, according to the corresponding conversion specifier, and
+	 *	then writing the result to the output stream.
+	 *
+	 *	Each conversion specification is introduced by the character %. After the %, the following
+	 *	appear in sequence:
+	 *
+	 *	- Zero or more flags (in any order) that modify the meaning of the conversion
+	 *		specification.
+	 *
+	 *	- An optional minimum field width. If the converted value has fewer characters than the
+	 *		field width, it is padded with spaces (by default) on the left (or right, if the left
+	 *		adjustment flag, described later, has been given) to the field width. The field width
+	 *		takes the form of an asterisk '*' (described later) or a nonnegative decimal integer.
+	 *
+	 *	- An optional precision that gives the minimum number of digits to appear for the 'd', 'i',
+	 *		'o', 'u', 'x', and 'X' conversions, the number of digits to appear after the decimal-point
+	 *		character for 'a', 'A', 'e', 'E', 'f', and 'F' conversions, the maximum number of significant
+	 *		digits for the 'g' and 'G' conversions, or the maximum number of bytes to be written for
+	 *		's' conversions. The precision takes the form of a period (.) followed either by an
+	 *		asterisk '*' (described later) or by an optional decimal integer; if only the period is
+	 *		specified, the precision is taken as zero. If a precision appears with any other
+	 *		conversion specifier, it is ignored.
+	 *
+	 *	- An optional length modifier that specifies the size of the argument.
+	 *
+	 *	- A conversion specifier character that specifies the type of conversion to be applied.
+	 *	
+	 *	As noted above, a field width, or precision, or both, may be indicated by an asterisk. In
+	 *	this case, an int argument supplies the field width or precision. The arguments
+	 *	specifying field width, or precision, or both, shall appear (in that order) before the
+	 *	argument (if any) to be converted. A negative field width argument is taken as a '-' flag
+	 *	followed by a positive field width. A neg ative precision argument is taken as if the
+	 *	precision were omitted.
+	 *	
+	 *	The flag characters and their meanings are:
+	 *
+	 *	 '-' The result of the conversion is left-justified within the field. (It is right-justified if
+	 *		this flag is not specified.)
+	 *
+	 *	 '+' The result of a signed conversion always begins with a plus or minus sign. (It
+	 *		begins with a sign only when a negative value is converted if this flag is not
+	 *		space If the first character of a signed conversion is not a sign, or if a signed conversion
+	 *		results in no characters, a space is prefixed to the result. If the space and '+' flags
+	 *		both appear, the space flag is ignored.
+	 *	
+	 *	 '#' The result is converted to an ‘‘alternative form’’. For 'o' conversion, it increases
+	 *		the precision, if and only if necessary, to force the first digit of the result to be a
+	 *		zero (if the value and precision are both '0', a single '0' is printed). For 'x' (or 'X')
+	 *		conversion, a nonzero result has 0x (or 0X) prefixed to it. For 'a', 'A', 'e', 'E', 'f',
+	 *		'F', 'g', and 'G' conversions, the result of converting a floating-point number always
+	 *		contains a decimal-point character, even if no digits follow it. (Normally, a
+	 *		decimal-point character appears in the result of these conversions only if a digit
+	 *		follows it.) For 'g' and 'G' conversions, trailing zeros are not removed from the
+	 *		result. For other conversions, it is ignored.
+	 *
+	 *	 '0' For 'd', 'i', 'o', 'u', 'x', 'X', 'a', 'A', 'e', 'E', 'f', 'F', 'g', and 'G' conversions,
+	 *		leading zeros (following any indication of sign or base) are used to pad to the field width
+	 *		rather than performing space padding, except when converting an infinity or NaN. If the
+	 *		'0' and '-' flags both appear, the '0' flag is ignored. For 'd', 'i', 'o', 'u', 'x', and 'X'
+	 *		conversions, if a precision is specified, the '0' flag is ignored. For other
+	 *		conversions, it is ignored.
+	 *
+	 *	 '@' Power Architecture AltiVec extension, the next argument provides vector separator string.
+	 *
+	 *	The length modifiers and their meanings are:
+	 *
+	 *	 hh Specifies that a following 'd', 'i', 'o', 'u', 'x', or 'X' conversion specifier
+	 *		applies to a signed char or unsigned char argument (the argument will have
+	 *		been promoted according to the integer promotions, but its value shall be
+	 *		converted to signed char or unsigned char before printing); or that
+	 *		a following n conversion specifier applies to a pointer to a signed char
+	 *		argument.
+	 *		(Available only when _EWL_C99_PRINTF_SCANF is set)
+	 *
+	 *	 hv Power Architecture AltiVec extension, the argument is of type vector short.
+	 *
+	 *	 h Specifies that a following  'd', 'i', 'o', 'u', 'x', or 'X' conversion specifier
+	 *		applies to a short int or unsigned short int argument (the argument will
+	 *		have been promoted according to the integer promotions, but its value shall
+	 *		be converted to short int or unsigned short int before printing);
+	 *		or that a following n conversion specifier applies to a pointer to a short
+	 *		int argument.
+	 *
+	 *	 l Specifies that a following  'd', 'i', 'o', 'u', 'x', or 'X' conversion 
+	 *		specifier applies to a long int or unsigned long int argument; that a following
+	 *		'n' conversion specifier applies to a pointer to a long int argument; that a
+	 *		following 'c' conversion specifier applies to a wint_t argument; that a
+	 *		following 's' conversion specifier applies to a pointer to a wchar_t argument;
+	 *		or has no effect on a following 'a', 'A', 'e', 'E', 'f', 'F', 'g', or 'G'
+	 *		conversion specifier.
+	 *
+	 *	 ll Specifies that a following  'd', 'i', 'o', 'u', 'x', or 'X' conversion specifier
+	 *		applies to a long long int or unsigned long long int argument; or that a
+	 *		following n conversion specifier applies to a pointer to a long long int
+	 *		argument.
+	 *		(Available only when _EWL_C99_PRINTF_SCANF or _EWL_LONGLONG_PRINTF_SCANF is set)
+	 *
+	 *	 j Specifies that a following  'd', 'i', 'o', 'u', 'x', or 'X' conversion specifier
+	 *		applies to an intmax_t or uintmax_t argument; or that a following n conversion
+	 *		specifier applies to a pointer to an intmax_t argument.
+	 *		(Available only when _EWL_C99_PRINTF_SCANF is set)
+	 *
+	 *	 z Specifies that a following  'd', 'i', 'o', 'u', 'x', or 'X' conversion specifier
+	 *		applies to a size_t or the corresponding signed integer type argument; or that a
+	 *		following n conversion specifier applies to a pointer to a signed integer type
+	 *		corresponding to size_t argument.
+	 *		(Available only when _EWL_C99_PRINTF_SCANF is set)
+	 *
+	 *	 t Specifies that a following  'd', 'i', 'o', 'u', 'x', or 'X' conversion specifier
+	 *		applies to a ptrdiff_t or the corresponding unsigned integer type argument; or that
+	 *		a following n conversion specifier applies to a pointer to a ptrdiff_t argument.
+	 *		(Available only when _EWL_C99_PRINTF_SCANF is set)
+	 *
+	 *	 L Specifies that a following 'a', 'A', 'e', 'E', 'f', 'F', 'g', or 'G' conversion
+	 *		specifier applies to a long double argument. If a length modifier appears with any
+	 *		conversion specifier other than as specified above, the behavior is undefined.
+	 *		(Available only when _EWL_FLOATING_POINT_PRINTF_SCANF is set)
+	 *	
+	 *	The conversion specifiers and their meanings are:
+	 *	
+	 *	 d,i The int argument is converted to signed decimal in the style [-]dddd. The
+	 *		precision specifies the minimum number of digits to appear; if the value
+	 *		being converted can be represented in fewer digits, it is expanded with
+	 *		leading zeros. The default precision is 1. The result of converting a zero
+	 *		value with a precision of zero is no characters.
+	 *		
+	 *	o,u,x,X The unsigned int argument is converted to unsigned octal (o), unsigned
+	 *		decimal (u), or unsigned hexadecimal notation (x or X) in the style dddd; the
+	 *		letters abcdef are used for 'x' conversion and the letters ABCDEF for 'X'
+	 *		conversion. The precision specifies the minimum number of digits to appear;
+	 *		if the value being converted can be represented in fewer digits, it is expanded
+	 *		with leading zeros. The default precision is 1. The result of converting a
+	 *		zero value with a precision of zero is no characters.
+	 *	
+	 *	f,F A double argument representing a floating-point number is converted to
+	 *		decimal notation in the style [.]ddd.ddd, where the number of digits after
+	 *		the decimal-point character is equal to the precision specification. If the
+	 *		precision is missing, it is taken as 6; if the precision is zero and the '#'
+	 *		flag is not specified, no decimal-point character appears. If a decimal-point
+	 *		character appears, at least one digit appears before it. The value is rounded to
+	 *		the appropriate number of digits. A double argument representing an infinity is
+	 *		converted in one of the styles [-]inf or [-]infinity which style is
+	 *		implementation-defined. A double argument representing a NaN is converted in
+	 *		one of the styles [-]nan or [-]nan(n-char-sequence) which style, and the meaning
+	 *		of any n-char-sequence, is implementation-defined. The 'F' conversion specifier
+	 *		produces INF, INFINITY, or NAN instead of inf, infinity, or nan, respectively.
+	 *		(Available only when _EWL_FLOATING_POINT_PRINTF_SCANF is set)
+	 *
+	 *	e,E A double argument representing a floating-point number is converted in the
+	 *		style [.]d.ddd e±}dd, where there is one digit (which is nonzero if the
+	 *		argument is nonzero) before the decimal-point character and the number of
+	 *		digits after it is equal to the precision; if the precision is missing, it is
+	 *		taken as 6; if the precision is zero and the '#' flag is not specified, no
+	 *		decimal-point character appears. The value is rounded to the appropriate number
+	 *		of digits. The 'E' conversion specifier produces a number with E instead of e
+	 *		introducing the exponent. The exponent always contains at least two digits,
+	 *		and only as many more digits as necessary to represent the exponent. If the
+	 *		value is zero, the exponent is zero.
+	 *		A double argument representing an infinity or NaN is converted in the style
+	 *		of an 'f' or 'F' conversion specifier.
+	 *		(Available only when _EWL_FLOATING_POINT_PRINTF_SCANF is set)
+	 *
+	 *	g,G A double argument representing a floating-point number is converted in style
+	 *		'f' or 'e' (or in style 'F' or 'E' in the case of a G conversion specifier),
+	 *		depending on the value converted and the precision. Let P equal the
+	 *		precision if nonzero, 6 if the precision is omitted, or 1 if the precision is zero.
+	 *		Then, if a conversion with style E would have an exponent of X:
+	 *			if P > X >= -4, the conversion is with style f (or F) and precision P - (X + 1).
+	 *			otherwise, the conversion is with style e (or E) and precision P - 1.
+	 *		Finally, unless the '#' flag is used, any trailing zeros are removed from the
+	 *		fractional portion of the result and the decimal-point character is removed if
+	 *		there is no fractional portion remaining.
+	 *		A double argument representing an infinity or NaN is converted in the style
+	 *		of an 'f' or 'F' conversion specifier.
+	 *		(Available only when _EWL_FLOATING_POINT_PRINTF_SCANF is set)
+	 *	
+	 *	a,A A double argument representing a floating-point number is converted in the
+	 *		style [-]0xh.hhhh p±d, where there is one hexadecimal digit (which is
+	 *		nonzero if the argument is a normalized floating-point number and is
+	 *		otherwise unspecified) before the decimal-point character and the number
+	 *		of hexadecimal digits after it is equal to the precision; if the precision is
+	 *		missing and FLT_RADIX is a power of 2, then the precision is sufficient for
+	 *		an exact representation of the value; if the precision is missing and
+	 *		FLT_RADIX is not a power of 2, then the precision is sufficient to
+	 *		distinguish values of type double, except that trailing zeros may be
+	 *		omitted; if the precision is zero and the '#' flag is not specified, no decimal
+	 *		point character appears. The letters abcdef are used for a conversion and
+	 *		the letters ABCDEF for 'A' conversion. The 'A' conversion specifier produces a
+	 *		number with X and P instead of x and p. The exponent always contains at
+	 *		least one digit, and only as many more digits as necessary to represent the
+	 *		decimal exponent of 2. If the value is zero, the exponent is zero.
+	 *		A double argument representing an infinity or NaN is converted in the style
+	 *		of an 'f' or 'F' conversion specifier.
+	 *		(Available only when _EWL_FLOATING_POINT_PRINTF_SCANF and _EWL_C99_PRINTF_SCANF are set)
+	 *
+	 *	c If no 'l' length modifier is present, the int argument is converted to an
+	 *		unsigned char, and the resulting character is written.
+	 *
+	 *		If an 'l' length modifier is present, the wint_t argument is converted as if by
+	 *		an ls conversion specification with no precision and an argument that points
+	 *		to the initial element of a two-element array of wchar_t, the first element
+	 *		containing the wint_t argument to the 'lc' conversion specification and the
+	 *		second a null wide character.
+	 *		(Available only when _EWL_WIDE_CHAR is set)
+	 *
+	 *	s If no 'l' length modifier is present, the argument shall be a pointer to the initial
+	 *		element of an array of character type. Characters from the array are written
+	 *		up to (but not including) the terminating null character. If the precision is 
+	 *		specified, no more than that many bytes are written. If the precision is not
+	 *		specified or is greater than the size of the array, the array shall contain a
+	 *		null character.
+	 *
+	 *		If an 'l' length modifier is present, the argument shall be a pointer to the initial
+	 *		element of an array of wchar_t type. Wide characters from the array are
+	 *		converted to multibyte characters (each as if by a call to the wcrtomb
+	 *		function, with the conversion state described by an mbstate_t object
+	 *		initialized to zero before the first wide character is converted) up to and
+	 *		including a terminating null wide character. The resulting multibyte
+	 *		characters are written up to (but not including) the terminating null character
+	 *		(byte). If no precision is specified, the array shall contain a null wide
+	 *		character. If a precision is specified, no more than that many bytes are
+	 *		written (including shift sequences, if any), and the array shall contain a null
+	 *		wide character if, to equal the multibyte character sequence length given by
+	 *		the precision, the function would need to access a wide character one past the
+	 *		end of the array. In no case is a partial multibyte character written.
+	 *		(Available only when _EWL_WIDE_CHAR is set)
+	 *	
+	 *	p The argument shall be a pointer to void. The value of the pointer is
+	 *		converted to a sequence of printing characters, in an implementation-defined
+	 *		manner.
+	 *
+	 *	n The argument shall be a pointer to signed integer into which is written the
+	 *		number of characters written to the output stream so far by this call to
+	 *		fprintf. No argument is converted, but one is consumed. If the conversion
+	 *		specification includes any flags, a field width, or a precision, the behavior is
+	 *		undefined.
+	 *
+	 *	R,r Power Architecture SPE extension, The argument shall be unsigned (signed) fixed
+	 *		point.
+	 *		(Available only when _EWL_C99_PRINTF_SCANF && _EWL_FLOATING_POINT_PRINTF_SCANF are set)
+	 *
+	 *	% A % character is written. No argument is converted. The complete conversion
+	 *		specification shall be %%.
+	 *
+	 *	If a conversion specification is invalid, the behavior is undefined. If any argument is
+	 *	not the correct type for the corresponding conversion specification, the behavior is
+	 *	undefined.
+	 *	
+	 *	In no case does a nonexistent or small field width cause truncation of a field; if the result
+	 *	of a conversion is wider than the field width, the field is expanded to contain the
+	 *	conversion result.
+	 *
+	 *	For a and A conversions, if FLT_RADIX is a power of 2, the value is correctly rounded
+	 *	to a hexadecimal floating number with the given precision.
+	 *
+	 *	Returns the number of characters transmitted, or a negative value if an output or encoding
+	 *	error occurred.
+	 */
+	_EWL_IMP_EXP_C int _EWL_CDECL fwprintf(FILE * _EWL_RESTRICT stream, const wchar_t * _EWL_RESTRICT format, ...) _EWL_CANT_THROW;
+	
+	/** The wprintf function is equivalent to fwprintf with the argument stdout
+	 *	interposed before the arguments to wprintf.
+	 *	Returns the number of wide characters transmitted, or a negative
+	 *	value if an output or encoding error occurred.
+	 */
+	_EWL_IMP_EXP_C int _EWL_CDECL wprintf(const wchar_t * _EWL_RESTRICT format, ...) _EWL_CANT_THROW;
+
+	/** The swprintf function is equivalent to fwprintf, except that the argument s
+	 *	specifies an array of wide characters into which the generated output is to be written,
+	 *	rather than written to a stream. No more than n wide characters are written, including a
+	 *	terminating null wide character, which is always added (unless n is zero).
+	 *	Returns the number of wide characters written in the array, not
+	 *	counting the terminating null wide character, or a neg ative value if an encoding error
+	 *	occurred or if n or more wide characters were requested to be written.
+	 */
+	_EWL_IMP_EXP_C int _EWL_CDECL swprintf(wchar_t * _EWL_RESTRICT s, size_t n, const wchar_t * _EWL_RESTRICT format, ...) _EWL_CANT_THROW;
+	
+	/** The vfwprintf function is equivalent to fwprintf, with the variable argument list
+	 *	replaced by arg, which shall have been initialized by the va_start macro (and
+	 *	possibly subsequent va_arg calls). The vfwprintf function does not invoke the
+	 *	va_end macro.
+	 *	Returns the number of wide characters transmitted, or a
+	 *	negative value if an output or encoding error occurred.
+	 */
+	_EWL_IMP_EXP_C int _EWL_CDECL vfwprintf(FILE * _EWL_RESTRICT stream, const wchar_t * _EWL_RESTRICT format, va_list arg) _EWL_CANT_THROW;
+	
+	/** The vswprintf function is equivalent to swprintf, with the variable argument list
+	 *	replaced by arg, which shall have been initialized by the va_start macro (and
+	 *	possibly subsequent va_arg calls). The vswprintf function does not invoke the
+	 *	va_end macro.
+	 *	Returns the number of wide characters written in the array, not
+	 *	counting the terminating null wide character, or a neg ative value if an encoding error
+	 *	occurred or if n or more wide characters were requested to be generated.
+	 */
+	_EWL_IMP_EXP_C int _EWL_CDECL vswprintf(wchar_t * _EWL_RESTRICT s, size_t n, const wchar_t * _EWL_RESTRICT format, va_list arg) _EWL_CANT_THROW;
+	
+	/** The vwprintf function is equivalent to wprintf, with the variable argument list
+	 *	replaced by arg, which shall have been initialized by the va_start macro (and
+	 *	possibly subsequent va_arg calls). The vwprintf function does not invoke the
+	 *	va_end macro.
+	 *	Returns the number of wide characters transmitted, or a negative
+	 *	value if an output or encoding error occurred.
+	 */
+	_EWL_IMP_EXP_C int _EWL_CDECL vwprintf(const wchar_t * _EWL_RESTRICT format, va_list arg) _EWL_CANT_THROW;
+
+#if defined(__STDC_WANT_LIB_EXT1__) && __STDC_WANT_LIB_EXT1__
+	_EWL_IMP_EXP_C int _EWL_CDECL fwprintf_s(FILE * _EWL_RESTRICT stream, const wchar_t * _EWL_RESTRICT format, ...) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C int _EWL_CDECL wprintf_s(const wchar_t * _EWL_RESTRICT format, ...) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C int _EWL_CDECL snwprintf_s(wchar_t * _EWL_RESTRICT s, rsize_t n, const wchar_t * _EWL_RESTRICT format, ...) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C int _EWL_CDECL swprintf_s(wchar_t * _EWL_RESTRICT s, rsize_t n, const wchar_t * _EWL_RESTRICT format, ...) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C int _EWL_CDECL vfwprintf_s(FILE * _EWL_RESTRICT stream, const wchar_t * _EWL_RESTRICT format, va_list arg) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C int _EWL_CDECL vsnwprintf_s(wchar_t * _EWL_RESTRICT s, rsize_t n, const wchar_t * _EWL_RESTRICT format, va_list arg) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C int _EWL_CDECL vswprintf_s(wchar_t * _EWL_RESTRICT s, rsize_t n, const wchar_t * _EWL_RESTRICT format, va_list arg) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C int _EWL_CDECL vwprintf_s(const wchar_t * _EWL_RESTRICT format, va_list arg) _EWL_CANT_THROW;
+#endif /* __STDC_WANT_LIB_EXT1__ */
+
+
+	wchar_t _EWL_CDECL __put_wchar(wchar_t , FILE * stream) _EWL_CANT_THROW;
+	wchar_t _EWL_CDECL __get_wchar(FILE * stream) _EWL_CANT_THROW;
+
+	/** The ungetwc function pushes the wide character specified by c back onto the input
+	 *	stream pointed to by stream. Pushed-back wide characters will be returned by
+	 *	subsequent reads on that stream in the reverse order of their pushing. A successful
+	 *	intervening call (with the stream pointed to by stream) to a file positioning function
+	 *	(fseek, fsetpos, or rewind) discards any pushed-back wide characters for the
+	 *	stream. The external storage corresponding to the stream is unchanged.
+	 *
+	 *	One wide character of pushback is guaranteed, even if the call to the ungetwc function
+	 *	follows just after a call to a formatted wide character input function fwscanf,
+	 *	vfwscanf, vwscanf, or wscanf. If the ungetwc function is called too many times
+	 *	on the same stream without an intervening read or file positioning operation on that
+	 *	stream, the operation may fail.
+	 *
+	 *	If the value of c equals that of the macro WEOF, the operation fails and the input stream is
+	 *	unchanged.
+	 *
+	 *	A successful call to the ungetwc function clears the end-of-file indicator for the stream.
+	 *	The value of the file position indicator for the stream after reading or discarding all
+	 *	pushed-back wide characters is the same as it was before the wide characters were pushed
+	 *	back. For a text or binary stream, the value of its file position indicator after a successful
+	 *	call to the ungetwc function is unspecified until all pushed-back wide characters are
+	 *	read or discarded.
+	 *
+	 *	Returns the wide character pushed back, or WEOF if the operation
+	 *	fails.
+	 */
+	_EWL_IMP_EXP_C wchar_t _EWL_CDECL ungetwc(wchar_t , FILE * stream) _EWL_CANT_THROW;
+
+	/** The putwc function returns the wide character written, or WEOF.
+	 */
+	_EWL_IMP_EXP_C wchar_t  _EWL_CDECL putwc(wchar_t, FILE * stream) _EWL_CANT_THROW;
+	
+	/** The fputwc function writes the wide character specified by c to the output stream
+	 *	pointed to by stream, at the position indicated by the associated file position indicator
+	 *	for the stream (if defined), and advances the indicator appropriately. If the file cannot
+	 *	support positioning requests, or if the stream was opened with append mode, the
+	 *	character is appended to the output stream.
+	 *	Returns the wide character written. If a write error occurs, the
+	 *	error indicator for the stream is set and fputwc returns WEOF. If an encoding error
+	 *	occurs, the value of the macro EILSEQ is stored in errno and fputwc returns WEOF.
+	 */
+	_EWL_IMP_EXP_C wchar_t  _EWL_CDECL fputwc(wchar_t c, FILE * stream) _EWL_CANT_THROW;
+	
+	/** The getwc function is equivalent to fgetwc, except that if it is implemented as a
+	 *	macro, it may evaluate stream more than once, so the argument should never be an
+	 *	expression with side effects.
+	 *	Returns the next wide character from the input stream pointed to by
+	 *	stream, or WEOF.
+	 */
+	_EWL_IMP_EXP_C wchar_t  _EWL_CDECL getwc(FILE * stream) _EWL_CANT_THROW;
+	
+	/** If the end-of-file indicator for the input stream pointed to by stream is not set and a
+	 *	next wide character is present, the fgetwc function obtains that wide character as a
+	 *	wchar_t converted to a wint_t and advances the associated file position indicator for
+	 *	the stream (if defined).
+	 *	If the end-of-file indicator for the stream is set, or if the stream is at end-of-file, the endof-
+	 *	file indicator for the stream is set and the fgetwc function returns WEOF. Otherwise,
+	 *	the fgetwc function returns the next wide character from the input stream pointed to by
+	 *	stream. If a read error occurs, the error indicator for the stream is set and the fgetwc
+	 *	function returns WEOF. If an encoding error occurs (including too few bytes), the value of
+	 *	the macro EILSEQ is stored in errno and the fgetwc function returns WEOF.
+	 */
+	_EWL_IMP_EXP_C wchar_t  _EWL_CDECL fgetwc(FILE * stream) _EWL_CANT_THROW;
+	
+	/** The fputws function writes the wide string pointed to by s to the stream pointed to by
+	 *	stream. The terminating null wide character is not written.
+	 *	Returns EOF if a write or encoding error occurs; otherwise, it
+	 *	returns a nonnegative value.
+	 */
+	_EWL_IMP_EXP_C int      _EWL_CDECL fputws(const wchar_t * _EWL_RESTRICT, FILE * _EWL_RESTRICT stream) _EWL_CANT_THROW;
+	
+	/** The fgetws function reads at most one less than the number of wide characters
+	 *	specified by n from the stream pointed to by stream into the array pointed to by s. No
+	 *	additional wide characters are read after a new-line wide character (which is retained) or
+	 *	after end-of-file. A null wide character is written immediately after the last wide
+	 *	character read into the array.
+	 *	Returns s if successful. If end-of-file is encountered and no characters have
+	 *	been read into the array, the contents of the array remain unchanged and a null
+	 *	pointer is returned. If a read or encoding error occurs during the operation, the array
+	 *	contents are indeterminate and a null pointer is returned.
+	 */
+	_EWL_IMP_EXP_C wchar_t *_EWL_CDECL fgetws(wchar_t * _EWL_RESTRICT s, int n, FILE * _EWL_RESTRICT stream) _EWL_CANT_THROW;
+	
+	/** The putwchar function returns the character written, or WEOF.
+	 */
+	_EWL_IMP_EXP_C wchar_t  _EWL_CDECL putwchar(wchar_t) _EWL_CANT_THROW;
+	
+	/** The fwide function determines the orientation of the stream pointed to by stream. If
+	 *	mode is greater than zero, the function first attempts to make the stream wide oriented. If
+	 *	mode is less than zero, the function first attempts to make the stream byte oriented.
+	 *	Otherwise, mode is zero and the function does not alter the orientation of the stream.
+	 *	Returns a value greater than zero if, after the call, the stream has
+	 *	wide orientation, a value less than zero if the stream has byte orientation, or zero if the
+	 *	stream has no orientation.
+	 */
+	_EWL_IMP_EXP_C int      _EWL_CDECL fwide(FILE * stream, int) _EWL_CANT_THROW;
+	
+	/** The getwchar function returns the next wide character from the input stream pointed to
+	 *	by stdin, or WEOF.
+	 */
+	_EWL_IMP_EXP_C wchar_t  _EWL_CDECL getwchar(void) _EWL_CANT_THROW;
+
+	_EWL_INLINE wchar_t _EWL_CDECL _EWL_CANT_THROW getwchar(void) { return getwc(stdin); }
+
+
+	#ifdef __cplusplus
+		_EWL_END_EXTERN_C
+		inline int _EWL_CDECL 				wctob(wint_t c) { return((c & 0xFF00) ? (int)EOF : (int)c);}
+		inline wint_t _EWL_CDECL 			btowc(int c) { return((c & 0x8000) ? (wint_t)WEOF : (wint_t)c);}
+		_EWL_BEGIN_EXTERN_C
+	#else       /* !__cplusplus */
+		_EWL_IMP_EXP_C int _EWL_CDECL 		wctob(wint_t);
+		_EWL_IMP_EXP_C wint_t _EWL_CDECL 	btowc(int);
+	#endif /* __cplusplus */
+
+	_EWL_IMP_EXP_C size_t _EWL_CDECL 		mbrlen(const char * _EWL_RESTRICT, size_t, mbstate_t * _EWL_RESTRICT) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C int _EWL_CDECL 			mbsinit(const mbstate_t * ) _EWL_CANT_THROW;
+
+	_EWL_IMP_EXP_C size_t _EWL_CDECL 	mbrtowc(wchar_t * _EWL_RESTRICT, const char * _EWL_RESTRICT, size_t, mbstate_t * _EWL_RESTRICT) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C size_t _EWL_CDECL 	wcrtomb(char * _EWL_RESTRICT, wchar_t, mbstate_t * _EWL_RESTRICT) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C size_t _EWL_CDECL 	mbsrtowcs(wchar_t * _EWL_RESTRICT, const char ** _EWL_RESTRICT, size_t, mbstate_t * _EWL_RESTRICT) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C size_t _EWL_CDECL 	wcsrtombs(char * _EWL_RESTRICT, const wchar_t ** _EWL_RESTRICT, size_t, mbstate_t * _EWL_RESTRICT) _EWL_CANT_THROW;
+
+	#if defined(__STDC_WANT_LIB_EXT1__) && __STDC_WANT_LIB_EXT1__
+		_EWL_IMP_EXP_C errno_t _EWL_CDECL 	wcrtomb_s(size_t * _EWL_RESTRICT, char * _EWL_RESTRICT, rsize_t, wchar_t, mbstate_t * _EWL_RESTRICT) _EWL_CANT_THROW;
+		_EWL_IMP_EXP_C errno_t _EWL_CDECL 	mbsrtowcs_s(size_t * _EWL_RESTRICT, wchar_t * _EWL_RESTRICT, rsize_t, const char ** _EWL_RESTRICT, rsize_t, mbstate_t * _EWL_RESTRICT) _EWL_CANT_THROW;
+		_EWL_IMP_EXP_C errno_t _EWL_CDECL 	wcsrtombs_s(size_t * _EWL_RESTRICT, char * _EWL_RESTRICT, rsize_t, const wchar_t ** _EWL_RESTRICT, rsize_t, mbstate_t * _EWL_RESTRICT) _EWL_CANT_THROW;
+	#endif /* __STDC_WANT_LIB_EXT1__ */
+
+	/** The wcstod, wcstof, and wcstold functions convert the initial portion of the wide string
+	 *	pointed to by nptr to double, float, and long double representation,
+	 *	respectively. First, they decompose the input string into three parts: an initial, possibly
+	 *	empty, sequence of white-space characters (as specified by the iswspace function), a
+	 *	subject sequence resembling a floating-point constant or representing an infinity or NaN;
+	 *	and a final string of one or more unrecognized characters, including the terminating null
+	 *	character of the input string. Then, they attempt to convert the subject sequence to a
+	 *	floating-point number, and return the result.
+	 *
+	 *	The expected form of the subject sequence is an optional plus or minus sign, then one of
+	 *	the following:
+	 *	
+	 *	 a nonempty sequence of decimal digits optionally containing a decimal-point
+	 *		character, then an optional exponent part as defined in 6.4.4.2;
+	 *	
+	 *	 a0x or 0X, then a nonempty sequence of hexadecimal digits optionally containing a
+	 *		decimal-point character, then an optional binary exponent part as defined in 6.4.4.2;
+	 *	
+	 *	 INF or INFINITY, ignoring case
+	 *
+	 *	 NAN or NAN(n-char-sequenceopt), ignoring case in the NAN part, where:
+	 *			n-char-sequence:
+	 *			digit
+	 *			nondigit
+	 *			n-char-sequence digit
+	 *			n-char-sequence nondigit
+	 *
+	 *	The subject sequence is defined as the longest initial subsequence of the input string,
+	 *	starting with the first non-white-space character, that is of the expected form. The subject
+	 *	sequence contains no characters if the input string is not of the expected form.
+	 *
+	 *	If the subject sequence has the expected form for a floating-point number, the sequence of
+	 *	characters starting with the first digit or the decimal-point character (whichever occurs
+	 *	first) is interpreted as a floating constant according to the rules of 6.4.4.2, except that the
+	 *	decimal-point character is used in place of a period, and that if neither an exponent part
+	 *	nor a decimal-point character appears in a decimal floating point number, or if a binary
+	 *	exponent part does not appear in a hexadecimal floating point number, an exponent part
+	 *	of the appropriate type with value zero is assumed to follow the last digit in the string. If
+	 *	the subject sequence begins with a minus sign, the sequence is interpreted as negated.252)
+	 *	A character sequence INF or INFINITY is interpreted as an infinity, if representable in
+	 *	the return type, else like a floating constant that is too large for the range of the return
+	 *	type. A character sequence NAN or NAN(n-char-sequenceopt), is interpreted as a quiet
+	 *	NaN, if supported in the return type, else like a subject sequence part that does not have
+	 *	the expected form; the meaning of the n-char sequences is implementation-defined.253) A
+	 *	pointer to the final string is stored in the object pointed to by endptr, provided that
+	 *	endptr is not a null pointer.
+	 *
+	 *	If the subject sequence has the hexadecimal form and FLT_RADIX is a power of 2, the
+	 *	value resulting from the conversion is correctly rounded.
+	 *
+	 *	In other than the "C" locale, additional locale-specific subject sequence forms may be
+	 *	accepted.
+	 *
+	 *	If the subject sequence is empty or does not have the expected form, no conversion is
+	 *	performed; the value of nptr is stored in the object pointed to by endptr, provided
+	 *	that endptr is not a null pointer.
+	 *
+	 *	The functions return the converted value, if any. If no conversion could be performed,
+	 *	zero is returned. If the correct value is outside the range of representable values, plus or
+	 *	minus HUGE_VAL, HUGE_VALF, or HUGE_VALL is returned (according to the return
+	 *	type and sign of the value), and the value of the macro ERANGE is stored in errno. If
+	 *	the result underflows (7.12.1), the functions return a value whose magnitude is no greater
+	 *	than the smallest normalized positive number in the return type; whether errno acquires
+	 *	the value ERANGE is implementation-defined.
+	 */
+	_EWL_IMP_EXP_C double		_EWL_CDECL wcstod(const wchar_t * _EWL_RESTRICT nptr, wchar_t ** _EWL_RESTRICT endptr)  _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C float 		_EWL_CDECL wcstof(const wchar_t * _EWL_RESTRICT nptr, wchar_t ** _EWL_RESTRICT endptr)  _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C long double	_EWL_CDECL wcstold(const wchar_t * _EWL_RESTRICT nptr, wchar_t ** _EWL_RESTRICT endptr) _EWL_CANT_THROW;
+
+	/** The wcstol, wcstoll, wcstoul, and wcstoull functions convert the initial
+	 *	portion of the string pointed to by nptr to long int, long long int, unsigned
+	 *	long int, and unsigned long long int representation, respectively. First,
+	 *	they decompose the input string into three parts: an initial, possibly empty, sequence of
+	 *	white-space characters (as specified by the isspace function), a subject sequence
+	 *	resembling an integer represented in some radix determined by the value of base, and a
+	 *	final string of one or more unrecognized characters, including the terminating null
+	 *	character of the input string. Then, they attempt to convert the subject sequence to an
+	 *	integer, and return the result.
+	 *	
+	 *	If the value of base is zero, the expected form of the subject sequence is that of an
+	 *	integer constant as described in 6.4.4.1, optionally preceded by a plus or minus sign, but
+	 *	not including an integer suffix. If the value of base is between 2 and 36 (inclusive), the
+	 *	expected form of the subject sequence is a sequence of letters and digits representing an
+	 *	integer with the radix specified by base, optionally preceded by a plus or minus sign,
+	 *	but not including an integer suffix. The letters from a (or A) through z (or Z) are
+	 *	ascribed the values 10 through 35; only letters and digits whose ascribed values are less
+	 *	than that of base are permitted. If the value of base is 16, the characters 0x or 0X may
+	 *	optionally precede the sequence of letters and digits, following the sign if present.
+	 *	
+	 *	The subject sequence is defined as the longest initial subsequence of the input string,
+	 *	starting with the first non-white-space character, that is of the expected form. The subject
+	 *	sequence contains no characters if the input string is empty or consists entirely of white
+	 *	space, or if the first non-white-space character is other than a sign or a permissible letter
+	 *	or digit.
+	 *	
+	 *	If the subject sequence has the expected form and the value of base is zero, the sequence
+	 *	of characters starting with the first digit is interpreted as an integer constant according to
+	 *	the rules of 6.4.4.1. If the subject sequence has the expected form and the value of base
+	 *	is between 2 and 36, it is used as the base for conversion, ascribing to each letter its value
+	 *	as given above. If the subject sequence begins with a minus sign, the value resulting from
+	 *	the conversion is negated (in the return type). A pointer to the final string is stored in the
+	 *	object pointed to by endptr, provided that endptr is not a null pointer.
+	 *	
+	 *	In other than the "C" locale, additional locale-specific subject sequence forms may be
+	 *	accepted.
+	 *	
+	 *	If the subject sequence is empty or does not have the expected form, no conversion is
+	 *	performed; the value of nptr is stored in the object pointed to by endptr, provided
+	 *	that endptr is not a null pointer.
+	 *	
+	 *	The wcstol, wcstoll, wcstoul, and wcstoull functions return the converted
+	 *	value, if any. If no conversion could be performed, zero is returned. If the correct value
+	 *	is outside the range of representable values, LONG_MIN, LONG_MAX, LLONG_MIN,
+	 *	LLONG_MAX, ULONG_MAX, or ULLONG_MAX is returned (according to the return type
+	 *	and sign of the value, if any), and the value of the macro ERANGE is stored in errno.
+	 */
+	_EWL_IMP_EXP_C long 		_EWL_CDECL wcstol(const wchar_t * _EWL_RESTRICT nptr, wchar_t ** _EWL_RESTRICT endptr, int base) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C unsigned long _EWL_CDECL	wcstoul(const wchar_t * _EWL_RESTRICT nptr, wchar_t ** _EWL_RESTRICT endptr, int base) _EWL_CANT_THROW;
+	#if _EWL_LONGLONG
+		_EWL_IMP_EXP_C unsigned long long _EWL_CDECL wcstoull(const wchar_t * _EWL_RESTRICT nptr, wchar_t ** _EWL_RESTRICT endptr, int base) _EWL_CANT_THROW;
+		_EWL_IMP_EXP_C long long _EWL_CDECL wcstoll(const wchar_t * _EWL_RESTRICT nptr, wchar_t ** _EWL_RESTRICT endptr, int base) _EWL_CANT_THROW;
+	#endif /* _EWL_LONGLONG */
+
+
+	_EWL_IMP_EXP_C size_t _EWL_CDECL		(wcslen)(const wchar_t *) _EWL_CANT_THROW;
+
+	/** The wcscpy function copies the wide string pointed to by s2 (including the terminating
+	 *	null wide character) into the array pointed to by s1.
+	 *	Returns the value of s1.
+	 */
+	_EWL_IMP_EXP_C wchar_t * _EWL_CDECL 	(wcscpy)(wchar_t * _EWL_RESTRICT s1, const wchar_t * _EWL_RESTRICT s2) _EWL_CANT_THROW;
+	
+	/** The wcsncpy function copies not more than n wide characters (those that follow a null
+	 *	wide character are not copied) from the array pointed to by s2 to the array pointed to by s1.
+	 *	If the array pointed to by s2 is a wide string that is shorter than n wide characters, null
+	 *	wide characters are appended to the copy in the array pointed to by s1, until n wide
+	 *	characters in all have been written.
+	 *	Returns the value of s1.
+	 */
+	_EWL_IMP_EXP_C wchar_t * _EWL_CDECL 	wcsncpy(wchar_t * _EWL_RESTRICT, const wchar_t * _EWL_RESTRICT, size_t n) _EWL_CANT_THROW;
+	
+	/** The wcscat function appends a copy of the wide string pointed to by s2 (including the
+	 *	terminating null wide character) to the end of the wide string pointed to by s1. The initial
+	 *	wide character of s2 overwrites the null wide character at the end of s1.
+	 *	Returns the value of s1.
+ 	 */
+	_EWL_IMP_EXP_C wchar_t * _EWL_CDECL		wcscat(wchar_t * _EWL_RESTRICT, const wchar_t * _EWL_RESTRICT) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C wchar_t * _EWL_CDECL		wcsncat(wchar_t * _EWL_RESTRICT, const wchar_t * _EWL_RESTRICT, size_t) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C int _EWL_CDECL 			wcscmp(const wchar_t *, const wchar_t *) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C int _EWL_CDECL			wcsncmp(const wchar_t *, const wchar_t *, size_t) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C int _EWL_CDECL 			wcscoll(const wchar_t *, const wchar_t *) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C size_t _EWL_CDECL 		wcsxfrm(wchar_t * _EWL_RESTRICT, const wchar_t * _EWL_RESTRICT, size_t) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C size_t _EWL_CDECL		wcsspn(const wchar_t *, const wchar_t *) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C size_t _EWL_CDECL		wcscspn(const wchar_t *, const wchar_t *) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C wchar_t * _EWL_CDECL		wcstok(wchar_t * _EWL_RESTRICT, const wchar_t * _EWL_RESTRICT, wchar_t ** _EWL_RESTRICT) _EWL_CANT_THROW;
+#if !defined(__cplusplus)
+	_EWL_IMP_EXP_C wchar_t * _EWL_CDECL		wcschr(const wchar_t *, wchar_t) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C wchar_t * _EWL_CDECL 	wcspbrk(const wchar_t *, const wchar_t *) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C wchar_t * _EWL_CDECL 	wcsrchr(const wchar_t *, wchar_t) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C wchar_t * _EWL_CDECL 	wcsstr(const wchar_t *, const wchar_t *) _EWL_CANT_THROW;
+#else
+	_EWL_IMP_EXP_C const wchar_t * _EWL_CDECL	wcschr(const wchar_t *, wchar_t) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C const wchar_t * _EWL_CDECL 	wcspbrk(const wchar_t *, const wchar_t *) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C const wchar_t * _EWL_CDECL 	wcsrchr(const wchar_t *, wchar_t) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C const wchar_t * _EWL_CDECL 	wcsstr(const wchar_t *, const wchar_t *) _EWL_CANT_THROW;
+#endif
+
+	/** The wmemcpy function copies n wide characters from the object pointed to by s2 to the
+	 *	object pointed to by s1.
+	 *	Returns the value of s1.
+	 */
+	_EWL_IMP_EXP_C wchar_t * _EWL_CDECL 	(wmemcpy)(wchar_t * _EWL_RESTRICT s1, const wchar_t * _EWL_RESTRICT s2, size_t n) _EWL_CANT_THROW;
+	
+	/** The wmemmove function copies n wide characters from the object pointed to by s2 to
+	 *	the object pointed to by s1. Copying takes place as if the n wide characters from the
+	 *	object pointed to by s2 are first copied into a temporary array of n wide characters that
+	 *	does not overlap the objects pointed to by s1 or s2, and then the n wide characters from
+	 *	the temporary array are copied into the object pointed to by s1.
+	 *	Returns the value of s1.
+	 */
+	_EWL_IMP_EXP_C wchar_t * _EWL_CDECL 	(wmemmove)(wchar_t *, const wchar_t *, size_t) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C wchar_t * _EWL_CDECL		(wmemset)(wchar_t *, wchar_t, size_t) _EWL_CANT_THROW;
+#if !defined(__cplusplus)
+	_EWL_IMP_EXP_C wchar_t * _EWL_CDECL 	(wmemchr)(const wchar_t *, wchar_t, size_t) _EWL_CANT_THROW;
+#else
+	_EWL_IMP_EXP_C const wchar_t * _EWL_CDECL (wmemchr)(const wchar_t *, wchar_t, size_t) _EWL_CANT_THROW;
+#endif
+	_EWL_IMP_EXP_C int   _EWL_CDECL 	(wmemcmp)(const wchar_t *, const wchar_t *, size_t) _EWL_CANT_THROW;
+
+#if defined(__STDC_WANT_LIB_EXT1__) && __STDC_WANT_LIB_EXT1__
+	_EWL_IMP_EXP_C size_t _EWL_CDECL	(wcsnlen_s)(const wchar_t *, size_t) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C errno_t _EWL_CDECL	(wcscpy_s)(wchar_t * _EWL_RESTRICT, rsize_t, const wchar_t * _EWL_RESTRICT) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C errno_t _EWL_CDECL	wcsncpy_s(wchar_t * _EWL_RESTRICT, rsize_t, const wchar_t * _EWL_RESTRICT, rsize_t) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C errno_t _EWL_CDECL	wcscat_s(wchar_t * _EWL_RESTRICT, rsize_t, const wchar_t * _EWL_RESTRICT) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C errno_t _EWL_CDECL	wcsncat_s(wchar_t * _EWL_RESTRICT, rsize_t, const wchar_t * _EWL_RESTRICT, rsize_t) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C errno_t _EWL_CDECL 	(wmemcpy_s)(wchar_t * _EWL_RESTRICT, rsize_t, const wchar_t * _EWL_RESTRICT, rsize_t) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C errno_t _EWL_CDECL 	(wmemmove_s)(wchar_t *, rsize_t, const wchar_t *, rsize_t) _EWL_CANT_THROW;
+#endif /* __STDC_WANT_LIB_EXT1__ */
+
+_EWL_END_EXTERN_C
+
+	#if defined(__cplusplus)
+		#if __GNUC__
+		_EWL_BEGIN_EXTERN_CPP
+		#endif
+
+		inline
+		wchar_t* 
+		wmemchr(wchar_t* s, wchar_t c, size_t n)
+		{
+			return const_cast<wchar_t*>(wmemchr(static_cast<const wchar_t*>(s), c, n));
+		}
+
+		inline
+		wchar_t*
+		wcschr(wchar_t* s, wchar_t c)
+		{
+			return const_cast<wchar_t*>(wcschr(static_cast<const wchar_t*>(s), c));
+		}
+
+		inline
+		wchar_t* 
+		wcspbrk(wchar_t* s1, const wchar_t* s2)
+		{
+			return const_cast<wchar_t*>(wcspbrk(const_cast<const wchar_t*>(s1), s2));
+		}
+
+		inline
+		wchar_t* 
+		wcsrchr(wchar_t* s, wchar_t c)
+		{
+			return const_cast<wchar_t*>(wcsrchr(const_cast<const wchar_t*>(s), c));
+		}
+
+		inline
+		wchar_t* 
+		wcsstr(wchar_t* s1, const wchar_t* s2)
+		{
+			return const_cast<wchar_t*>(wcsstr(const_cast<const wchar_t*>(s1), s2));
+		}
+		#if __GNUC__
+		_EWL_END_EXTERN_CPP
+		#endif
+	#endif //defined(__cplusplus)
+
+
+_EWL_END_NAMESPACE_STD
+
+#if defined(_EWL_EXPORT_CNAMES) && defined(__cplusplus) && defined(_EWL_USING_NAMESPACE)
+#include <wchar.h>
+#endif /*  defined(_EWL_EXPORT_CNAMES) && defined(__cplusplus) && defined(_EWL_USING_NAMESPACE) */
+
+
+#endif /* _EWL_WIDE_CHAR */
+
+#endif /* _EWL_USING_CW_C_HEADERS_ */
+
+#endif /* _EWL_CWCHAR */

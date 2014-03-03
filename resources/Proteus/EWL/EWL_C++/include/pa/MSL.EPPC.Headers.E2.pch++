@@ -1,0 +1,44 @@
+/* MSL
+ * Copyright © 1995-2007 Freescale Corporation.  All rights reserved.
+ *
+ * $Date: 2012/06/01 16:03:01 $
+ * $Revision: 1.1 $
+ */
+
+/*
+ *	970415 bkoz
+ *	MSL C++ pch file, precompiles all the C++ Headers 
+ *	with and without appropriate .pch's for host OS  (ie MFC or MacHeaders).
+ */
+ 
+/*  vss  971015  */
+/*  #pragma once on  */
+/* Switching this pragma on, can improve compilation speed but it may cause problems with the
+   use of assert.h, which generally depends upon being actually included more than once during
+   compilation.   Please see also ansi_prefix.mac.h  */
+
+/*  vss  971015  */
+#pragma check_header_flags on  
+
+#if __option(unsigned_char)
+	#pragma precompile_target "MSLHeaders.EPPC.E2.UC.mch"
+#else
+#pragma precompile_target "MSLHeaders.EPPC.E2.mch"
+#endif
+
+#if __dest_os == __ppc_eabi
+#include <ansi_prefix.PA_EABI.bare.h>
+#elif __dest_os == __eppc_vxworks
+#include <ansi_prefix.EPPC.VxWorks.h>
+#else
+#error "Missing target (Must match prefix file)"
+#endif
+
+#include "MSLHeaders++.cp"
+
+/* 971015 vss  This is supposed to be off
+ * 971015 vss  Check to ensure precompiled headers are compiled with
+               same int/double lengths as library
+ * 971015 vss  Turned off pragma once as per Andreas' suggestion
+ * 971019 beb  added file name extensions of .mch to speed up useage on windows
+*/

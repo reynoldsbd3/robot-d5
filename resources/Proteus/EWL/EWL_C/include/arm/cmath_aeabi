@@ -1,0 +1,77 @@
+/* EWL
+ * Copyright © 1995-2007 Freescale Corporation.  All rights reserved.
+ *
+ * $Date: 2012/06/01 15:40:17 $
+ * $Revision: 1.1 $
+ */
+
+
+#ifndef _EWL_CMATH_AEABI
+#define _EWL_CMATH_AEABI
+
+#include <ansi_parms.h>
+
+/* mandatory portatibility declaration C Library ABI for ARM architecture section 5.1.1 */
+#if defined(_AEABI_PORTABILITY_LEVEL) && !defined(_AEABI_PORTABLE)
+#define _AEABI_PORTABLE 1
+#endif
+
+#if _EWL_FLOATING_POINT
+
+/************************/
+/*						*/
+/* 	 Standard Macros	*/
+/*						*/
+/************************/
+
+_EWL_BEGIN_EXTERN_C
+
+	extern const double __aeabi_HUGE_VAL;
+	#define HUGE_VAL 	__aeabi_HUGE_VAL
+
+_EWL_END_EXTERN_C
+
+#if _EWL_C99 || _EWL_C_HAS_CPP_EXTENSIONS
+
+_EWL_BEGIN_EXTERN_C
+		
+	extern const float __aeabi_HUGE_VALF;
+	extern const float __aeabi_INFINITY;
+	
+	#define HUGE_VALF	__aeabi_HUGE_VALF
+	#define INFINITY	__aeabi_INFINITY
+
+_EWL_END_EXTERN_C
+			
+#endif /* _EWL_C99 || _EWL_C_HAS_CPP_EXTENSIONS */
+
+#if _EWL_C99 || _EWL_USES_SUN_MATH_LIB
+
+_EWL_BEGIN_EXTERN_C
+
+	extern const float __aeabi_NAN;
+	#define NAN	__aeabi_NAN
+
+_EWL_END_EXTERN_C
+
+#endif /* _EWL_C99 || _EWL_USES_SUN_MATH_LIB */
+
+#if _EWL_C99
+
+_EWL_BEGIN_EXTERN_C
+
+	extern const long double __aeabi_HUGE_VALL;
+	#define HUGE_VALL	__aeabi_HUGE_VALL
+
+_EWL_END_EXTERN_C
+
+#endif /* _EWL_C99 */
+
+#endif /* !_EWL_FLOATING_POINT */
+
+#endif /* _EWL_CMATH_AEABI */
+
+/* Refer Section 5.10 of "C Library ABI for the ARM architecture.pdf"
+ *__aeabi_HUGE_VAL,__aeabi_HUGE_VALL,__aeabi_HUGE_VALF,__aeabi_INFINITY,
+ *__aeabi_NAN are decalred for _AEABI_PORTABILITY_LEVEL macro
+ */

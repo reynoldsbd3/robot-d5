@@ -1,0 +1,192 @@
+/* EWL
+ * Copyright © 1995-2009 Freescale Corporation.  All rights reserved.
+ *
+ * $Date: 2012/06/01 15:39:37 $
+ * $Revision: 1.1 $
+ */
+
+#ifndef _EWL_CCTYPE
+#define _EWL_CCTYPE
+
+#include <ansi_parms.h>
+
+/* The header <ctype.h> declares several functions useful for classifying and mapping
+   characters.166) In all cases the argument is an int, the value of which shall be
+   representable as an unsigned char or shall equal the value of the macro EOF. If the
+   argument has any other value, the behavior is undefined. */
+
+#if !_EWL_USING_CW_C_HEADERS_
+	#include <ctype.h>
+
+	#if _EWL_PUT_THIRD_PARTY_C_IN_STD
+		#include <ewl_cpp_std_ctype.h>
+	#endif
+#elif _AEABI_PORTABILITY_LEVEL
+	#include <arm/cctype_aeabi>
+#else
+
+#include <ctype_api.h>
+#include <eof.h>
+
+_EWL_BEGIN_NAMESPACE_STD
+_EWL_BEGIN_EXTERN_C
+
+	/** The isalnum function tests for any character for which isalpha or isdigit is true.
+	 */
+	_EWL_IMP_EXP_C int _EWL_CDECL isalnum(int) _EWL_CANT_THROW;
+
+	/** The isalpha function tests for any character for which isupper or islower is true,
+	 *	or any character that is one of a locale-specific set of alphabetic characters for which
+	 *	none of iscntrl, isdigit, ispunct, or isspace is true.
+	 *	In the "C" locale (or if _EMBEDDED_WARRIOR_CTYPE is on), isalpha returns true only for
+	 *	the characters for which isupper or islower is true.
+	 */
+	_EWL_IMP_EXP_C int _EWL_CDECL isalpha(int) _EWL_CANT_THROW;
+
+#if _EWL_C99 || _EMBEDDED_WARRIOR_CTYPE
+	/** The isblank function tests for any character that is a standard blank character or is one
+	 *	of a locale-specific set of characters for which isspace is true and that is used to
+	 *	separate words within a line of text. The standard blank characters are the following:
+	 *	space (' '), and horizontal tab ('\t').
+	 *	In the "C" locale (or if _EMBEDDED_WARRIOR_CTYPE is on), isblank returns true only
+	 *	for the standard blank characters.
+	 */
+	_EWL_IMP_EXP_C int _EWL_CDECL isblank(int) _EWL_CANT_THROW;
+#endif /* _EWL_C99 */
+
+#if _EMBEDDED_WARRIOR_CTYPE
+	/** The isascii function tests for any character that is a standard ascii character in the
+	 *	range 0..127.
+	 *	In the "C" locale, isascii returns non-zero only for the standard ascii characters.
+	 */
+	_EWL_IMP_EXP_C int _EWL_CDECL isascii(int) _EWL_CANT_THROW;
+
+	/** The toascii function converts its argument into a 7-bit ASCII character.
+	 */
+	_EWL_IMP_EXP_C int _EWL_CDECL toascii(int) _EWL_CANT_THROW;
+
+#endif /* _EMBEDDED_WARRIOR_CTYPE */
+
+	/** The iscntrl function tests for any control character.
+	 */
+	_EWL_IMP_EXP_C int _EWL_CDECL iscntrl(int) _EWL_CANT_THROW;
+
+	/** The isdigit function tests for any decimal-digit character.
+	 */
+	_EWL_IMP_EXP_C int _EWL_CDECL isdigit(int) _EWL_CANT_THROW;
+
+	/** The isgraph function tests for any printing character except space (' ').
+	 */
+	_EWL_IMP_EXP_C int _EWL_CDECL isgraph(int) _EWL_CANT_THROW;
+
+	/** The islower function tests for any character that is a lowercase letter or is one of a
+	 *	locale-specific set of characters for which none of iscntrl, isdigit, ispunct, or
+	 *	isspace is true.
+	 *	In the "C" locale (or if _EMBEDDED_WARRIOR_CTYPE is on), islower returns true only for
+	 *	the lowercase letters.
+	 */
+	_EWL_IMP_EXP_C int _EWL_CDECL islower(int) _EWL_CANT_THROW;
+
+	/** The isprint function tests for any printing character including space (' ').
+	 */
+	_EWL_IMP_EXP_C int _EWL_CDECL isprint(int) _EWL_CANT_THROW;
+
+	/** The ispunct function tests for any printing character that is one of a locale-specific set
+	 *	of punctuation characters for which neither isspace nor isalnum is true. In the "C"
+	 *	locale, ispunct returns true for every printing character for which neither isspace
+	 *	nor isalnum is true.
+	 */
+	_EWL_IMP_EXP_C int _EWL_CDECL ispunct(int) _EWL_CANT_THROW;
+
+	/** The isspace function tests for any character that is a standard white-space character or
+	 *	is one of a locale-specific set of characters for which isalnum is false. The standard
+	 *	white-space characters are the following: space (' '), form feed ('\f'), new-line ('\n'),
+	 *	carriage return ('\r'), horizontal tab ('\t'), and vertical tab ('\v').
+	 *	In the "C" locale (or if _EMBEDDED_WARRIOR_CTYPE is on), isspace returns true only for
+	 *	the standard white-space characters.
+	 */
+	_EWL_IMP_EXP_C int _EWL_CDECL isspace(int) _EWL_CANT_THROW;
+
+	/** The isupper function tests for any character that is an uppercase letter or is one of a
+	 *	locale-specific set of characters for which none of iscntrl, isdigit, ispunct, or
+	 *	isspace is true.
+	 *	In the "C" locale (or if _EMBEDDED_WARRIOR_CTYPE is on), isupper returns true only for
+	 *	the uppercase letters.
+	 */
+	_EWL_IMP_EXP_C int _EWL_CDECL isupper(int) _EWL_CANT_THROW;
+
+	/** The isxdigit function tests for any hexadecimal-digit character.
+	 */
+	_EWL_IMP_EXP_C int _EWL_CDECL isxdigit(int) _EWL_CANT_THROW;
+
+	/** The tolower function converts an uppercase letter to a corresponding lowercase letter.
+	 *	If the argument is a character for which isupper is true and there are one or more
+	 *	corresponding characters, as specified by the current locale, for which islower is true,
+	 *	the tolower function returns one of the corresponding characters (always the same one
+	 *	for any given locale); otherwise, the argument is returned unchanged.
+	 */
+	_EWL_IMP_EXP_C int _EWL_CDECL tolower(int) _EWL_CANT_THROW;
+
+	/** The toupper function converts a lowercase letter to a corresponding uppercase letter.
+	 *	If the argument is a character for which islower is true and there are one or more
+	 *	corresponding characters, as specified by the current locale, for which isupper is true,
+	 *	the toupper function returns one of the corresponding characters (always the same one
+	 *	for any given locale); otherwise, the argument is returned unchanged.
+	 */
+	_EWL_IMP_EXP_C int _EWL_CDECL toupper(int) _EWL_CANT_THROW;
+
+_EWL_END_EXTERN_C
+
+#if _EWL_USE_INLINE
+
+#if _EMBEDDED_WARRIOR_CTYPE
+
+	_EWL_INLINE int _EWL_CDECL _EWL_CANT_THROW isalnum(int c) { return  (int)_EWL_CMAP_ACCESS[((unsigned)(c) > _MXC_ ? -1 : c )+1] & (_UC_ | _LC_ | _NM_); }
+	_EWL_INLINE int _EWL_CDECL _EWL_CANT_THROW isalpha(int c) { return  (int)_EWL_CMAP_ACCESS[((unsigned)(c) > _MXC_ ? -1 : c )+1] & (_UC_ | _LC_); }
+	_EWL_INLINE int _EWL_CDECL _EWL_CANT_THROW isascii(int c) { return  0 <= c && c <= 127; }
+	_EWL_INLINE int _EWL_CDECL _EWL_CANT_THROW isblank(int c) { return  c == ' ' || c == '\t'; }
+
+	_EWL_INLINE int _EWL_CDECL _EWL_CANT_THROW iscntrl(int c) { return  (int)_EWL_CMAP_ACCESS[((unsigned)(c) > _MXC_ ? -1 : c )+1] & _CL_; }
+	_EWL_INLINE int _EWL_CDECL _EWL_CANT_THROW isdigit(int c) { return  (int)_EWL_CMAP_ACCESS[((unsigned)(c) > _MXC_ ? -1 : c )+1] & _NM_; }
+	_EWL_INLINE int _EWL_CDECL _EWL_CANT_THROW isgraph(int c) { return  (int)_EWL_CMAP_ACCESS[((unsigned)(c) > _MXC_ ? -1 : c )+1] & (_UC_ | _LC_ | _NM_ | _PU_);}
+	_EWL_INLINE int _EWL_CDECL _EWL_CANT_THROW islower(int c) { return  (int)_EWL_CMAP_ACCESS[((unsigned)(c) > _MXC_ ? -1 : c )+1] & _LC_; }
+	_EWL_INLINE int _EWL_CDECL _EWL_CANT_THROW isprint(int c) { return  (int)_EWL_CMAP_ACCESS[((unsigned)(c) > _MXC_ ? -1 : c )+1] & (_BL_ | _UC_ | _LC_ | _NM_ | _PU_);}
+	_EWL_INLINE int _EWL_CDECL _EWL_CANT_THROW ispunct(int c) { return  (int)_EWL_CMAP_ACCESS[((unsigned)(c) > _MXC_ ? -1 : c )+1] & _PU_; }
+	_EWL_INLINE int _EWL_CDECL _EWL_CANT_THROW isspace(int c) { return  (int)_EWL_CMAP_ACCESS[((unsigned)(c) > _MXC_ ? -1 : c )+1] & _SP_; }
+	_EWL_INLINE int _EWL_CDECL _EWL_CANT_THROW isupper(int c) { return  (int)_EWL_CMAP_ACCESS[((unsigned)(c) > _MXC_ ? -1 : c )+1] & _UC_; }
+	_EWL_INLINE int _EWL_CDECL _EWL_CANT_THROW isxdigit(int c){ return  (int)_EWL_CMAP_ACCESS[((unsigned)(c) > _MXC_ ? -1 : c )+1] & _HX_; }
+	_EWL_INLINE int _EWL_CDECL _EWL_CANT_THROW toascii(int c) { return  c & 0x7F; } /* code rather than code+data */
+	_EWL_INLINE int _EWL_CDECL _EWL_CANT_THROW tolower(int c) { return isupper(c) ? c + ('a' - 'A') : c; } /* code rather than code+data */
+	_EWL_INLINE int _EWL_CDECL _EWL_CANT_THROW toupper(int c) { return islower(c) ? c - ('a' - 'A') : c; } /* code rather than code+data */
+
+#else
+
+	_EWL_INLINE int _EWL_CDECL _EWL_CANT_THROW isalnum(int c) { return (((unsigned)(c) >= __ewl_cmap_size)) ? 0 : (int) (_EWL_CMAP_ACCESS[c] & __ewl_alnum); }
+	_EWL_INLINE int _EWL_CDECL _EWL_CANT_THROW isalpha(int c) { return (((unsigned)(c) >= __ewl_cmap_size)) ? 0 : (int) (_EWL_CMAP_ACCESS[c] & __ewl_alpha); }
+#if _EWL_C99
+	_EWL_INLINE int _EWL_CDECL _EWL_CANT_THROW isblank(int c) { return (((unsigned)(c) >= __ewl_cmap_size)) ? 0 : (int) (_EWL_CMAP_ACCESS[c] & __ewl_blank); }
+#endif /* _EWL_C99 */
+	_EWL_INLINE int _EWL_CDECL _EWL_CANT_THROW iscntrl(int c) { return (((unsigned)(c) >= __ewl_cmap_size)) ? 0 : (int) (_EWL_CMAP_ACCESS[c] & __ewl_cntrl); }
+	_EWL_INLINE int _EWL_CDECL _EWL_CANT_THROW isdigit(int c) { return (((unsigned)(c) >= __ewl_cmap_size)) ? 0 : (int) (_EWL_CMAP_ACCESS[c] & __ewl_digit); }
+	_EWL_INLINE int _EWL_CDECL _EWL_CANT_THROW isgraph(int c) { return (((unsigned)(c) >= __ewl_cmap_size)) ? 0 : (int) (_EWL_CMAP_ACCESS[c] & __ewl_graph); }
+	_EWL_INLINE int _EWL_CDECL _EWL_CANT_THROW islower(int c) { return (((unsigned)(c) >= __ewl_cmap_size)) ? 0 : (int) (_EWL_CMAP_ACCESS[c] & __ewl_lower); }
+	_EWL_INLINE int _EWL_CDECL _EWL_CANT_THROW isprint(int c) { return (((unsigned)(c) >= __ewl_cmap_size)) ? 0 : (int) (_EWL_CMAP_ACCESS[c] & __ewl_print); }
+	_EWL_INLINE int _EWL_CDECL _EWL_CANT_THROW ispunct(int c) { return (((unsigned)(c) >= __ewl_cmap_size)) ? 0 : (int) (_EWL_CMAP_ACCESS[c] & __ewl_punct); }
+	_EWL_INLINE int _EWL_CDECL _EWL_CANT_THROW isspace(int c) { return (((unsigned)(c) >= __ewl_cmap_size)) ? 0 : (int) (_EWL_CMAP_ACCESS[c] & __ewl_space); }
+	_EWL_INLINE int _EWL_CDECL _EWL_CANT_THROW isupper(int c) { return (((unsigned)(c) >= __ewl_cmap_size)) ? 0 : (int) (_EWL_CMAP_ACCESS[c] & __ewl_upper); }
+	_EWL_INLINE int _EWL_CDECL _EWL_CANT_THROW isxdigit(int c){ return (((unsigned)(c) >= __ewl_cmap_size)) ? 0 : (int) (_EWL_CMAP_ACCESS[c] & __ewl_xdigit); }
+	_EWL_INLINE int _EWL_CDECL _EWL_CANT_THROW tolower(int c) { return (((unsigned)(c) >= __ewl_cmap_size)) ? c : (int) (_EWL_CLOWER_ACCESS[c]); }
+	_EWL_INLINE int _EWL_CDECL _EWL_CANT_THROW toupper(int c) { return (((unsigned)(c) >= __ewl_cmap_size)) ? c : (int) (_EWL_CUPPER_ACCESS[c]); }
+
+#endif /* _EMBEDDED_WARRIOR_CTYPE */
+#endif /* _EWL_USE_INLINE */
+
+_EWL_END_NAMESPACE_STD
+
+#if defined(_EWL_EXPORT_CNAMES) && defined(__cplusplus) && defined(_EWL_USING_NAMESPACE)
+#include <ctype.h>
+#endif /*  defined(_EWL_EXPORT_CNAMES) && defined(__cplusplus) && defined(_EWL_USING_NAMESPACE) */
+
+#endif /* _EWL_USING_CW_C_HEADERS_ */
+
+#endif /* _EWL_CCTYPE */

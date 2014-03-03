@@ -1,0 +1,202 @@
+/* EWL
+ * Copyright 2009- Freescale Corporation.  All rights reserved.
+ *
+ * $Date: 2012/06/28 06:41:40 $
+ * $Revision: 1.2 $
+ */
+
+#ifndef _EWL_ALLOCATOR
+# define _EWL_ALLOCATOR
+
+# include <ewlconfig>
+
+#ifdef __GNUC__
+extern "C++" {
+#endif // __GNUC__
+
+# ifndef _EWL_NO_CPP_NAMESPACE
+    namespace std {
+# endif
+
+//  lib.default.allocator, the default allocator:
+
+template <class T> class allocator;
+
+//  specialize for  void:
+
+template <>
+class allocator<void>
+{
+public:
+    typedef size_t      size_type;
+    typedef ptrdiff_t   difference_type;
+    typedef void*       pointer;
+    typedef const void* const_pointer;
+    typedef void        value_type;
+#ifndef _EWL_NO_MEMBER_TEMPLATE
+    template <class U> struct rebind { typedef allocator<U> other; };
+#endif
+};
+
+template <class T>
+class allocator
+{
+public:
+    typedef size_t    size_type;
+    typedef ptrdiff_t difference_type;
+    typedef T*        pointer;
+    typedef const T*  const_pointer;
+    typedef T&        reference;
+    typedef const T&  const_reference;
+    typedef T         value_type;
+#ifndef _EWL_NO_MEMBER_TEMPLATE
+    template <class U> struct rebind { typedef allocator<U> other; };
+#endif
+
+    allocator() _EWL_NO_THROW;
+#ifndef _EWL_NO_MEMBER_TEMPLATE
+#ifndef _EWL_MUST_INLINE_MEMBER_TEMPLATE
+    template <class U> allocator(const allocator<U>&) _EWL_NO_THROW;
+#else
+    template <class U>
+    inline
+    allocator(const allocator<U>&) _EWL_NO_THROW
+    {
+    }
+#endif  // _EWL_MUST_INLINE_MEMBER_TEMPLATE
+#endif  // _EWL_NO_MEMBER_TEMPLATE
+
+    pointer address(reference x) const;
+    const_pointer address(const_reference x) const;
+
+    pointer allocate(size_type n, allocator<void>::const_pointer hint = 0);
+    void deallocate(pointer p, size_type n);
+    size_type max_size() const _EWL_NO_THROW;
+
+    void construct(pointer p, const T& val);
+    void destroy(pointer p);
+
+#ifdef _EWL_MOVE
+    template <class U> void construct(pointer p, U&& val)
+        {::new((void*)p) T(_STD::forward<U>(val));}
+#endif  // _EWL_MOVE
+};
+
+template <class T>
+inline
+allocator<T>::allocator() _EWL_NO_THROW
+{
+}
+
+#ifndef _EWL_NO_MEMBER_TEMPLATE
+#ifndef _EWL_MUST_INLINE_MEMBER_TEMPLATE
+    template <class T>
+    template <class U>
+    inline
+    allocator<T>::allocator(const allocator<U>&) _EWL_NO_THROW
+    {
+    }
+#endif  // _EWL_MUST_INLINE_MEMBER_TEMPLATE
+#endif  // _EWL_NO_MEMBER_TEMPLATE
+
+template <class T>
+inline
+typename allocator<T>::pointer
+allocator<T>::address(reference x) const
+{
+    return &x;
+}
+
+template <class T>
+inline
+typename allocator<T>::const_pointer
+allocator<T>::address(const_reference x) const
+{
+    return &x;
+}
+
+template <class T>
+inline
+typename allocator<T>::pointer
+allocator<T>::allocate(size_type n, allocator<void>::const_pointer)
+{
+#ifndef _EWL_NO_EXCEPTIONS
+    return static_cast<pointer>(::operator new(n * sizeof(T)));
+#else
+    pointer p = static_cast<pointer>(::operator new(n * sizeof(T)));
+    if (p == 0)
+        __ewl_error("Memory allocation failure");
+    return p;
+#endif  // _EWL_NO_EXCEPTIONS
+}
+
+template <class T>
+inline
+void
+allocator<T>::deallocate(pointer p, size_type)
+{
+#ifdef _EWL_DEBUG
+    if (p == 0)
+        _EWL_DEBUG_ERROR(logic_error, "EWL DEBUG: NULL pointer passed to allocator::deallocate");
+#endif  // _EWL_DEBUG
+    ::operator delete((void*)p);
+}
+
+template <class T>
+inline
+typename allocator<T>::size_type
+allocator<T>::max_size() const _EWL_NO_THROW
+{
+    return numeric_limits<size_type>::max() / sizeof(T);
+}
+
+template <class T>
+inline
+void
+allocator<T>::construct(pointer p, const T& val)
+{
+    ::new((void*)p) T(val);
+}
+
+template <class T>
+inline
+void
+allocator<T>::destroy(pointer p)
+{
+    p->~T();
+}
+
+template <class T, class U>
+inline
+bool
+operator==(const allocator<T>&, const allocator<U>&) _EWL_NO_THROW
+{
+    return true;
+}
+
+template <class T, class U>
+inline
+bool
+operator!=(const allocator<T>&, const allocator<U>&) _EWL_NO_THROW
+{
+    return false;
+}
+
+template <class T>
+inline
+bool
+operator!=(const allocator<T>&, const allocator<T>&) _EWL_NO_THROW
+{
+    return false;
+}
+
+# ifndef _EWL_NO_CPP_NAMESPACE
+    } // namespace std
+# endif
+
+#ifdef __GNUC__
+} // extern "C++"
+#endif // __GNUC__
+
+#endif // _EWL_ALLOCATOR
+

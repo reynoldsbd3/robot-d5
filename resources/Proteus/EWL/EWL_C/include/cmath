@@ -1,0 +1,1147 @@
+/* EWL
+ * Copyright © 1995-2009 Freescale Corporation.  All rights reserved.
+ *
+ * $Date: 2012/06/01 15:39:37 $
+ * $Revision: 1.1 $
+ */
+
+ /**
+  * \file cmath - Std C Library
+  */
+
+#ifndef _EWL_CMATH
+#define _EWL_CMATH
+
+#ifdef __STARCORE__
+#pragma reject_floats off 
+#endif 
+
+#ifndef __cmath__
+   #define __cmath__
+#endif  /* __cmath__ */
+
+#include <ansi_parms.h>
+
+_MISRA_EXCEPTION_CMATH_MACROS()
+
+#if _AEABI_PORTABILITY_LEVEL
+	#include <arm/cmath_aeabi>
+#endif /* _AEABI_PORTABILITY_LEVEL */
+
+	#ifndef MATH_ERRNO
+	#define MATH_ERRNO 		1
+	#endif /* MATH_ERRNO */
+
+	#ifndef MATH_ERREXCEPT
+	#define MATH_ERREXCEPT	2
+	#endif /* MATH_ERREXCEPT */
+
+	#ifndef math_errhandling
+	#define math_errhandling _EWL_MATH_ERRHANDLING
+	#endif /* math_errhandling */
+
+#if _EWL_FLOATING_POINT || _EWL_FLOATING_POINT_PRINTF_SCANF
+
+/* mostly complete overrides of the math library */
+#if __dest_os == __m56800_os || __dest_os == __m56800E_os
+
+	#include <dsp/cmath_dsp56800x.h>
+
+#elif !defined(_EWL_NO_MATH_LIB)
+
+	#define _EWL_CMATH_DEFINED_MATH_ITEMS
+
+	#include <cfloat>
+	#include <math_api.h>
+	#include <limits_api.h>
+
+_EWL_BEGIN_NAMESPACE_STD
+_EWL_BEGIN_EXTERN_C
+
+	/** The types float_t and double_t are floating types at least as wide as
+	 *	float and double, respectively, and such that double_t is at least as
+	 *	wide as float_t. If FLT_EVAL_METHOD equals 0, float_t and double_t are
+	 *	float and double, respectively; if FLT_EVAL_METHOD equals 1, they are
+	 *	both double; if FLT_EVAL_METHOD equals 2, they are both long double;
+	 */
+	#if FLT_EVAL_METHOD == 0
+	typedef float float_t;
+	typedef double double_t;
+	#elif FLT_EVAL_METHOD == 1
+	typedef double float_t;
+	typedef double double_t;
+	#elif FLT_EVAL_METHOD == 2
+	typedef long double float_t;
+	typedef long double double_t;
+	#else
+	#error sanity check
+	#endif /* FLT_EVAL_METHOD */
+	
+	#ifndef MATH_ERRNO
+	#define MATH_ERRNO 		1
+	#endif /* MATH_ERRNO */
+
+	#ifndef MATH_ERREXCEPT
+	#define MATH_ERREXCEPT	2
+	#endif /* MATH_ERREXCEPT */
+
+	#ifndef math_errhandling
+	#define math_errhandling _EWL_MATH_ERRHANDLING
+	#endif /* math_errhandling */
+
+	extern _EWL_IMP_EXP int32_t __float_huge[sizeof(float)/4];
+	extern _EWL_IMP_EXP int32_t __double_huge[sizeof(double)/4];
+	extern _EWL_IMP_EXP int32_t __extended_huge[sizeof(long double)/4];
+
+	#ifndef HUGE_VALF
+	/** \def HUGE_VALF represented by the float positive infinity  */
+	#define HUGE_VALF (_MISRA_EXCEPTION_FLOAT_CAST() *(float *)&__float_huge)
+	#endif
+
+	#ifndef	HUGE_VAL
+	/** \def HUGE_VAL represented by the double positive infinity  */
+	#define HUGE_VAL  (_MISRA_EXCEPTION_FLOAT_CAST() *(double *)&__double_huge)
+	#endif
+
+	#ifndef HUGE_VALL
+	/** \def HUGE_VALL represented by the long double positive infinity  */
+	#define HUGE_VALL (_MISRA_EXCEPTION_FLOAT_CAST() *(long double*)&__extended_huge)
+	#endif
+
+
+	#ifndef INFINITY
+	/** \def INFINITY is the float positive infinity  */
+	#define INFINITY  (_MISRA_EXCEPTION_FLOAT_CAST() *(float *)__float_huge)
+	#endif
+
+	#ifndef NAN
+	extern _EWL_IMP_EXP int32_t __float_nan[];
+	/** \def NAN is the float NaN */
+	#define NAN       (_MISRA_EXCEPTION_FLOAT_CAST() *(float*)__float_nan)
+	#endif
+
+	#ifndef FP_ILOGB0
+	/** \def FP_ILOGB0 is the result of ilogb(0) */
+	#define FP_ILOGB0   _EWL_INT_MIN
+	#endif /* FP_ILOGB0 */
+
+	#ifndef FP_ILOGBNAN
+	/** \def FP_ILOGBNAN is the result of ilogb(NaN) */
+	#define FP_ILOGBNAN _EWL_INT_MAX
+	#endif /* FP_ILOGBNAN */
+
+	_EWL_IMP_EXP_C int _EWL_MATH_CDECL __fpclassifyf(float x) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C int _EWL_MATH_CDECL __fpclassifyd(double x) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C int _EWL_MATH_CDECL __fpclassifyl(long double x) _EWL_CANT_THROW;
+
+	/**
+	 *  \def fpclassify returns a classification value:
+	 *			FP_NAN       	quiet NaN
+	 *			FP_INFINITE  	+ or - infinity
+	 *			FP_ZERO      	+ or - zero
+	 *			FP_NORMAL    	normalized numbers
+	 *			FP_SUBNORMAL 	denormalized numbers
+	 */
+	
+	#define FP_NAN       1  /*   quiet NaN */
+	#define FP_INFINITE  2  /*   + or - infinity */
+	#define FP_ZERO      3  /*   + or - zero          */
+	#define FP_NORMAL    4  /*   all normal numbers   */
+	#define FP_SUBNORMAL 5  /*   denormal numbers     */
+
+	#define fpclassify(x)  \
+		 	((sizeof(x) == sizeof(float))  ? __fpclassifyf((float)(x))  : \
+		 	((sizeof(x) == sizeof(double)) ? __fpclassifyd((double)(x)) : \
+									__fpclassifyl((long double)(x))))
+
+	/** \def isnormal returns a nonzero value if and only if the value is a normal value */
+	#define isnormal(x) (fpclassify(x) == FP_NORMAL)
+
+	/** \def isnan returns a nonzero value if and only if the value is NaN */
+	#define isnan(x)    (fpclassify(x) == FP_NAN)
+
+	/** \def isinf returns a nonzero value if and only if the value is infinite */
+	#define isinf(x)    (fpclassify(x) == FP_INFINITE)
+
+	/** \def isfinite returns a nonzero value if and only if the value is not infinite */
+	#define isfinite(x) ((fpclassify(x) > FP_INFINITE))
+
+	_EWL_IMP_EXP_C int _EWL_MATH_CDECL __signbitf(float x) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C int _EWL_MATH_CDECL __signbitd(double x) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C int _EWL_MATH_CDECL __signbit(long double x) _EWL_CANT_THROW;
+
+	/**
+	 *  \def signbit returns a nonzero value if and only if the sign of its argument value is negative
+	 */
+	
+	#define signbit(x) \
+		 ((sizeof(x) == sizeof(float))  ? __signbitf((float)(x)) \
+		:((sizeof(x) == sizeof(double)) ? __signbitd((double)(x)) \
+		:                     			  __signbit((long double)(x))))
+
+	_EWL_IMP_EXP_C short __ewl_relation(double x, double y) _EWL_CANT_THROW;
+
+	/** \def isgreater  returns a nonzero value if (x) > (y) */
+	#define isgreater(x, y) 		(__ewl_relation(x, y) == 0)
+	/** \def isgreaterequal returns a nonzero value if (x) >= (y) */
+	#define isgreaterequal(x, y)	(__ewl_relation(x, y) % 2 == 0)
+	/** \def isless returns a nonzero value if (x) < (y) */
+	#define isless(x, y)			(__ewl_relation(x, y) == 1)
+	/** \def islessequal returns a nonzero value if (x) <= (y) */
+	#define islessequal(x, y)		((__ewl_relation(x, y)+1)/2 == 1)
+	/** \def islessgreater returns a nonzero value if (x) > (y) || (x) < (y) */
+	#define islessgreater(x, y)		(__ewl_relation(x, y) <= 1)
+	/** \def isunordered returns a nonzero value if its arguments are unordered */
+	#define isunordered(x, y)		(__ewl_relation(x, y) == 3)
+
+
+#if __dest_os != __starcore
+
+	/**
+	 *  The acos functions compute the principal value of the arc cosine of x.
+	 *  A domain error occurs for arguments not in the interval [-1, +1].
+	 */
+	_EWL_IMP_EXP_C  double      _EWL_MATH_CDECL acos(double) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C  float       _EWL_MATH_CDECL acosf(float) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C  long double _EWL_MATH_CDECL acosl(long double) _EWL_CANT_THROW;
+
+	/**
+	 *  The asin functions compute the principal value of the arc sine of x.
+	 *  A domain error occurs for arguments not in the interval [-1, +1].
+	 */
+	_EWL_IMP_EXP_C  double      _EWL_MATH_CDECL asin(double) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C  float       _EWL_MATH_CDECL asinf(float) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C  long double _EWL_MATH_CDECL asinl(long double) _EWL_CANT_THROW;
+
+	/**
+	 *  The atan functions compute the principal value of the arc tangent of x.
+	 */
+	_EWL_IMP_EXP_C  double      _EWL_MATH_CDECL atan(double) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C  float       _EWL_MATH_CDECL atanf(float) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C  long double _EWL_MATH_CDECL atanl(long double) _EWL_CANT_THROW;
+
+	/**
+	 *  The atan2 functions compute the value of the arc tangent of y/x, using
+	 *  the signs of both arguments to determine the quadrant of the return value.
+	 *  A domain error may occur if both arguments are zero.
+	 */
+	_EWL_IMP_EXP_C  double      _EWL_MATH_CDECL atan2(double, double) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C  float       _EWL_MATH_CDECL atan2f(float, float) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C  long double _EWL_MATH_CDECL atan2l(long double, long double) _EWL_CANT_THROW;
+
+	/**
+	 *  The cos functions compute the cosine of x.
+	 */
+	_EWL_IMP_EXP_C  double      _EWL_MATH_CDECL cos(double)  _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C  float       _EWL_MATH_CDECL cosf(float)  _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C  long double _EWL_MATH_CDECL cosl(long double) _EWL_CANT_THROW;
+
+	/**
+	 *  The sin functions compute the sine of x.
+	 */
+	_EWL_IMP_EXP_C  double      _EWL_MATH_CDECL sin(double)  _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C  float       _EWL_MATH_CDECL sinf(float)  _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C  long double _EWL_MATH_CDECL sinl(long double) _EWL_CANT_THROW;
+
+	/**
+	 *  The tan functions compute the tangemt of x.
+	 */
+	_EWL_IMP_EXP_C  double      _EWL_MATH_CDECL tan(double)  _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C  float       _EWL_MATH_CDECL tanf(float)  _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C  long double _EWL_MATH_CDECL tanl(long double) _EWL_CANT_THROW;
+
+	/**
+	 *  The acosh functions compute the (nonnegative) arc hyperbolic cosine of x.
+	 *  A domain error occurs for arguments less than 1.
+	 */
+	_EWL_IMP_EXP_C  double      _EWL_MATH_CDECL acosh(double) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C  float       _EWL_MATH_CDECL acoshf(float) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C  long double _EWL_MATH_CDECL acoshl(long double) _EWL_CANT_THROW;
+	
+	/**
+	 *  The asinh functions compute the arc hyperbolic sine of x.
+	 */
+	_EWL_IMP_EXP_C  double      _EWL_MATH_CDECL asinh(double) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C  float       _EWL_MATH_CDECL asinhf(float) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C  long double _EWL_MATH_CDECL asinhl(long double) _EWL_CANT_THROW;
+	
+	/**
+	 *  The atanh functions compute the arc hyperbolic tangent of x.
+	 *  A domain error occurs for arguments not in the interval [-1, +1].
+	 *  A range error may occur if the argument equals -1 or +1.
+	 */
+	_EWL_IMP_EXP_C  double      _EWL_MATH_CDECL atanh(double) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C  float       _EWL_MATH_CDECL atanhf(float) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C  long double _EWL_MATH_CDECL atanhl(long double) _EWL_CANT_THROW;
+
+	/**
+	 *  The cosh functions compute the hyperbolic cosine of x.
+	 *  A range error occurs if the magnitude of x is too large.
+	 */
+	_EWL_IMP_EXP_C  double      _EWL_MATH_CDECL cosh(double) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C  float       _EWL_MATH_CDECL coshf(float) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C  long double _EWL_MATH_CDECL coshl(long double) _EWL_CANT_THROW;
+	
+	/**
+	 *  The sinh functions compute the hyperbolic sine of x.
+	 *  A range error occurs if the magnitude of x is too large.
+	 */
+	_EWL_IMP_EXP_C  double      _EWL_MATH_CDECL sinh(double) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C  float       _EWL_MATH_CDECL sinhf(float) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C  long double _EWL_MATH_CDECL sinhl(long double) _EWL_CANT_THROW;
+	
+	/**
+	 *  The tanh functions compute the hyperbolic tangent of x.
+	 *  A range error occurs if the magnitude of x is too large.
+	 */
+	_EWL_IMP_EXP_C  double      _EWL_MATH_CDECL tanh(double) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C  float       _EWL_MATH_CDECL tanhf(float) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C  long double _EWL_MATH_CDECL tanhl(long double) _EWL_CANT_THROW;
+
+	/**
+	 *  The exp functions compute the base-e exponential of x.
+	 *  A range error occurs if the magnitude of x is too large.
+	 */
+	_EWL_IMP_EXP_C  double      _EWL_MATH_CDECL exp(double)  _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C  float       _EWL_MATH_CDECL expf(float)  _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C  long double _EWL_MATH_CDECL expl(long double) _EWL_CANT_THROW;
+
+	/**
+	 *  The exp2 functions compute the base-2 exponential of x.
+	 *  A range error occurs if the magnitude of x is too large.
+	 */
+	_EWL_IMP_EXP_C  double      _EWL_MATH_CDECL exp2(double)  _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C  float       _EWL_MATH_CDECL exp2f(float) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C  long double _EWL_MATH_CDECL exp2l(long double) _EWL_CANT_THROW;
+
+	/**
+	 *  The expm1 functions compute the base-e exponential of the argument, minus 1.
+	 *  A range error occurs if the magnitude of x is too large.
+	 */
+	_EWL_IMP_EXP_C  double      _EWL_MATH_CDECL expm1(double) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C  float       _EWL_MATH_CDECL expm1f(float) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C  long double _EWL_MATH_CDECL expm1l(long double) _EWL_CANT_THROW;
+
+	/**
+	 *  The frexp functions break a floating-point number into a normalized fraction
+	 *  and an integral power of 2. They store the integer in the int object pointed
+	 *  to by exp
+	 */
+	_EWL_IMP_EXP_C  double      _EWL_MATH_CDECL frexp(double, int*) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C  float       _EWL_MATH_CDECL frexpf(float, int*) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C  long double _EWL_MATH_CDECL frexpl(long double, int*) _EWL_CANT_THROW;
+
+	/**
+	 *  The ilogb functions extract the exponent of x as a signed int value.
+	 *  	- if x is zero they compute the value FP_ILOGB0;
+	 *		- if x is infinite they compute the value INT_MAX;
+	 *		- if x is a NaN they compute the value FP_ILOGBNAN;
+	 *		- otherwise, they are equivalent to calling the corresponding logb function
+	 *		  and casting the returned value to type int.
+	 *   A range error may occur if x is 0.
+	 */
+	_EWL_IMP_EXP_C  int         _EWL_MATH_CDECL ilogb(double) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C  int         _EWL_MATH_CDECL ilogbf(float) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C  int         _EWL_MATH_CDECL ilogbl(long double) _EWL_CANT_THROW;
+
+	/**
+	 *  The ldexp functions multiply a floating-point number by an integral power of 2.
+	 *  A range error occurs if the magnitude of results is too large.
+	 */
+	_EWL_IMP_EXP_C  double      _EWL_MATH_CDECL ldexp(double, int)  _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C  float       _EWL_MATH_CDECL ldexpf(float, int)  _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C  long double _EWL_MATH_CDECL ldexpl(long double, int) _EWL_CANT_THROW;
+
+	/**
+	 *  The log functions compute the base-e (natural) logarithm of x.
+	 *  A domain error occurs if the argument is negative.
+	 *  A range error may occur if the argument is zero.
+	 */
+	_EWL_IMP_EXP_C  double      _EWL_MATH_CDECL log(double)   _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C  float       _EWL_MATH_CDECL logf(float)   _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C  long double _EWL_MATH_CDECL logl(long double) _EWL_CANT_THROW;
+	
+	/**
+	 *  The log10 functions compute the base-10 (common) logarithm of x.
+	 *  A domain error occurs if the argument is negative.
+	 *  A range error may occur if the argument is zero.
+	 */
+	_EWL_IMP_EXP_C  double      _EWL_MATH_CDECL log10(double) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C  float       _EWL_MATH_CDECL log10f(float) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C  long double _EWL_MATH_CDECL log10l(long double) _EWL_CANT_THROW;
+
+	/**
+	 *  The log1p functions compute the base-e (natural) logarithm of 1 plus the argument.
+	 *  A domain error occurs if the argument is less than -1.
+	 *  A range error may occur if the argument equals -1.
+	 */
+	_EWL_IMP_EXP_C  double      _EWL_MATH_CDECL log1p(double) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C  float       _EWL_MATH_CDECL log1pf(float) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C  long double _EWL_MATH_CDECL log1pl(long double) _EWL_CANT_THROW;
+
+	/**
+	 *  The log functions compute the base-2 logarithm of x.
+	 *  A domain error occurs if the argument is negative.
+	 *  A range error may occur if the argument is zero.
+	 */
+	_EWL_IMP_EXP_C  double      _EWL_MATH_CDECL log2(double) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C  float       _EWL_MATH_CDECL log2f(float)  _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C  long double _EWL_MATH_CDECL log2l(long double) _EWL_CANT_THROW;
+
+	/**
+	 *  The logb functions extract the exponent of x, as a signed integer value in
+	 *  floating-point format. If x is subnormal it is treated as though it were normalized;
+	 *  thus, for positive finite x, 1 <= x * FLT_RADIX**-logb(x) < FLT_RADIX
+	 *  A domain error may occur if the argument is zero.
+	 */
+	_EWL_IMP_EXP_C  double      _EWL_MATH_CDECL logb(double) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C  float       _EWL_MATH_CDECL logbf(float)  _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C  long double _EWL_MATH_CDECL logbl(long double) _EWL_CANT_THROW;
+
+	/**
+	 *  The modf functions break the argument value into integral and fractional parts,
+	 *  each of which has the same type and sign as the argument. They store the integral
+	 *  part (in floating-point format) in the object pointed to by iptr.
+	 */
+	_EWL_IMP_EXP_C  double      _EWL_MATH_CDECL modf(double, double*) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C  float       _EWL_MATH_CDECL modff(float, float*) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C  long double _EWL_MATH_CDECL modfl(long double, long double*) _EWL_CANT_THROW;
+
+	/**
+	 *  The scalbn and scalbln functions compute x * FLT_RADIX**n efficiently, not
+     *  normally by computing FLT_RADIX**n explicitly.
+     *  A range error may occur.
+     */
+	_EWL_IMP_EXP_C  double      _EWL_MATH_CDECL scalbln(double, long int) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C  float       _EWL_MATH_CDECL scalblnf(float, long int) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C  long double _EWL_MATH_CDECL scalblnl(long double, long int) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C  double      _EWL_MATH_CDECL scalbn(double, int) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C  float       _EWL_MATH_CDECL scalbnf(float, int) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C  long double _EWL_MATH_CDECL scalbnl(long double, int) _EWL_CANT_THROW;
+
+	/**
+	 *  The cbrt functions compute the real cube root of x.
+	 */
+	_EWL_IMP_EXP_C  double      _EWL_MATH_CDECL cbrt(double)  _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C  float       _EWL_MATH_CDECL cbrtf(float) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C  long double _EWL_MATH_CDECL cbrtl(long double) _EWL_CANT_THROW;
+
+	/**
+	 *  The fabs functions compute the absolute value of a floating-point number x.
+	 */
+#if __dest_os !=  __emb_coldfire
+	_EWL_IMP_EXP_C  double      _EWL_MATH_CDECL fabs(double) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C  float       _EWL_MATH_CDECL fabsf(float) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C  long double _EWL_MATH_CDECL fabsl(long double) _EWL_CANT_THROW;
+#endif
+
+	/**
+	 *  The hypot functions compute the square root of the sum of the squares of x and y,
+	 *  without undue overflow or underflow.
+	 *  A range error may occur.
+	 */
+	_EWL_IMP_EXP_C  double      _EWL_MATH_CDECL hypot(double, double) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C  float       _EWL_MATH_CDECL hypotf(float, float) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C  long double _EWL_MATH_CDECL hypotl(long double, long double) _EWL_CANT_THROW;
+	
+	/**
+	 *  The pow functions compute x raised to the power y.
+	 *  A domain error occurs if x is finite and negative and y is finite and not an integer value.
+	 *  A domain error may occur if x is zero and y is less than or equal to zero.
+	 *  A range error may occur.
+	 */
+	_EWL_IMP_EXP_C  double      _EWL_MATH_CDECL pow(double, double)  _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C  float       _EWL_MATH_CDECL powf(float, float)   _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C  long double _EWL_MATH_CDECL powl(long double, long double) _EWL_CANT_THROW;
+
+	/**
+	 *  The sqrt functions compute the nonnegative square root of x.
+	 *  A domain error occurs if the argument is less than zero.
+	 */
+#if __dest_os !=  __emb_coldfire
+	_EWL_IMP_EXP_C  double      _EWL_MATH_CDECL sqrt(double) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C  float       _EWL_MATH_CDECL sqrtf(float) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C  long double _EWL_MATH_CDECL sqrtl(long double) _EWL_CANT_THROW;
+#endif
+
+	/**
+	 *  The erf functions compute the error function of x.
+	 */
+	_EWL_IMP_EXP_C  double      _EWL_MATH_CDECL erf(double)   _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C  float       _EWL_MATH_CDECL erff(float) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C  long double _EWL_MATH_CDECL erfl(long double) _EWL_CANT_THROW;
+
+	/**
+	 *  The erfc functions compute the complementary error function of x.
+	 *  A range error occurs if x is too large.
+	 */
+	_EWL_IMP_EXP_C  double      _EWL_MATH_CDECL erfc(double)  _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C  float       _EWL_MATH_CDECL erfcf(float) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C  long double _EWL_MATH_CDECL erfcl(long double) _EWL_CANT_THROW;
+
+	/**
+	 *  The lgamma functions compute the natural logarithm of the absolute value of gamma of x.
+	 *  A range error occurs if x is too large.
+	 *  A range error may occur if x is a negative integer or zero.
+	 */
+	_EWL_IMP_EXP_C  double      _EWL_MATH_CDECL lgamma(double) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C  float       _EWL_MATH_CDECL lgammaf(float) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C  long double _EWL_MATH_CDECL lgammal(long double) _EWL_CANT_THROW;
+
+	/**
+	 *  The tgamma functions compute the gamma function of x.
+	 *  A domain error occurs if x is a negative integer
+	 *  A domain error occurs if the result cannot be represented when x is zero.
+	 *  A range error may occur if the magnitude of x is too large or too small.
+	 */
+	_EWL_IMP_EXP_C  double      _EWL_MATH_CDECL tgamma(double) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C  float       _EWL_MATH_CDECL tgammaf(float) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C  long double _EWL_MATH_CDECL tgammal(long double) _EWL_CANT_THROW;
+
+	/**
+	 *  The ceil functions compute the smallest integer value not less than x.
+	 */
+	_EWL_IMP_EXP_C  double      _EWL_MATH_CDECL ceil(double) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C  float       _EWL_MATH_CDECL ceilf(float) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C  long double _EWL_MATH_CDECL ceill(long double) _EWL_CANT_THROW;
+
+	/**
+	 *  The floor functions compute the largest integer value not greater than x.
+	 */
+	_EWL_IMP_EXP_C  double      _EWL_MATH_CDECL floor(double) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C  float       _EWL_MATH_CDECL floorf(float) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C  long double _EWL_MATH_CDECL floorl(long double) _EWL_CANT_THROW;
+
+	/**
+	 *  The nearbyint functions round their argument to an integer value in
+	 *  floating-point format, using the current rounding direction and without
+	 *  raising the ‘‘inexact’’ floating point exception.
+	 */
+	_EWL_IMP_EXP_C  double      _EWL_MATH_CDECL nearbyint(double) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C  float       _EWL_MATH_CDECL nearbyintf(float) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C  long double _EWL_MATH_CDECL nearbyintl(long double) _EWL_CANT_THROW;
+
+	/**
+	 *  The rint functions round their argument to an integer value in floating-point
+	 *  format, using the current rounding direction and raising the ‘‘inexact’’
+	 *  floating point exception if the result differs in value from the argument.
+	 */
+	_EWL_IMP_EXP_C  double      _EWL_MATH_CDECL rint(double)  _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C  float       _EWL_MATH_CDECL rintf(float) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C  long double _EWL_MATH_CDECL rintl(long double) _EWL_CANT_THROW;
+
+	/**
+	 *  The lrint and llrint functions round their argument to the nearest integer value,
+	 *  rounding according to the current rounding direction. If the rounded value is
+	 *  outside the range of the return type, the numeric result is unspecified.
+	 *  A range error may occur if the magnitude of x is too large.
+	 */
+	_EWL_IMP_EXP_C  long        _EWL_MATH_CDECL lrint(double) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C  long        _EWL_MATH_CDECL lrintf(float) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C  long        _EWL_MATH_CDECL lrintl(long double) _EWL_CANT_THROW;
+#if _EWL_LONGLONG
+	_EWL_IMP_EXP_C  long long   _EWL_MATH_CDECL llrint(double) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C  long long   _EWL_MATH_CDECL llrintf(float) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C  long long   _EWL_MATH_CDECL llrintl(long double) _EWL_CANT_THROW;
+#endif /* _EWL_LONGLONG */
+
+	/**
+	 *  The round functions round their argument to the nearest integer value in
+	 *  floating-point format, rounding halfway cases away from zero, regardless
+	 *  of the current rounding direction.
+	 */
+	_EWL_IMP_EXP_C  double      _EWL_MATH_CDECL round(double) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C  float       _EWL_MATH_CDECL roundf(float) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C  long double _EWL_MATH_CDECL roundl(long double) _EWL_CANT_THROW;
+
+	/**
+	 *  The lround and llround functions round their argument to the nearest integer value,
+	 *  rounding halfway cases away from zero, regardless of the current rounding direction.
+	 *  If the rounded value is outside the range of the return type, the numeric result is
+	 *  unspecified.
+	 *  A range error may occur if the magnitude of x is too large.
+	 */
+	_EWL_IMP_EXP_C  long        _EWL_MATH_CDECL lround(double) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C  long        _EWL_MATH_CDECL lroundf(float) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C  long        _EWL_MATH_CDECL lroundl(long double) _EWL_CANT_THROW;
+#if _EWL_LONGLONG
+	_EWL_IMP_EXP_C  long long   _EWL_MATH_CDECL llround(double) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C  long long   _EWL_MATH_CDECL llroundf(float) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C  long long   _EWL_MATH_CDECL llroundl(long double) _EWL_CANT_THROW;
+#endif /* _EWL_LONGLONG */
+
+	/**
+	 *  The trunc functions round their argument to the integer value, in floating format,
+	 *  nearest to but no larger in magnitude than the argument.
+	 */
+	_EWL_IMP_EXP_C  double      _EWL_MATH_CDECL trunc(double) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C  float       _EWL_MATH_CDECL truncf(float) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C  long double _EWL_MATH_CDECL truncl(long double) _EWL_CANT_THROW;
+
+	/**
+	 *  The fmod functions compute the floating-point remainder of x/y.
+	 */
+#if __dest_os !=  __emb_coldfire
+	_EWL_IMP_EXP_C  double      _EWL_MATH_CDECL fmod(double, double) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C  float       _EWL_MATH_CDECL fmodf(float, float) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C  long double _EWL_MATH_CDECL fmodl(long double, long double) _EWL_CANT_THROW;
+#endif
+
+	/**
+	 *  The remainder functions compute the remainder x REM y required by IEC 60559.
+	 */
+	_EWL_IMP_EXP_C  double      _EWL_MATH_CDECL remainder(double, double) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C  float       _EWL_MATH_CDECL remainderf(float, float) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C  long double _EWL_MATH_CDECL remainderl(long double, long double) _EWL_CANT_THROW;
+
+	/**
+	 *  The remquo functions compute the same remainder as the remainder functions.
+	 *  In the object pointed to by quo they store a value whose sign is the sign of x/y and whose
+     *  magnitude is congruent modulo 2**n to the magnitude of the integral quotient of x/y, where
+     *  n is an implementation-defined integer greater than or equal to 3.
+	 */
+	_EWL_IMP_EXP_C  double      _EWL_MATH_CDECL remquo(double, double, int*) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C  float       _EWL_MATH_CDECL remquof(float, float, int*) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C  long double _EWL_MATH_CDECL remquol(long double, long double, int*) _EWL_CANT_THROW;
+
+	/**
+	 *  The copysign functions produce a value with the magnitude of x and the sign of y.
+     *  They produce a NaN (with the sign of y) if x is a NaN. On implementations that
+     *  represent a signed zero but do not treat negative zero consistently in arithmetic
+     *  operations, the copysign functions regard the sign of zero as positive.
+	 */
+	_EWL_IMP_EXP_C  double      _EWL_MATH_CDECL copysign(double, double) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C  float       _EWL_MATH_CDECL copysignf(float, float) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C  long double _EWL_MATH_CDECL copysignl(long double, long double) _EWL_CANT_THROW;
+
+	/**
+	 *  The call nan("n-char-sequence") is equivalent to strtod("NAN(n-charsequence)",(char**) NULL);
+	 *  the call nan("") is equivalent to strtod("NAN()", (char**) NULL). If tagp does not point to
+	 *  an n-char sequence or an empty string, the call is equivalent to strtod("NAN", (char**) NULL).
+	 *  Calls to nanf and nanl are equivalent to the corresponding calls to strtof and strtold.
+	 */
+	_EWL_IMP_EXP_C  double      _EWL_MATH_CDECL nan(const char*) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C  float       _EWL_MATH_CDECL nanf(const char*) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C  long double _EWL_MATH_CDECL nanl(const char*) _EWL_CANT_THROW;
+
+	/**
+	 *  The nextafter functions determine the next representable value, in the type of the function,
+     *  after x in the direction of y, where x and y are first converted to the type of the fucntion.
+	 *  The nextafter functions return y if x equals y.
+	 *  A range error may occur if the magnitude of x is the largest finite value representable in
+	 *  the type and the result is infinite or not representable in the type.
+	 */
+	_EWL_IMP_EXP_C  double      _EWL_MATH_CDECL nextafter(double, double) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C  float       _EWL_MATH_CDECL nextafterf(float, float) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C  long double _EWL_MATH_CDECL nextafterl(long double, long double) _EWL_CANT_THROW;
+
+	/**
+	 *  The nexttoward functions are equivalent to the nextafter functions except that the
+     *  second parameter has type long double and the functions return y converted to the
+     *  type of the function if x equals y.
+	 */
+	_EWL_IMP_EXP_C  double      _EWL_MATH_CDECL nexttoward(double, long double) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C  float       _EWL_MATH_CDECL nexttowardf(float, long double) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C  long double _EWL_MATH_CDECL nexttowardl(long double, long double) _EWL_CANT_THROW;
+
+	/**
+	 *  The fdim functions determine the positive difference between their arguments:
+	 *      if x > y return x - y else return 0
+	 *  A range error may occur.
+	 */
+	_EWL_IMP_EXP_C  double      _EWL_MATH_CDECL fdim(double, double) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C  float       _EWL_MATH_CDECL fdimf(float, float) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C  long double _EWL_MATH_CDECL fdiml(long double, long double) _EWL_CANT_THROW;
+
+	/**
+	 *  The fmax functions determine the maximum numeric value of their arguments.
+	 */
+	_EWL_IMP_EXP_C  double      _EWL_MATH_CDECL fmax(double, double) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C  float       _EWL_MATH_CDECL fmaxf(float, float) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C  long double _EWL_MATH_CDECL fmaxl(long double, long double) _EWL_CANT_THROW;
+	
+	/**
+	 *  The fmin functions determine the minimum numeric value of their arguments.
+	 */
+	_EWL_IMP_EXP_C  double      _EWL_MATH_CDECL fmin(double, double) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C  float       _EWL_MATH_CDECL fminf(float, float) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C  long double _EWL_MATH_CDECL fminl(long double, long double) _EWL_CANT_THROW;
+
+	/**
+	 *  The fma functions compute (x * y) + z, rounded as one ternary operation: they compute
+     *  the value (as if) to infinite precision and round once to the result format, according
+     *  to the rounding mode characterized by the value of FLT_ROUNDS.
+	 */
+	_EWL_IMP_EXP_C  double 		_EWL_MATH_CDECL fma(double, double, double) _EWL_CANT_THROW;
+	#if __has_intrinsic(__builtin_fma)
+
+		/** \def FP_FAST_FMA macro is defined because there's a double hardware multiply-add */
+		#define FP_FAST_FMA 	1
+
+		_EWL_INLINE _EWL_IMP_EXP_C double _EWL_MATH_CDECL fma(double x, double y, double z) _EWL_CANT_THROW
+		{
+			return __builtin_fma(x, y, z);
+		}
+	#endif /* __has_intrinsic(__builtin_fma) */
+
+	_EWL_IMP_EXP_C  float		_EWL_MATH_CDECL fmaf(float, float, float) _EWL_CANT_THROW;
+	#if __has_intrinsic(__builtin_fmaf)
+
+		/** \def FP_FAST_FMAF macro is defined because there's a float hardware multiply-add */
+		#define FP_FAST_FMAF 	1
+
+		_EWL_INLINE _EWL_IMP_EXP_C _EWL_CANT_THROW float _EWL_MATH_CDECL fmaf(float x, float y, float z)
+		{
+			return __builtin_fmaf(x, y, z);
+		}
+	#endif /* __has_intrinsic(__builtin_fmaf) */
+
+
+	_EWL_IMP_EXP_C  long double _EWL_MATH_CDECL fmal(long double x, long double y, long double z) _EWL_CANT_THROW;
+	#if __has_intrinsic(__builtin_fma)
+
+		/** \def FP_FAST_FMAL macro is defined because there's a double hardware multiply-add */
+		#define FP_FAST_FMAL 	1
+
+		_EWL_INLINE _EWL_IMP_EXP_C long double _EWL_MATH_CDECL _EWL_CANT_THROW fmal(long double x, long double y, long double z)
+		{
+			return fma((double) x, (double) y, (double) z);
+		}
+	#endif /* __has_intrinsic(__builtin_fma) */
+
+#elif __dest_os == __starcore
+	/* double entry points only */
+
+	_EWL_IMP_EXP_C  double      _EWL_MATH_CDECL acos(double) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C  double      _EWL_MATH_CDECL asin(double) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C  double      _EWL_MATH_CDECL atan(double) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C  double      _EWL_MATH_CDECL atan2(double, double) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C  double      _EWL_MATH_CDECL ceil(double) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C  double      _EWL_MATH_CDECL cos(double)  _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C  double      _EWL_MATH_CDECL cosh(double) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C  double      _EWL_MATH_CDECL exp(double)  _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C  double      _EWL_MATH_CDECL floor(double)_EWL_CANT_THROW;
+	_EWL_IMP_EXP_C  double      _EWL_MATH_CDECL fabs(double) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C  double      _EWL_MATH_CDECL fmod(double, double) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C  double      _EWL_MATH_CDECL sqrt(double) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C  double      _EWL_MATH_CDECL frexp(double, int*) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C  double      _EWL_MATH_CDECL ldexp(double, int)  _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C  double      _EWL_MATH_CDECL log(double)   _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C  double      _EWL_MATH_CDECL log10(double) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C  double      _EWL_MATH_CDECL modf(double, double*) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C  double      _EWL_MATH_CDECL pow(double,  double)  _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C  double      _EWL_MATH_CDECL sin(double)  _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C  double      _EWL_MATH_CDECL sinh(double) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C  double      _EWL_MATH_CDECL tan(double)  _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C  double      _EWL_MATH_CDECL tanh(double) _EWL_CANT_THROW;
+
+#endif /* __dest_os == __starcore */
+
+#undef _EWL_USING
+
+_EWL_END_EXTERN_C
+_EWL_END_NAMESPACE_STD
+
+#include <math_inlines.h>	/* inlined SP and DP implementations */
+
+#if __dest_os ==  __emb_coldfire
+	#include <coldfire/cmath_coldfire.h>
+#elif __dest_os ==  __starcore
+	#include <sc/cmath_StarCore.h>
+#endif
+
+#ifdef __cplusplus	/* C++ overloads, as per 26.5 */
+
+	extern "C++" {
+	#ifdef __ANSI_OVERLOAD__
+
+	_EWL_BEGIN_NAMESPACE_STD
+
+	__inline float       _EWL_MATH_CDECL acos(float x) { return (acosf)((x)); }
+	__inline float       _EWL_MATH_CDECL asin(float x)   { return (asinf)((x)); }
+	__inline float       _EWL_MATH_CDECL atan(float x)   { return (atanf)((x)); }
+	__inline float       _EWL_MATH_CDECL atan2(float y, float x)   { return (atan2f)((y), (x)); }
+	__inline float       _EWL_MATH_CDECL ceil(float x)   { return (ceilf)((x)); }
+	__inline float       _EWL_MATH_CDECL cos(float x)    { return (cosf)((x)); }
+	__inline float       _EWL_MATH_CDECL cosh(float x)   { return (coshf)((x)); }
+	__inline float       _EWL_MATH_CDECL exp(float x)    { return (expf)((x)); }
+
+	#if __dest_os !=  __emb_coldfire
+	__inline float       _EWL_MATH_CDECL fabs(float x)   { return (fabsf)((x)); }
+	__inline float       _EWL_MATH_CDECL fmod(float x, float y)   { return (fmodf)((x), (y)); }
+	__inline float       _EWL_MATH_CDECL sqrt(float x)   { return (sqrtf)((x)); }
+	#endif
+
+	__inline float       _EWL_MATH_CDECL floor(float x)   { return (floorf)((x)); }
+	__inline float       _EWL_MATH_CDECL frexp(float x, int* y)   { return (frexpf)((x), (y)); }
+	__inline float       _EWL_MATH_CDECL ldexp(float x, int y)   { return (ldexpf)((x), (y)); }
+	__inline float       _EWL_MATH_CDECL log(float x)   { return (logf)((x)); }
+	__inline float       _EWL_MATH_CDECL log10(float x)   { return (log10f)((x)); }
+
+	__inline float _EWL_MATH_CDECL modf(float x, float* iptr) 
+		{
+		  double iptrd;
+		  float result = (float)modf((double)x, &iptrd);
+		  *iptr = (float)iptrd;
+		  return result;
+		}
+
+	__inline float       _EWL_MATH_CDECL pow(float x, float y)   { return (powf)((x), (y)); }
+	__inline float       _EWL_MATH_CDECL sin(float x)   { return (sinf)((x)); }
+	__inline float       _EWL_MATH_CDECL sinh(float x)   { return (sinhf)((x)); }
+	__inline float       _EWL_MATH_CDECL tan(float x)   { return (tanf)((x)); }
+	__inline float       _EWL_MATH_CDECL tanh(float x)   { return (tanhf)((x)); }
+
+	#if __dest_os != __starcore
+	__inline float       _EWL_MATH_CDECL acosh(float x)   { return (acoshf)((x)); }
+	__inline float       _EWL_MATH_CDECL asinh(float x)   { return (asinhf)((x)); }
+	__inline float       _EWL_MATH_CDECL atanh(float x)   { return (atanhf)((x)); }
+	__inline float       _EWL_MATH_CDECL cbrt(float x)    { return (cbrtf)((x)); }
+	__inline float       _EWL_MATH_CDECL copysign(float x,float y)   { return (copysignf)((x), (y)); }
+	__inline float       _EWL_MATH_CDECL erf(float x)    { return (erff)((x)); }
+	__inline float       _EWL_MATH_CDECL erfc(float x)   { return (erfcf)((x)); }
+	__inline float       _EWL_MATH_CDECL exp2(float x)   { return (exp2f)((x)); }
+	__inline float       _EWL_MATH_CDECL expm1(float x)  { return (expm1f)((x)); }
+	__inline float       _EWL_MATH_CDECL fdim(float x, float y)   { return (fdimf)((x), (y)); }
+	__inline float       _EWL_MATH_CDECL fma(float x, float y, float z)   { return (fmaf)((x), (y), (z)); }
+	__inline float       _EWL_MATH_CDECL fmax(float x, float y)   { return (fmaxf)((x), (y)); }
+	__inline float       _EWL_MATH_CDECL fmin(float x, float y)   { return (fminf)((x), (y)); }
+	__inline float       _EWL_MATH_CDECL hypot(float x, float y)  { return (hypotf)((x), (y)); }
+	__inline int         _EWL_MATH_CDECL ilogb(float x)   { return (ilogbf)((x)); }
+	__inline float       _EWL_MATH_CDECL lgamma(float x)  { return (lgammaf)((x)); }
+	#if _EWL_LONGLONG
+	__inline long long   _EWL_MATH_CDECL llrint(float x)   { return (llrintf)((x)); }
+	__inline long long   _EWL_MATH_CDECL llround(float x)  { return (llroundf)((x)); }
+	#endif /* _EWL_LONGLONG */
+	__inline float       _EWL_MATH_CDECL log1p(float x)   { return (log1pf)((x)); }
+	__inline float       _EWL_MATH_CDECL log2(float x)    { return (log2f)((x)); }
+	__inline float       _EWL_MATH_CDECL logb(float x)    { return (logbf)((x)); }
+	__inline long        _EWL_MATH_CDECL lrint(float x)   { return (lrintf)((x)); }
+	__inline long        _EWL_MATH_CDECL lround(float x)  { return (lroundf)((x)); }
+	__inline float       _EWL_MATH_CDECL nearbyint(float x)   { return (nearbyintf)((x)); }
+	__inline float       _EWL_MATH_CDECL nextafter(float x, float y)   { return (nextafterf)((x), (y)); }
+	__inline float       _EWL_MATH_CDECL nexttoward(float x, long double y)   { return (nexttowardf)((x), (y)); }
+	__inline float       _EWL_MATH_CDECL remainder(float x, float y)   { return (remainderf)((x), (y)); }
+	__inline float       _EWL_MATH_CDECL remquo(float x, float y, int* z)   { return (remquof)((x), (y), (z)); }
+	__inline float       _EWL_MATH_CDECL rint(float x)    { return (rintf)((x)); }
+	__inline float       _EWL_MATH_CDECL round(float x)   { return (roundf)((x)); }
+	__inline float       _EWL_MATH_CDECL scalbln(float x, long int y)   { return (scalblnf)((x), (y)); }
+	__inline float       _EWL_MATH_CDECL scalbn(float x, int y)   { return (scalbnf)((x), (y)); }
+	__inline float       _EWL_MATH_CDECL tgamma(float x)   { return (tgammaf)((x)); }
+	__inline float       _EWL_MATH_CDECL trunc(float x)    { return (truncf)((x)); }
+	#endif /* __dest_os != __starcore */
+
+	__inline long double _EWL_MATH_CDECL acos(long double x)   { return (acosl)((x)); }
+	__inline long double _EWL_MATH_CDECL asin(long double x)   { return (asinl)((x)); }
+	__inline long double _EWL_MATH_CDECL atan(long double x)   { return (atanl)((x)); }
+	__inline long double _EWL_MATH_CDECL atan2(long double y, long double x)   { return (atan2l)((y), (x)); }
+	__inline long double _EWL_MATH_CDECL ceil(long double x)   { return (ceill)((x)); }
+	__inline long double _EWL_MATH_CDECL cos(long double x)    { return (cosl)((x)); }
+	__inline long double _EWL_MATH_CDECL cosh(long double x)   { return (coshl)((x)); }
+	__inline long double _EWL_MATH_CDECL exp(long double x)    { return (expl)((x)); }
+
+	#if __dest_os !=  __emb_coldfire
+	__inline long double _EWL_MATH_CDECL fabs(long double x)   { return (fabsl)((x)); }
+	__inline long double _EWL_MATH_CDECL fmod(long double x, long double y)   { return (fmodl)((x), (y)); }
+	__inline long double _EWL_MATH_CDECL sqrt(long double x)   { return (sqrtl)((x)); }
+	#endif
+
+	__inline long double _EWL_MATH_CDECL floor(long double x)   { return (floorl)((x)); }
+	__inline long double _EWL_MATH_CDECL frexp(long double x, int* y)   { return (frexpl)((x), (y)); }
+	__inline long double _EWL_MATH_CDECL ldexp(long double x, int y)   { return (ldexpl)((x), (y)); }
+	__inline long double _EWL_MATH_CDECL log(long double x)     { return (logl)((x)); }
+	__inline long double _EWL_MATH_CDECL log10(long double x)   { return (log10l)((x)); }
+
+	__inline long double _EWL_MATH_CDECL modf(long double x, long double* iptr) 
+	    {
+		  double iptrd;
+		  long double result = (long double)modf((double)x, &iptrd);
+		  *iptr = (long double)iptrd;
+		  return result;
+		}
+
+	__inline long double _EWL_MATH_CDECL pow(long double x, long double y)   { return (powl)((x), (y)); }
+	__inline long double _EWL_MATH_CDECL sin(long double x)   { return (sinl)((x)); }
+	__inline long double _EWL_MATH_CDECL sinh(long double x)   { return (sinhl)((x)); }
+	__inline long double _EWL_MATH_CDECL tan(long double x)   { return (tanl)((x)); }
+	__inline long double _EWL_MATH_CDECL tanh(long double x)   { return (tanhl)((x)); }
+
+	#if __dest_os != __starcore
+	__inline long double _EWL_MATH_CDECL acosh(long double x)   { return (acoshl)((x)); }
+	__inline long double _EWL_MATH_CDECL asinh(long double x)   { return (asinhl)((x)); }
+	__inline long double _EWL_MATH_CDECL atanh(long double x)   { return (atanhl)((x)); }
+	__inline long double _EWL_MATH_CDECL cbrt(long double x)   { return (cbrtl)((x)); }
+	__inline long double _EWL_MATH_CDECL copysign(long double x, long double y)   { return (copysignl)((x), (y)); }
+	__inline long double _EWL_MATH_CDECL erf(long double x)   { return (erfl)((x)); }
+	__inline long double _EWL_MATH_CDECL erfc(long double x)   { return (erfcl)((x)); }
+	__inline long double _EWL_MATH_CDECL exp2(long double x)   { return (exp2l)((x)); }
+	__inline long double _EWL_MATH_CDECL expm1(long double x)   { return (expm1l)((x)); }
+	__inline long double _EWL_MATH_CDECL fdim(long double x, long double y)   { return (fdiml)((x), (y)); }
+	__inline long double _EWL_MATH_CDECL fma(long double x, long double y, long double z)   { return (fmal)((x), (y), (z)); }
+	__inline long double _EWL_MATH_CDECL fmax(long double x, long double y)   { return (fmaxl)((x), (y)); }
+	__inline long double _EWL_MATH_CDECL fmin(long double x, long double y)   { return (fminl)((x), (y)); }
+	__inline long double _EWL_MATH_CDECL hypot(long double x, long double y)   { return (hypotl)((x), (y)); }
+	__inline int         _EWL_MATH_CDECL ilogb(long double x)   { return (ilogbl)((x)); }
+	__inline long double _EWL_MATH_CDECL lgamma(long double x)   { return (lgammal)((x)); }
+	#if _EWL_LONGLONG
+	__inline long long   _EWL_MATH_CDECL llrint(long double x)   { return (llrintl)((x)); }
+	__inline long long   _EWL_MATH_CDECL llround(long double x)   { return (llroundl)((x)); }
+	#endif /* _EWL_LONGLONG */
+	__inline long double _EWL_MATH_CDECL log1p(long double x)   { return (log1pl)((x)); }
+	__inline long double _EWL_MATH_CDECL log2(long double x)   { return (log2l)((x)); }
+	__inline long double _EWL_MATH_CDECL logb(long double x)   { return (logbl)((x)); }
+	__inline long        _EWL_MATH_CDECL lrint(long double x)   { return (lrintl)((x)); }
+	__inline long        _EWL_MATH_CDECL lround(long double x)   { return (lroundl)((x)); }
+	__inline long double _EWL_MATH_CDECL nearbyint(long double x)   { return (nearbyintl)((x)); }
+	__inline long double _EWL_MATH_CDECL nextafter(long double x, long double y)   { return (nextafterl)((x), (y)); }
+	__inline long double _EWL_MATH_CDECL nexttoward(long double x, long double y)   { return (nexttowardl)((x), (y)); }
+	__inline long double _EWL_MATH_CDECL remainder(long double x, long double y)   { return (remainderl)((x), (y)); }
+	__inline long double _EWL_MATH_CDECL remquo(long double x, long double y, int* z)   { return (remquol)((x), (y), (z)); }
+	__inline long double _EWL_MATH_CDECL rint(long double x)   { return (rintl)((x)); }
+	__inline long double _EWL_MATH_CDECL round(long double x)   { return (roundl)((x)); }
+	__inline long double _EWL_MATH_CDECL scalbln(long double x, long int y)   { return (scalblnl)((x), (y)); }
+	__inline long double _EWL_MATH_CDECL scalbn(long double x, int y)   { return (scalbnl)((x), (y)); }
+	__inline long double _EWL_MATH_CDECL tgamma(long double x)   { return (tgammal)((x)); }
+	__inline long double _EWL_MATH_CDECL trunc(long double x)   { return (truncl)((x)); }
+	#endif /* __dest_os != __starcore */
+
+	_EWL_END_NAMESPACE_STD
+
+	#endif /*__ANSI_OVERLOAD__*/
+
+	#ifdef _EWL_INTEGRAL_MATH
+		#include "math_integral.h"
+	#endif /* _EWL_INTEGRAL_MATH */
+
+	#ifdef __ANSI_OVERLOAD__
+
+	_EWL_BEGIN_NAMESPACE_STD
+
+		/* special pow() overloads */
+		__inline float       _EWL_MATH_CDECL pow(float x, int y)   { return (powf)((x), (float)(y)); }
+		__inline double      _EWL_MATH_CDECL pow(double x, int y)   { return (pow)((x), (double)(y)); }
+		__inline long double _EWL_MATH_CDECL pow(long double x, int y) { return (powl)((x), (long double)(y)); }
+
+		/* special abs() functions */
+		__inline float       _EWL_MATH_CDECL abs(float x)  { return (fabsf)((x)); }
+		__inline double      _EWL_MATH_CDECL abs(double x)  { return (fabs)((x)); }
+		__inline long double _EWL_MATH_CDECL abs(long double x) { return (fabsl)((x)); }
+
+	_EWL_END_NAMESPACE_STD
+
+	#endif /*__ANSI_OVERLOAD__*/
+
+	// TR1 overloads
+
+	_EWL_BEGIN_NAMESPACE_STD
+#if _EWL_TR1_NAMESPACE
+	namespace tr1
+	{
+#endif
+
+	namespace detail
+	{
+	  template <class T> bool signbit_impl(T value) { return signbit(value); }
+	  #undef signbit
+
+	  template <class T> bool isfinite_impl(T value) { return isfinite(value); }
+	  #undef isfinite
+
+	  template <class T> bool isinf_impl(T value) { return isinf(value); }
+	  #undef isinf
+
+	  template <class T> bool isnan_impl(T value) { return isnan(value); }
+	  #undef isnan
+
+	  template <class T> bool isnormal_impl(T value) { return isnormal(value); }
+	  #undef isnormal
+
+	  template <class T> bool isgreater_impl(T x, T y) { return isgreater(x, y); }
+	  #undef isgreater
+
+	  template <class T> bool isgreaterequal_impl(T x, T y) { return isgreaterequal(x, y); }
+	  #undef isgreaterequal
+
+	  template <class T> bool isless_impl(T x, T y) { return isless(x, y); }
+	  #undef isless
+
+	  template <class T> bool islessequal_impl(T x, T y) { return islessequal(x, y); }
+	  #undef islessequal
+
+	  template <class T> bool islessgreater_impl(T x, T y) { return islessgreater(x, y); }
+	  #undef islessgreater
+
+	  template <class T> bool isunordered_impl(T x, T y) { return isunordered(x, y); }
+	  #undef isunordered
+
+	  template <class T> bool fpclassify_impl(T value) { return fpclassify(value); }
+	  #undef fpclassify
+	}
+
+	template <class T> bool signbit(T x) { return detail::signbit_impl(x); }
+	template <class T> int fpclassify(T x) { return detail::fpclassify_impl(x); }
+	template <class T> bool isfinite(T x) { return detail::isfinite_impl(x); }
+	template <class T> bool isinf(T x) { return detail::isinf_impl(x); }
+	template <class T> bool isnan(T x) { return detail::isnan_impl(x); }
+	template <class T> bool isnormal(T x) { return detail::isnormal_impl(x); }
+	template <class T> bool isgreater(T x, T y) { return detail::isgreater_impl(x, y); }
+	template <class T> bool isgreaterequal(T x, T y) { return detail::isgreaterequal_impl(x, y); }
+	template <class T> bool isless(T x, T y) { return detail::isless_impl(x, y); }
+	template <class T> bool islessequal(T x, T y) { return detail::islessequal_impl(x, y); }
+	template <class T> bool islessgreater(T x, T y) { return detail::islessgreater_impl(x, y); }
+	template <class T> bool isunordered(T x, T y) { return detail::isunordered_impl(x, y); }
+
+#if _EWL_TR1_NAMESPACE
+
+#if (_EWL_C99 || _EWL_C99_MATH_LEAK) && __dest_os != __starcore
+	using __std(acoshf);
+	using __std(acoshl);
+	using __std(asinhf);
+	using __std(asinhl);
+	using __std(atanhf);
+	using __std(atanhl);
+	using __std(cbrtf);
+	using __std(cbrtl);
+	using __std(copysignf);
+	using __std(copysignl);
+	using __std(erff);
+	using __std(erfl);
+	using __std(erfcf);
+	using __std(erfcl);
+	using __std(exp2f);
+	using __std(exp2l);
+	using __std(expm1f);
+	using __std(expm1l);
+	using __std(fdimf);
+	using __std(fdiml);
+	using __std(fmaf);
+	using __std(fmal);
+	using __std(fmaxf);
+	using __std(fmaxl);
+	using __std(hypotf);
+	using __std(hypotl);
+	using __std(ilogbf);
+	using __std(ilogbl);
+	using __std(lgammaf);
+	using __std(lgammal);
+	using __std(llrintf);
+	using __std(llrintl);
+	using __std(fminf);
+	using __std(fminl);
+	using __std(llroundf);
+	using __std(llroundl);
+	using __std(log1pf);
+	using __std(log1pl);
+	using __std(log2f);
+	using __std(log2l);
+	using __std(logbf);
+	using __std(logbl);
+	using __std(lrintf);
+	using __std(lrintl);
+	using __std(lroundf);
+	using __std(lroundl);
+	using __std(nan);
+	using __std(nanf);
+	using __std(nanl);
+	using __std(nearbyintf);
+	using __std(nearbyintl);
+	using __std(nextafterf);
+	using __std(nextafterl);
+	using __std(nexttowardf);
+	using __std(nexttowardl);
+	using __std(remainderf);
+	using __std(remainderl);
+	using __std(remquof);
+	using __std(remquol);
+	using __std(rintf);
+	using __std(rintl);
+	using __std(round);
+	using __std(roundf);
+	using __std(roundl);
+	using __std(scalbln);
+	using __std(scalblnf);
+	using __std(scalblnl);
+	using __std(scalbnf);
+	using __std(scalbnl);
+	using __std(scalbnf);
+	using __std(scalbnl);
+	using __std(tgammaf);
+	using __std(tgammal);
+	using __std(truncf);
+	using __std(truncl);
+#endif
+	using __std(acosh);
+	using __std(asinh);
+	using __std(atanh);
+	using __std(cbrt);
+	using __std(copysign);
+	using __std(erf);
+	using __std(erfc);
+	using __std(exp2);
+	using __std(expm1);
+	using __std(fdim);
+	using __std(fma);
+	using __std(fmax);
+	using __std(fmin);
+	using __std(hypot);
+	using __std(ilogb);
+	using __std(lgamma);
+#if __dest_os != __starcore
+	using __std(llrint);
+	using __std(llround);
+#endif /* __dest_os != __starcore */
+	using __std(log1p);
+	using __std(log2);
+	using __std(logb);
+	using __std(lrint);
+	using __std(lround);
+	using __std(nearbyint);
+	using __std(nextafter);
+	using __std(nexttoward);
+	using __std(remainder);
+	using __std(remquo);
+	using __std(rint);
+
+	using __std(scalbn);
+	using __std(tgamma);
+	using __std(trunc);
+
+	using __std(__float_huge);
+	using __std(__double_huge);
+	using __std(__extended_huge);
+
+	}
+
+	using tr1::signbit;
+	using tr1::fpclassify;
+	using tr1::isfinite;
+	using tr1::isinf;
+	using tr1::isnan;
+	using tr1::isnormal;
+	using tr1::isgreater;
+	using tr1::isgreaterequal;
+	using tr1::isless;
+	using tr1::islessequal;
+	using tr1::islessgreater;
+	using tr1::isunordered;
+#endif
+
+	_EWL_END_NAMESPACE_STD
+
+	} // extern "C++"
+#endif /*__cplusplus*/
+
+
+#endif /* #if os */
+
+#if defined(_EWL_EXPORT_CNAMES) && defined(__cplusplus) && defined(_EWL_USING_NAMESPACE)
+#include <math.h>
+#endif /*  defined(_EWL_EXPORT_CNAMES) && defined(__cplusplus) && defined(_EWL_USING_NAMESPACE) */
+
+#endif /* !_EWL_FLOATING_POINT */
+
+#ifdef __STARCORE__
+#pragma reject_floats reset
+#endif 
+
+#endif /* _EWL_CMATH */

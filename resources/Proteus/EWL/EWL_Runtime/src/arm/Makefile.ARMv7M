@@ -1,0 +1,236 @@
+#
+# Makefile.ARMv7M - This target only runs in Thumb(2) mode
+#
+#
+
+TOOLS_ROOT = "$(ARM_TOOLS)"
+TOOLS = $(TOOLS_ROOT)
+AS = $(TOOLS)/mwasmarm
+ARMAR = $(TOOLS)/mwldarm
+
+OBJDATA_ROOT = ./ARMv7M_Data
+OBJOUT = obj
+LIBSUFFIX = .a
+LIBOUT = ../../../libcw
+
+
+SOURCES = _d_add.asm _d_sub.asm _d_mul.asm _d_neg.asm _d_dtof.asm \
+  _d_dtoq.asm _d_itod.asm _f_cmp.asm  _f_ftod.asm \
+  _f_itof.asm _f_lltof.asm _f_neg.asm \
+  _ll_div.asm _ll_mul.asm _ll_sll.asm \
+  _ll_sra.asm _ull_srl.asm _s32_div.asm _s32_div_f.asm \
+  _u32_div.asm _u32_div_f.asm \
+  _f_ftoh.asm _f_htof.asm _f_ftoh_alt.asm _f_htof_alt.asm \
+  _f_ftoi.asm _f_ftoi_r.asm _f_ftou.asm _f_ftou_r.asm \
+  _d_dtoi.asm _d_dtoi_r.asm _d_dtou.asm _d_dtou_r.asm \
+  _f_ftoll.asm _f_ftoll_r.asm  _f_ftoull.asm _f_ftoull_r.asm \
+  _d_dtoll.asm _d_dtoll_r.asm  _d_dtoull.asm _d_dtoull_r.asm \
+  _d_sqrt.asm _f_sqrt.asm _f_rem.asm _d_rem.asm \
+  _f_rnd.asm _d_rnd.asm _f_mul.asm _f_add.asm _f_sub.asm \
+  _f_div.asm _d_div.asm _d_div_xm.asm _div32_common_f.asm ieee_status.asm \
+  memory_readwrite.asm _ll_cmp.asm _ll_lasr.asm \
+  memclr.asm memmove.asm memset.asm memcpy.asm
+
+  
+OBJECTS = $(SOURCES:%.asm=%.o)
+
+# Define EXPLICIT_FCMP for Nitro mathlibs to ensure compatibility with ARM2.0 compiler
+#
+XPREPFLAGS =  -DEXPLICIT_FCMP -DTHUMB 
+XASFLAGS =  -thumb -ads -no_section_resume -proc cortex-m4 
+
+# ARMv7M, CortexM4 Libs
+#
+T24 = FP_flush0_Thumb_LE_v7M
+$(join $(T24),ASFLAGS) = $(XASFLAGS)
+$(join $(T24),EFLAGS) = -DIEEE_STD $(XPREPFLAGS)
+
+T25 = FP_flush0_Thumb_BE_v7M
+$(join $(T25),EFLAGS) = -DIEEE_STD -DBIG_ENDIAN $(XPREPFLAGS)
+$(join $(T25),ASFLAGS) =  -big $(XASFLAGS)
+
+T26 = FP_fastI_Thumb_LE_v7M
+$(join $(T26),EFLAGS) = $(XPREPFLAGS)
+$(join $(T26),ASFLAGS) =  $(XASFLAGS) 
+
+T27 = FP_fastI_Thumb_BE_v7M
+$(join $(T27),EFLAGS) = -DBIG_ENDIAN $(XPREPFLAGS)
+$(join $(T27),ASFLAGS) =  -big $(XASFLAGS)
+
+T28 = FP_fixedI_Thumb_LE_v7M
+$(join $(T28),EFLAGS) = -DIEEE_FIXED $(XPREPFLAGS) 
+$(join $(T28),ASFLAGS) = $(XASFLAGS) 
+
+T29 = FP_fixedI_Thumb_BE_v7M
+$(join $(T29),EFLAGS) = -DIEEE_FIXED -DBIG_ENDIAN $(XPREPFLAGS)
+$(join $(T29),ASFLAGS) = -big $(XASFLAGS) 
+
+T30 = FP_fullI_Thumb_LE_v7M
+$(join $(T30),EFLAGS) = -DIEEE_FULL $(XPREPFLAGS)
+$(join $(T30),ASFLAGS) = $(XASFLAGS) 
+
+T31 = FP_fullI_Thumb_BE_v7M
+$(join $(T31),EFLAGS) = -DIEEE_FULL $(XPREPFLAGS)
+$(join $(T31),ASFLAGS) = -big $(XASFLAGS)
+
+
+# Size libs
+# TBD
+
+# PIC/PID libs - note identical to non PIC/PID but added to
+# simplify handling of library names by -lavender model=...,
+# i.e. -lavender expect FP_<type>_Thumb_<endian>_<picpid>_v7M.a 
+# naming convention
+T40 = FP_flush0_Thumb_LE_PIC_PID_v7M
+$(join $(T40),ASFLAGS) = $(XASFLAGS)
+$(join $(T40),EFLAGS) = -DIEEE_STD $(XPREPFLAGS)
+
+T41 = FP_flush0_Thumb_BE_PIC_PID_v7M
+$(join $(T41),EFLAGS) = -DIEEE_STD -DBIG_ENDIAN $(XPREPFLAGS)
+$(join $(T41),ASFLAGS) =  -big $(XASFLAGS)
+
+T42 = FP_fastI_Thumb_LE_PIC_PID_v7M
+$(join $(T42),EFLAGS) = $(XPREPFLAGS)
+$(join $(T42),ASFLAGS) =  $(XASFLAGS) 
+
+T43 = FP_fastI_Thumb_BE_PIC_PID_v7M
+$(join $(T43),EFLAGS) = -DBIG_ENDIAN $(XPREPFLAGS)
+$(join $(T43),ASFLAGS) =  -big $(XASFLAGS)
+
+T44 = FP_fixedI_Thumb_LE_PIC_PID_v7M
+$(join $(T44),EFLAGS) = -DIEEE_FIXED $(XPREPFLAGS) 
+$(join $(T44),ASFLAGS) = $(XASFLAGS) 
+
+T45 = FP_fixedI_Thumb_BE_PIC_PID_v7M
+$(join $(T45),EFLAGS) = -DIEEE_FIXED -DBIG_ENDIAN $(XPREPFLAGS)
+$(join $(T45),ASFLAGS) = -big $(XASFLAGS) 
+
+T46 = FP_fullI_Thumb_LE_PIC_PID_v7M
+$(join $(T46),EFLAGS) = -DIEEE_FULL $(XPREPFLAGS)
+$(join $(T46),ASFLAGS) = $(XASFLAGS) 
+
+T47 = FP_fullI_Thumb_BE_PIC_PID_v7M
+$(join $(T47),EFLAGS) = -DIEEE_FULL $(XPREPFLAGS)
+$(join $(T47),ASFLAGS) = -big $(XASFLAGS)
+
+
+# ARMv7M, CortexM4 Libs
+#
+T54 = fp/FP_flush0_Thumb_LE_v7M
+$(join $(T54),ASFLAGS) = $(XASFLAGS) 
+$(join $(T54),EFLAGS) = -DIEEE_STD $(XPREPFLAGS) -D__VFPV4__ -fp=vfpv4
+
+T55 = fp/FP_flush0_Thumb_BE_v7M
+$(join $(T55),EFLAGS) = -DIEEE_STD -DBIG_ENDIAN $(XPREPFLAGS) -D__VFPV4__ -fp=vfpv4
+$(join $(T55),ASFLAGS) =  -big $(XASFLAGS) 
+
+T56 = fp/FP_fastI_Thumb_LE_v7M
+$(join $(T56),EFLAGS) = $(XPREPFLAGS) -D__VFPV4__ -fp=vfpv4
+$(join $(T56),ASFLAGS) =  $(XASFLAGS) 
+
+T57 = fp/FP_fastI_Thumb_BE_v7M
+$(join $(T57),EFLAGS) = -DBIG_ENDIAN $(XPREPFLAGS) -D__VFPV4__ -fp=vfpv4
+$(join $(T57),ASFLAGS) =  -big $(XASFLAGS)
+
+T58 = fp/FP_fixedI_Thumb_LE_v7M
+$(join $(T58),EFLAGS) = -DIEEE_FIXED $(XPREPFLAGS) -D__VFPV4__ -fp=vfpv4
+$(join $(T58),ASFLAGS) = $(XASFLAGS) 
+
+T59 = fp/FP_fixedI_Thumb_BE_v7M
+$(join $(T59),EFLAGS) = -DIEEE_FIXED -DBIG_ENDIAN $(XPREPFLAGS) -D__VFPV4__ -fp=vfpv4
+$(join $(T59),ASFLAGS) = -big $(XASFLAGS) 
+
+T60 = fp/FP_fullI_Thumb_LE_v7M
+$(join $(T60),EFLAGS) = -DIEEE_FULL $(XPREPFLAGS) -D__VFPV4__ -fp=vfpv4
+$(join $(T60),ASFLAGS) = $(XASFLAGS) 
+
+T61 = fp/FP_fullI_Thumb_BE_v7M
+$(join $(T61),EFLAGS) = -DIEEE_FULL $(XPREPFLAGS) -D__VFPV4__ -fp=vfpv4
+$(join $(T61),ASFLAGS) = -big $(XASFLAGS)
+
+
+# VFP libs - note identical to non VFP but added to
+# simplify handling of library names by -fp=vfpv4
+# FP_<type>_Thumb_<endian>_<picpid>_<VFP>_v7M.a 
+# naming convention
+T62 = fp/FP_flush0_Thumb_LE_PIC_PID_v7M
+$(join $(T62),ASFLAGS) = $(XASFLAGS)
+$(join $(T62),EFLAGS) = -DIEEE_STD $(XPREPFLAGS) -D__VFPV4__ -fp=vfpv4
+
+T63 = fp/FP_flush0_Thumb_BE_PIC_PID_v7M
+$(join $(T63),EFLAGS) = -DIEEE_STD -DBIG_ENDIAN $(XPREPFLAGS) -D__VFPV4__ -fp=vfpv4
+$(join $(T63),ASFLAGS) =  -big $(XASFLAGS)
+
+T64 = fp/FP_fastI_Thumb_LE_PIC_PID_v7M
+$(join $(T64),EFLAGS) = $(XPREPFLAGS) -D__VFPV4__ -fp=vfpv4
+$(join $(T64),ASFLAGS) =  $(XASFLAGS) 
+
+T65 = fp/FP_fastI_Thumb_BE_PIC_PID_v7M
+$(join $(T65),EFLAGS) = -DBIG_ENDIAN $(XPREPFLAGS) -D__VFPV4__ -fp=vfpv4
+$(join $(T65),ASFLAGS) =  -big $(XASFLAGS)
+
+T66 = fp/FP_fixedI_Thumb_LE_PIC_PID_v7M
+$(join $(T66),EFLAGS) = -DIEEE_FIXED $(XPREPFLAGS) -D__VFPV4__ -fp=vfpv4
+$(join $(T66),ASFLAGS) = $(XASFLAGS) 
+
+T67 = fp/FP_fixedI_Thumb_BE_PIC_PID_v7M
+$(join $(T67),EFLAGS) = -DIEEE_FIXED -DBIG_ENDIAN $(XPREPFLAGS) -D__VFPV4__ -fp=vfpv4
+$(join $(T67),ASFLAGS) = -big $(XASFLAGS) 
+
+T68 = fp/FP_fullI_Thumb_LE_PIC_PID_v7M
+$(join $(T68),EFLAGS) = -DIEEE_FULL $(XPREPFLAGS) -D__VFPV4__ -fp=vfpv4
+$(join $(T68),ASFLAGS) = $(XASFLAGS) 
+
+T69 = fp/FP_fullI_Thumb_BE_PIC_PID_v7M
+$(join $(T69),EFLAGS) = -DIEEE_FULL $(XPREPFLAGS) -D__VFPV4__ -fp=vfpv4
+$(join $(T69),ASFLAGS) = -big $(XASFLAGS)
+
+TARGETS = $(T24) $(T26) $(T28) $(T30)
+TARGETS_VFP = $(T54) $(T56) $(T58) $(T60) 
+#PICPID_TARGETS = $(T40) $(T42) $(T44) $(T46)
+#PICPID_TARGETS_VFP = $(T62) $(T64) $(T66) $(T68) 
+
+ALL_TARGETS = $(TARGETS) $(PICPID_TARGETS) $(TARGETS_VFP) $(PICPID_TARGETS_VFP)
+
+#Cancel implicit rules
+%.o : %.s
+
+BASEOBJECTS = $(basename $(OBJECTS))
+AOBJECTS = $(addprefix $(OBJDATA_ROOT)/$(TARGET)/$(OBJOUT)/, $(OBJECTS))
+
+OBJDIRS = $(OBJDATA_ROOT)/$(TARGET)/$(OBJOUT)
+TARGET_MAK = Makefile.ARMv7M
+
+ifndef TARGET
+all : $(ALL_TARGETS)
+
+$(ALL_TARGETS) :
+	make -f $(TARGET_MAK) TARGET=$@
+endif
+
+# Cancel implicit rules
+%.o : %.s
+
+$(LIBOUT)/$(TARGET)$(LIBSUFFIX) : $(AOBJECTS) | $(OBJDIRS)
+	$(ARMAR) -library -nodefaults -o $@ $(AOBJECTS)
+
+$(AOBJECTS) : $(OBJDATA_ROOT)/$(TARGET)/$(OBJOUT)/%.o : %.asm ARMsfpe.pre.asm | $(OBJDIRS)
+	$(AS) $($(TARGET)EFLAGS) $($(TARGET)ASFLAGS) -c -o $@ $<
+
+$(OBJDIRS) :
+	@mkdir -p $(LIBOUT)
+	@mkdir -p $@
+
+clean:
+# Remove generated data files
+#
+	-rm -rf $(OBJDATA_ROOT)
+
+# Remove library files
+#
+	-rm -fr $(addprefix $(LIBOUT)/, $(addsuffix $(LIBSUFFIX),$(ALL_TARGETS)))
+
+cleanobj:
+# Leave the library files intact,  clean up the object files
+#
+	-rm -rf $(OBJDATA_ROOT)

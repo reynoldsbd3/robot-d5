@@ -1,0 +1,32 @@
+===============================================================================
+EWL C++ Release Notes
+===============================================================================
+
+Version:			15.1
+Date:   			July 7th, 2010
+Authors:  			Anca Burlacu-Zane, Monica Galatanu, Andreas Hommel
+Previous Authors:	Marcel Achim, Cecilia Galvan, Howard Hinnant
+
+(C) 2010 Freescale Semiconductor, Inc.
+
+===============================================================================
+Current version is:                              (__EWL_CPP__ == 0x00015001).
+These release notes document changes since 		 (__EWL_CPP__ == 0x00014000).
+===============================================================================
+
+===============================================================================
+New Features / Fixes in this release
+===============================================================================
+
+*	Split <iterator> into <iterator_base> / <iterator> to break iostream
+	iterator header dependencies.
+
+===============================================================================
+New Features / Fixes in previous releases
+===============================================================================
+
+Version 14.0:
+
+- initial release
+
+===============================================================================

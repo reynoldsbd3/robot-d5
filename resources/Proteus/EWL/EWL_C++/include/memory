@@ -1,0 +1,869 @@
+/* EWL
+ * Copyright © 1995-2009 Freescale Corporation.  All rights reserved.
+ *
+ * $Date: 2012/07/12 22:31:16 $
+ * $Revision: 1.3 $
+ */
+
+#ifndef _MEMORY
+#define _MEMORY
+
+/*  memory synopsis
+
+namespace std {
+
+//  the default allocator:
+
+template <class T> class allocator
+{
+public:
+	typedef size_t    size_type;
+	typedef ptrdiff_t difference_type;
+	typedef T*        pointer;
+	typedef const T*  const_pointer;
+	typedef T&        reference;
+	typedef const T&  const_reference;
+	typedef T         value_type;
+	template <class U> struct rebind { typedef allocator<U> other; };
+
+	allocator() throw();
+	allocator(const allocator&) throw();
+	template <class U> allocator(const allocator<U>&) throw();
+	~allocator() throw();
+
+	pointer address(reference x) const;
+	const_pointer address(const_reference x) const;
+
+	pointer allocate(size_type, allocator<void>::const_pointer hint = 0);
+	void deallocate(pointer p, size_type n);
+	size_type max_size() const throw();
+
+	void construct(pointer p, const T& val);
+	void destroy(pointer p);
+};
+
+//  specialize for  void:
+template <> class allocator<void>
+{
+public:
+	typedef void*       pointer;
+	typedef const void* const_pointer;
+	// reference-to-void  members are impossible.
+	typedef void  value_type;
+	template <class U> struct rebind { typedef allocator<U> other; };
+};
+
+template <class T, class U>
+bool
+operator==(const allocator<T>&, const allocator<U>&) throw();
+
+template <class T, class U>
+bool
+operator!=(const allocator<T>&, const allocator<U>&) throw();
+
+//  raw storage iterator:
+template <class OutputIterator, class T>
+class raw_storage_iterator
+	: public iterator<output_iterator_tag,void,void,void,void>
+{
+public:
+	explicit raw_storage_iterator(OutputIterator x);
+
+	raw_storage_iterator& operator*();
+	raw_storage_iterator& operator=(const T& element);
+	raw_storage_iterator& operator++();
+	raw_storage_iterator  operator++(int);
+};
+
+//  temporary buffers:
+template <class T>
+pair<T*,ptrdiff_t>
+get_temporary_buffer(ptrdiff_t n);
+
+template <class T>
+void
+return_temporary_buffer(T* p);
+
+//  specialized algorithms:
+template <class InputIterator, class ForwardIterator>
+ForwardIterator
+uninitialized_copy(InputIterator first, InputIterator last, ForwardIterator result);
+
+template <class ForwardIterator, class T>
+void
+uninitialized_fill(ForwardIterator first, ForwardIterator last, const T& x);
+
+template <class ForwardIterator, class Size, class T>
+void
+uninitialized_fill_n(ForwardIterator first, Size n, const T& x);
+
+	//  auto_ptr
+
+template <class Y> struct auto_ptr_ref {...};
+
+template<class X>
+class auto_ptr
+{
+public:
+	typedef X element_type;
+	typedef single_ptr_tag category;
+
+	//  lib.auto.ptr.cons construct/copy/destroy:
+	explicit auto_ptr(X* p = 0) throw();
+	auto_ptr(auto_ptr& a) throw();
+	template<class Y> auto_ptr(auto_ptr<Y>& a) throw();
+	auto_ptr& operator=(auto_ptr& a) throw();
+	template<class Y> auto_ptr& operator=(auto_ptr<Y>& a) throw();
+	~auto_ptr() throw();
+
+	//  lib.auto.ptr.members members:
+	X& operator*() const throw();
+	X* operator->() const throw();
+	X* get() const throw();
+	X* release() throw();
+	void reset(X* p = 0) throw();
+
+	//  lib.auto.ptr.conv conversions:
+	auto_ptr(auto_ptr_ref<X> r) throw();
+	auto_ptr& operator=(auto_ptr_ref<X> r) throw();
+	template<class Y> operator auto_ptr_ref<Y>() throw();
+	template<class Y> operator auto_ptr<Y>() throw();
+};
+
+}  // std
+*/
+
+#include <ewlconfig>
+
+#include <cstddef>
+#include <cstdlib>
+#include <cstring>
+#ifndef _EWL_NO_WCHART_C_SUPPORT
+		#include <cwchar>
+#endif  // _EWL_NO_WCHART_C_SUPPORT
+#include <new>
+#include <ewl_int_limits>
+#include <utility>
+#include <iterator_base>
+#include <ewl_utility>
+#include <typeinfo>
+#include <ewl_allocator>
+#include <ewl_smart_pointers>
+#ifdef _EWL_DEBUG
+	#include <stdexcept>
+#endif
+
+#ifdef __CWCC__
+#pragma options align=native
+
+#ifdef _EWL_FORCE_ENUMS_ALWAYS_INT
+	#if _EWL_FORCE_ENUMS_ALWAYS_INT
+		#pragma enumsalwaysint on
+	#else
+		#pragma enumsalwaysint off
+	#endif
+#endif  // _EWL_FORCE_ENUMS_ALWAYS_INT
+
+#ifdef _EWL_FORCE_ENABLE_BOOL_SUPPORT
+	#if _EWL_FORCE_ENABLE_BOOL_SUPPORT
+		#pragma bool on
+	#else
+		#pragma bool off
+	#endif
+#endif  // _EWL_FORCE_ENABLE_BOOL_SUPPORT
+#endif
+
+#ifdef min
+#undef min
+#endif
+
+#ifdef max
+#undef max
+#endif
+
+#if defined(_EWL_ALLOCATE_SIZE)   && \
+    defined(_EWL_ALLOCATE)        && \
+    defined(_EWL_ALLOCATE_RESIZE) && \
+    defined(_EWL_ALLOCATE_EXPAND) && \
+    !defined(_EWL_HAS_EXPAND_IN_PLACE)
+
+#define _EWL_HAS_EXPAND_IN_PLACE
+
+#endif  // defined(_EWL_ALLOCATE_SIZE)
+
+#ifdef __GNUC__
+extern "C++" {
+#endif // __GNUC__
+
+#ifndef _EWL_NO_CPP_NAMESPACE
+	namespace std {
+#endif
+
+// Warning, __destroy is non-standard
+
+template <class T>
+inline
+void
+__destroy(T* pointer)
+{
+	pointer->~T ();
+}
+
+template <class ForwardIterator>
+inline
+void
+__destroy(ForwardIterator first, ForwardIterator last, forward_iterator_tag)
+{
+	for(; first != last; ++first)
+		__destroy(&*first);
+}
+
+template <class RandomAccessIterator>
+inline
+void
+__destroy(RandomAccessIterator first, RandomAccessIterator last, random_access_iterator_tag)
+{
+	for(; first < last; ++first)
+		__destroy(&*first);
+}
+
+template <class ForwardIterator>
+inline
+void
+__destroy(ForwardIterator first, ForwardIterator last)
+{
+	__destroy(first, last, typename iterator_traits<ForwardIterator>::iterator_category());
+}
+
+//  lib.storage.iterator, raw storage iterator:
+
+template <class OutputIterator, class T>
+class raw_storage_iterator
+	: public iterator<output_iterator_tag, void, void, void, void>
+{
+public:
+	explicit raw_storage_iterator(OutputIterator x);
+
+	raw_storage_iterator& operator*();
+	raw_storage_iterator& operator=(const T& element);
+	raw_storage_iterator& operator++();
+	raw_storage_iterator  operator++(int);
+private:
+	OutputIterator x_;
+};
+
+template <class OutputIterator, class T>
+inline
+raw_storage_iterator<OutputIterator, T>::raw_storage_iterator(OutputIterator x)
+	: x_(x)
+{
+}
+
+template <class OutputIterator, class T>
+inline
+raw_storage_iterator<OutputIterator, T>&
+raw_storage_iterator<OutputIterator, T>::operator*()
+{
+	return *this;
+}
+
+template <class OutputIterator, class T>
+inline
+raw_storage_iterator<OutputIterator, T>&
+raw_storage_iterator<OutputIterator, T>::operator=(const T& element)
+{
+	::new(&*x_) T(element);
+	return *this;
+}
+
+template <class OutputIterator, class T>
+inline
+raw_storage_iterator<OutputIterator, T>&
+raw_storage_iterator<OutputIterator, T>::operator++()
+{
+	++x_;
+	return *this;
+}
+
+template <class OutputIterator, class T>
+inline
+raw_storage_iterator<OutputIterator, T>
+raw_storage_iterator<OutputIterator, T>::operator++(int)
+{
+	raw_storage_iterator tmp(*this);
+	++x_;
+	return tmp;
+}
+
+//  lib.temporary.buffer, temporary buffers:
+template <class T>
+pair<T*, ptrdiff_t>
+get_temporary_buffer(ptrdiff_t n)
+{
+	pair<T*, ptrdiff_t> result((T*)0, 0);
+	while (n > 0)
+	{
+		result.first = reinterpret_cast<T*>(new(nothrow) char [sizeof(T)*n]);
+		if (result.first != 0)
+		{
+			result.second = n;
+			break;
+		}
+		else
+			n /= 2;
+	}
+	return result;
+}
+
+template <class T>
+inline
+void
+return_temporary_buffer(T* p)
+{
+	delete [] reinterpret_cast<char*>(p);
+}
+
+// hh 980601  Added non-standard class.  This facilitates use of
+//            get_temporary_buffer in a exception-safe manner.
+//            Used in <algorithm>
+template <class T>
+class _TempVec
+{
+public:
+	// types:
+	typedef T&                                     reference;
+//	typedef const T&                               const_reference;
+	class                                          iterator;
+//	class                                          const_iterator;
+	typedef size_t                                 size_type;
+	typedef ptrdiff_t                              difference_type;
+	typedef T                                      value_type;
+	typedef T*                                     pointer;
+//	typedef const T*                               const_pointer;
+//	typedef _STD::reverse_iterator<iterator>       reverse_iterator;
+//	typedef _STD::reverse_iterator<const_iterator> const_reverse_iterator;
+
+	class proxy
+	{
+	public:
+		reference operator = (const T& rhs) const
+		{
+			if (cur_ - vec_->data_ < vec_->size_)
+				*cur_ = rhs;
+			else
+			{
+				::new (cur_) T(rhs);
+				++vec_->size_;
+			}
+			return *cur_;
+		}
+
+		reference operator = (const proxy& rhs) const
+		{
+			return *this = static_cast<const T&>(rhs);
+		}
+
+		operator const T& () const {return *cur_;}
+
+#ifdef _EWL_MOVE
+		reference operator = (T&& rhs) const
+		{
+			if (cur_ - vec_->data_ < vec_->size_)
+				*cur_ = _STD::move(rhs);
+			else
+			{
+				::new (cur_) T(_STD::move(rhs));
+				++vec_->size_;
+			}
+			return *cur_;
+		}
+
+		reference operator = (proxy&& rhs) const
+		{
+			return *this = static_cast<T&&>(rhs);
+		}
+
+		operator T&& () {return *cur_;}
+
+#endif  // _EWL_MOVE
+
+	private:
+		T* cur_;
+		_TempVec<T>* vec_;
+
+		proxy(T* cur, _TempVec<T>* vec) : cur_(cur), vec_(vec) {}
+
+		friend class iterator;
+	};
+	friend class proxy;
+
+	class iterator
+	{
+	public:
+		typedef T                          value_type;
+		typedef ptrdiff_t                  difference_type;
+		typedef T*                         pointer;
+		typedef T&                         reference;
+		typedef random_access_iterator_tag iterator_category;
+
+		iterator() {}
+		proxy operator * () const {return proxy(cur_, vec_);}
+		pointer operator -> () const {return cur_;}
+		iterator& operator ++ () {++cur_; return *this;}
+		iterator operator ++ (int) {iterator tmp(*this); ++(*this); return tmp;}
+		iterator& operator -- () {--cur_; return *this;}
+		iterator operator -- (int) {iterator tmp(*this); --(*this); return tmp;}
+		iterator& operator += (difference_type n) {cur_ += n; return *this;}
+		iterator operator + (difference_type n) const {return iterator(*this) += n;}
+		iterator& operator -= (difference_type n) {cur_ -= n; return *this;}
+		iterator operator - (difference_type n) const {return iterator(*this) -= n;}
+		difference_type operator - (const iterator& rhs) const {return difference_type(cur_ - rhs.cur_);}
+		proxy operator [] (size_type i) const {iterator tmp(*this); tmp += difference_type(i); return *tmp;}
+		friend bool operator ==(const iterator& x, const iterator& y) {return x.cur_ == y.cur_;}
+		friend bool operator !=(const iterator& x, const iterator& y) {return x.cur_ != y.cur_;}
+		friend bool operator < (const iterator& x, const iterator& y) {return x.cur_ < y.cur_;}
+		friend bool operator <=(const iterator& x, const iterator& y) {return x.cur_ <= y.cur_;}
+		friend bool operator > (const iterator& x, const iterator& y) {return x.cur_ >  y.cur_;}
+		friend bool operator >=(const iterator& x, const iterator& y) {return x.cur_ >= y.cur_;}
+		friend iterator operator + (difference_type n, const iterator& rhs)
+			{return iterator(rhs) += n;}
+	private:
+		pointer cur_;
+		_TempVec<T>* vec_;
+
+		iterator(T* cur, _TempVec<T>* vec) : cur_(cur), vec_(vec) {}
+
+		friend class _TempVec<T>;
+	};
+
+	_TempVec(ptrdiff_t cap);
+	~_TempVec();
+	iterator begin();
+	iterator end();
+	ptrdiff_t size() const;
+	ptrdiff_t capacity() const;
+private:
+	ptrdiff_t cap_;
+	ptrdiff_t size_;
+	T* data_;
+
+	_TempVec(const _TempVec&);             // Not defined
+	_TempVec& operator=(const _TempVec&);  // Not defined
+};
+
+template <class T>
+inline
+_TempVec<T>::_TempVec(ptrdiff_t cap)
+{
+	pair<T*, ptrdiff_t> buf = get_temporary_buffer<T>(cap);
+	data_ = buf.first;
+	cap_ = buf.second;
+	size_ = 0;
+}
+
+template <class T>
+inline
+_TempVec<T>::~_TempVec()
+{
+	__destroy(data_, data_ + size_);
+	_STD::return_temporary_buffer(data_);
+}
+
+template <class T>
+inline
+typename _TempVec<T>::iterator
+_TempVec<T>::begin()
+{
+	return iterator(data_, this);
+}
+
+template <class T>
+inline
+typename _TempVec<T>::iterator
+_TempVec<T>::end()
+{
+	return iterator(data_ + cap_, this);
+}
+
+template <class T>
+inline
+ptrdiff_t
+_TempVec<T>::size() const
+{
+	return size_;
+}
+
+template <class T>
+inline
+ptrdiff_t
+_TempVec<T>::capacity() const
+{
+	return cap_;
+}
+
+//  lib.specialized.algorithms, specialized algorithms:
+
+// uninitialized_copy
+
+template <class InputIterator, class ForwardIterator>
+inline
+ForwardIterator
+__uninitialized_copy(InputIterator first, InputIterator last, ForwardIterator result)
+{
+	ForwardIterator __save = result;
+#ifndef _EWL_NO_EXCEPTIONS
+	try
+	{
+#endif  // _EWL_NO_EXCEPTIONS
+		for (; first != last; ++result, ++first)
+			::new (&*result) typename iterator_traits<ForwardIterator>::value_type(*first);
+#ifndef _EWL_NO_EXCEPTIONS
+	}
+	catch (...)
+	{
+		__destroy(__save, result);
+		throw;
+	}
+#endif  // _EWL_NO_EXCEPTIONS
+	return result;
+}
+
+template <class InputIterator, class ForwardIterator>
+inline
+ForwardIterator
+uninitialized_copy(InputIterator first, InputIterator last, ForwardIterator result)
+{
+	return __uninitialized_copy(first, last, result);
+}
+
+#ifndef __GNUC__
+
+template <class T, bool IsPOD = CodeWarrior::is_POD<T>::value, bool IsSmall = sizeof(T) < sizeof(int)>
+struct __uninitialized_copy_helper
+{
+	static T* uninitialized_copy(T* first, T* last, T* result)
+	{
+		return __uninitialized_copy(first, last, result);
+	}
+};
+
+template <class T>
+struct __uninitialized_copy_helper<T, true, true>
+{
+	static T* uninitialized_copy(T* first, T* last, T* result)
+	{
+		size_t n = static_cast<size_t>(last - first);
+		_CSTD::memcpy(result, first, n*sizeof(T));
+		return result + n;
+	}
+};
+
+template <class T>
+struct __uninitialized_copy_helper<T, true, false>
+{
+	static T* uninitialized_copy(T* first, T* last, T* result)
+	{
+		for (; first < last; ++result, ++first)
+			*result = *first;
+		return result;
+	}
+};
+
+template <class T>
+inline
+T*
+uninitialized_copy(T* first, T* last, T* result)
+{
+	return __uninitialized_copy_helper<T>::uninitialized_copy(first, last, result);
+}
+
+template <class T>
+inline
+T*
+uninitialized_copy(const T* first, const T* last, T* result)
+{
+	return __uninitialized_copy_helper<T>::uninitialized_copy(const_cast<T*>(first), const_cast<T*>(last), result);
+}
+
+#endif  // __GNUC__
+
+// uninitialized_fill
+
+template <class ForwardIterator, class T>
+inline
+void
+uninitialized_fill(ForwardIterator first, ForwardIterator last, const T& x)
+{
+	ForwardIterator __save = first;
+#ifndef _EWL_NO_EXCEPTIONS
+	try
+	{
+#endif  // _EWL_NO_EXCEPTIONS
+		for (; first != last; ++first)
+			::new (&*first) typename iterator_traits<ForwardIterator>::value_type(x);
+#ifndef _EWL_NO_EXCEPTIONS
+	}
+	catch (...)
+	{
+		__destroy(__save, first);
+		throw;
+	}
+#endif  // _EWL_NO_EXCEPTIONS
+}
+
+template <>
+inline
+void
+uninitialized_fill(char* first, char* last, const char& x)
+{
+	memset(first, x, static_cast<size_t>(last - first));
+}
+
+#ifndef _EWL_NO_WCHART_CPP_SUPPORT
+
+	template <>
+	inline
+	void
+	uninitialized_fill(wchar_t* first, wchar_t* last, const wchar_t& x)
+	{
+	#ifndef _EWL_NO_WCHART_C_SUPPORT
+		wmemset(first, x, static_cast<size_t>(last - first));
+	#else
+		for (; first < last; ++first)
+			*first = x;
+	#endif  // _EWL_NO_WCHART_C_SUPPORT
+	}
+
+#endif  // _EWL_NO_WCHART_CPP_SUPPORT
+
+// uninitialized_fill_n
+
+template <class ForwardIterator, class Size, class T>
+inline
+void
+uninitialized_fill_n(ForwardIterator first, Size n, const T& x)
+{
+	ForwardIterator __save = first;
+#ifndef _EWL_NO_EXCEPTIONS
+	try
+	{
+#endif  // _EWL_NO_EXCEPTIONS
+		for (; n--; ++first)
+			::new ((&*first)) typename iterator_traits<ForwardIterator>::value_type(x);
+#ifndef _EWL_NO_EXCEPTIONS
+	}
+	catch (...)
+	{
+		__destroy(__save, first);
+		throw;
+	}
+#endif  // _EWL_NO_EXCEPTIONS
+}
+
+template <>
+inline
+void
+uninitialized_fill_n(char* first, size_t n, const char& x)
+{
+	memset(first, x, n);
+}
+
+#ifndef _EWL_NO_WCHART_CPP_SUPPORT
+
+	template <>
+	inline
+	void
+	uninitialized_fill_n(wchar_t* first, size_t n, const wchar_t& x)
+	{
+	#ifndef _EWL_NO_WCHART_C_SUPPORT
+		wmemset(first, x, n);
+	#else
+		for (; n; ++first, --n)
+			*first = x;
+	#endif  // _EWL_NO_WCHART_C_SUPPORT
+	}
+
+#endif  // _EWL_NO_WCHART_CPP_SUPPORT
+
+#ifndef _EWL_NO_CPP_NAMESPACE
+	} // namespace std
+#endif
+
+#ifndef _EWL_NO_CPP_NAMESPACE
+	namespace CodeWarrior {
+#else
+	#ifndef CodeWarrior
+		#define CodeWarrior
+	#endif
+#endif  // _EWL_NO_CPP_NAMESPACE
+
+template <class T> class malloc_alloc;
+
+template <>
+class malloc_alloc<void>
+{
+public:
+	typedef _CSTD::size_t      size_type;
+	typedef _CSTD::ptrdiff_t   difference_type;
+	typedef void*              pointer;
+	typedef const void*        const_pointer;
+	typedef void               value_type;
+
+	template <class U> struct rebind { typedef malloc_alloc<U> other; };
+};
+
+template <class T> class malloc_alloc
+{
+public:
+#ifdef _EWL_HAS_EXPAND_IN_PLACE
+	typedef version_type<malloc_alloc, 2> version;
+#endif
+
+	typedef _CSTD::size_t    size_type;
+	typedef _CSTD::ptrdiff_t difference_type;
+	typedef T*        pointer;
+	typedef const T*  const_pointer;
+	typedef T&        reference;
+	typedef const T&  const_reference;
+	typedef T         value_type;
+	template <class U> struct rebind { typedef malloc_alloc<U> other; };
+
+	malloc_alloc() throw() {}
+	template <class U> malloc_alloc(const malloc_alloc<U>&) throw() {}
+
+	pointer address(reference x) const {return CodeWarrior::addressof(x);}
+	const_pointer address(const_reference x) const {return CodeWarrior::addressof(x);}
+
+	pointer allocate(size_type n, malloc_alloc<void>::const_pointer = 0);
+	void deallocate(pointer p, size_type n);
+	size_type max_size() const throw() {return _STD::numeric_limits<size_type>::max() / sizeof(T);}
+
+	void construct(pointer p, const T& val) {::new((void*)p) T(val);}
+#ifdef _EWL_MOVE
+	template <class U> void construct(pointer p, U&& val)
+		{::new((void*)p) T(_STD::forward<U>(val));}
+#endif  // _EWL_MOVE
+	void destroy(pointer p)                 {p->~T();}
+
+#ifdef _EWL_HAS_EXPAND_IN_PLACE
+
+//	version 2
+
+	size_type size(pointer p) const throw() {return _CSTD::_EWL_ALLOCATE_SIZE(p) / sizeof(T);}
+
+	pointer allocate(size_type n, size_type& size_received);
+
+	pointer request(size_type size_requested, size_type& size_received) throw()
+	{
+		pointer result = (pointer)_CSTD::_EWL_ALLOCATE(size_requested*sizeof(T), &size_received);
+		size_received /= sizeof(T);
+		return result;
+	}
+
+	int resize(pointer p, size_type size_requested, size_type& size_received) throw()
+	{
+		int result = _CSTD::_EWL_ALLOCATE_RESIZE(p, size_requested*sizeof(T), &size_received);
+		size_received /= sizeof(T);
+		return result;
+	}
+
+	int expand(pointer p, size_type min_size, size_type preferred_size, size_type& size_received) throw()
+	{
+		int result = _CSTD::_EWL_ALLOCATE_EXPAND(p, min_size*sizeof(T), preferred_size*sizeof(T), &size_received);
+		size_received /= sizeof(T);
+		return result;
+	}
+
+#endif  // _EWL_HAS_EXPAND_IN_PLACE
+};
+
+template <class T>
+typename malloc_alloc<T>::pointer
+malloc_alloc<T>::allocate(size_type n, malloc_alloc<void>::const_pointer)
+{
+	pointer p = (pointer)_CSTD::malloc(n*sizeof(T));
+	if (p == 0)
+	#ifndef _EWL_NO_EXCEPTIONS
+		throw _STD::bad_alloc();
+	#else
+		_STD::__ewl_error("bad_alloc");
+	#endif
+	return p;
+}
+
+#ifdef _EWL_HAS_EXPAND_IN_PLACE
+
+template <class T>
+typename malloc_alloc<T>::pointer
+malloc_alloc<T>::allocate(size_type n, size_type& size_received)
+{
+	pointer p = (pointer)_CSTD::_EWL_ALLOCATE(n*sizeof(T), &size_received);
+	if (p == 0)
+	#ifndef _EWL_NO_EXCEPTIONS
+		throw _STD::bad_alloc();
+	#else
+		_STD::__ewl_error("bad_alloc");
+	#endif
+	size_received /= sizeof(T);
+	return p;
+}
+
+#endif  // _EWL_HAS_EXPAND_IN_PLACE
+
+template <class T>
+inline
+void
+malloc_alloc<T>::deallocate(pointer p, size_type)
+{
+#ifdef _EWL_DEBUG
+	if (p == 0)
+		_EWL_DEBUG_ERROR(_STD::logic_error, "EWL DEBUG: NULL pointer passed to malloc_alloc::deallocate");
+#endif  // _EWL_DEBUG
+	_CSTD::free(p);
+}
+
+template <class T, class U>
+inline
+bool
+operator==(const malloc_alloc<T>&, const malloc_alloc<U>&) _EWL_NO_THROW
+{
+	return true;
+}
+
+template <class T, class U>
+inline
+bool
+operator!=(const malloc_alloc<T>&, const malloc_alloc<U>&) _EWL_NO_THROW
+{
+	return false;
+}
+
+template <class T>
+inline
+bool
+operator!=(const malloc_alloc<T>&, const malloc_alloc<T>&) _EWL_NO_THROW
+{
+	return false;
+}
+
+#ifndef _EWL_NO_CPP_NAMESPACE
+	} // namespace CodeWarrior
+#endif
+
+#ifdef __GNUC__
+} // extern "C++"
+#endif // __GNUC__
+
+#ifdef __CWCC__
+#ifdef _EWL_FORCE_ENUMS_ALWAYS_INT
+	#pragma enumsalwaysint reset
+#endif
+
+#ifdef _EWL_FORCE_ENABLE_BOOL_SUPPORT
+	#pragma bool reset
+#endif
+
+#pragma options align=reset
+#endif
+
+#endif // _MEMORY

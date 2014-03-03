@@ -1,0 +1,14 @@
+/* EWL
+ * Copyright 2009- Freescale Corporation.  All rights reserved.
+ *
+ * $Date: 2012/06/28 06:41:37 $
+ * $Revision: 1.2 $
+ */
+
+#ifndef _CSTDBOOL
+# define _CSTDBOOL
+
+# include <stdbool.h>
+
+#endif // _CSTDBOOL
+

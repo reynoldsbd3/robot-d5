@@ -1,0 +1,72 @@
+Implementation notes
+
+Reference : C Library ABI for the ARM® Architecture, ARM IHI 0039B
+
+locale.h
+
+"C" locale is the single locale supported for ARM.
+
+Linking in portable objetcs into CodeWarrior
+
+An EABI-conformant portable object accesses "struct __aeabi_lconv" members.
+A non portable object accesses "struct lconv" members. These 2 structures are
+different declarations thus interopability requires member to member copying.
+
+example
+
+portable.c
+
+static struct __aeabi_lconv  mylconv;
+
+extern struct __aeabi_lconv *publish()
+{
+	return &mylconv;	
+};
+
+codewarrior.c
+
+void interoperate ( struct lconv *lconv, const struct __aeabi_lconv *eabi_lconv )
+{
+	lconv->decimal_point = eabi_lconv->decimal_point;
+	lconv->thousands_sep = eabi_lconv->thousands_sep;
+	lconv->grouping = eabi_lconv->grouping;
+	lconv->int_curr_symbol = eabi_lconv->int_curr_symbol;
+	lconv->currency_symbol = eabi_lconv->currency_symbol;
+	lconv->mon_decimal_point = eabi_lconv->mon_decimal_point;
+	lconv->mon_thousands_sep = eabi_lconv->mon_thousands_sep;
+	lconv->mon_grouping = eabi_lconv->mon_grouping;
+	lconv->positive_sign = eabi_lconv->positive_sign;
+	lconv->negative_sign = eabi_lconv->negative_sign;
+	lconv->int_frac_digits = eabi_lconv->int_frac_digits;
+	lconv->frac_digits = eabi_lconv->frac_digits;
+	lconv->p_cs_precedes = eabi_lconv->p_cs_precedes;
+	lconv->p_sep_by_space = eabi_lconv->p_sep_by_space;
+	lconv->n_cs_precedes = eabi_lconv->n_cs_precedes;
+	lconv->n_sep_by_space = eabi_lconv->n_sep_by_space;
+	lconv->p_sign_posn = eabi_lconv->p_sign_posn;
+	lconv->n_sign_posn = eabi_lconv->n_sign_posn;
+/* The following fields are added by C99 */
+	lconv->int_p_cs_precedes = eabi_lconv->int_p_cs_precedes;
+	lconv->int_n_cs_precedes = eabi_lconv->int_n_cs_precedes;
+	lconv->int_p_sep_by_space = eabi_lconv->int_p_sep_by_space;
+	lconv->int_n_sep_by_space = eabi_lconv->int_n_sep_by_space;
+	lconv->int_p_sign_posn = eabi_lconv->int_p_sign_posn;
+	lconv->int_n_sign_posn = eabi_lconv->int_n_sign_posn;
+}
+
+ctype.h
+
+"C" locale is the default and the only one supported on ARM, thus _AEABI_LC_CTYPE
+can only be set to C.
+
+At link time, the linker resolves all calls to out of line ctype routines to their
+portable implementation (regular ctype symbols are WEAK).
+
+
+stdio.h
+
+An EABI-conformant object declares FILE opaque, preventing direct struct member accesses.
+
+CodeWarrior casts FILE * to struct _FILE *, this match is seamless and permits inline
+and out of line accesses.
+

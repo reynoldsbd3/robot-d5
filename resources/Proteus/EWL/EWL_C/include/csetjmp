@@ -1,0 +1,74 @@
+/* EWL
+ * Copyright © 1995-2009 Freescale Corporation.  All rights reserved.
+ *
+ * $Date: 2012/06/01 15:39:37 $
+ * $Revision: 1.1 $
+ */
+
+#ifndef _EWL_CSETJMP
+#define _EWL_CSETJMP
+
+#include <ansi_parms.h>
+
+#if !_EWL_USING_CW_C_HEADERS_
+	#include <setjmp.h>
+
+	#if _EWL_PUT_THIRD_PARTY_C_IN_STD
+		#include <ewl_cpp_std_setjmp.h>
+	#endif
+#else
+
+#if __dest_os == __win32_os
+	#include <x86/setjmp.win32.h>
+#elif __dest_os == __pa_eabi
+	#include <pa/setjmp.EPPC.h>
+#elif __dest_os == __m56800_os || __dest_os == __m56800E_os
+	#include <dsp/setjmp.56800.h>
+#elif __dest_os == __arm_bare
+	#include <arm/setjmp.ARM.h>
+#elif __dest_os == __starcore
+	#include <sc/setjmp_StarCore.h>
+#elif __dest_os == __emb_coldfire
+	#include <coldfire/setjmp.cf.h>
+#elif __dest_os == __hc_bare
+	#include <hc/setjmp.hc12.h>
+#else
+	#error Unknown platform
+#endif
+
+
+#ifndef _EWL_SETJMP_LONGJMP_DEFINED
+#define _EWL_SETJMP_LONGJMP_DEFINED
+
+		_EWL_BEGIN_EXTERN_C
+
+			_EWL_IMP_EXP_C int _EWL_CDECL setjmp(__std(jmp_buf)) /*_EWL_CANT_THROW*/;
+
+		_EWL_END_EXTERN_C
+
+
+		_EWL_BEGIN_NAMESPACE_STD
+		_EWL_BEGIN_EXTERN_C
+
+			_EWL_IMP_EXP_C void _EWL_CDECL longjmp(jmp_buf,int) _EWL_CANT_THROW;
+
+		_EWL_END_EXTERN_C
+		_EWL_END_NAMESPACE_STD
+
+#endif /* _EWL_SETJMP_LONGJMP_DEFINED */
+
+_EWL_BEGIN_NAMESPACE_STD
+_EWL_BEGIN_EXTERN_C
+
+	_EWL_IMP_EXP_C void _EWL_CDECL __longjmp_ldestr(jmp_buf,int) _EWL_CANT_THROW;
+
+_EWL_END_EXTERN_C
+_EWL_END_NAMESPACE_STD
+
+#if defined(_EWL_EXPORT_CNAMES) && defined(__cplusplus) && defined(_EWL_USING_NAMESPACE)
+#include <setjmp.h>
+#endif /*  defined(_EWL_EXPORT_CNAMES) && defined(__cplusplus) && defined(_EWL_USING_NAMESPACE) */
+
+#endif /* _EWL_USING_CW_C_HEADERS_ */
+
+#endif /* _EWL_CSETJMP */

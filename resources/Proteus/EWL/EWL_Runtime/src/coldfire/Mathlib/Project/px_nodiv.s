@@ -1,0 +1,1 @@
+NO_HARDWARE_DIVIDE	.set		1

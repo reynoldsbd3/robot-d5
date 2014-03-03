@@ -1,0 +1,26 @@
+/* EWL
+ * Copyright © 1995-2010 Freescale Corporation.  All rights reserved.
+ *
+ *  $Date: 2012/06/01 16:02:32 $ 
+ *  $Revision: 1.1 $ 
+ */
+
+#pragma check_header_flags on  
+
+#if __option(little_endian)
+	#ifndef __thumb
+		#pragma precompile_target "EWLHeaders_ARM_LE.mch"
+	#else
+		#pragma precompile_target "EWLHeaders_Thumb_LE.mch"
+	#endif
+#else
+	#ifndef __thumb
+		#pragma precompile_target "EWLHeaders_ARM_BE.mch"
+	#else
+		#pragma precompile_target "EWLHeaders_Thumb_BE.mch"
+	#endif
+#endif
+
+
+#include "EWLHeaders++.cp"
+

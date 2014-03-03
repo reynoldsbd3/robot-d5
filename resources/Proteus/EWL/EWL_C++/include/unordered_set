@@ -1,0 +1,786 @@
+/* EWL
+ * Copyright © 2009 Freescale Corporation.  All rights reserved.
+ *
+ * $Date: 2012/06/28 06:42:33 $
+ * $Revision: 1.2 $
+ */
+
+#ifndef _UNORDERED_SET
+#define _UNORDERED_SET
+
+/* unordered_set synopsis
+
+// tr.unord.syn.set
+
+namespace std {
+namespace tr1 {
+  // [6.3.4.3] Class template unordered_set
+  template <class Value,
+                class Hash = hash<Value>,
+                class Pred = std::equal_to<Value>,
+                class Alloc = std::allocator<Value> >
+     class unordered_set;
+  // [6.3.4.5] Class template unordered_multiset
+  template <class Value,
+                class Hash = hash<Value>,
+                class Pred = std::equal_to<Value>,
+                class Alloc = std::allocator<Value> >
+     class unordered_multiset;
+  template <class Value, class Hash, class Pred, class Alloc>
+     void swap(unordered_set<Value, Hash, Pred, Alloc>& x,
+                  unordered_set<Value, Hash, Pred, Alloc>& y);
+  template <class Value, class Hash, class Pred, class Alloc>
+     void swap(unordered_multiset<Value, Hash, Pred, Alloc>& x,
+                  unordered_multiset<Value, Hash, Pred, Alloc>& y);
+
+
+template <class Value,
+           class Hash = hash<Value>,
+           class Pred = std::equal_to<Value>,
+           class Alloc = std::allocator<Value> >
+class unordered_set
+{
+public:
+  // types
+  typedef Value                                    key_type;
+  typedef Value                                    value_type;
+  typedef Hash                                     hasher;
+  typedef Pred                                     key_equal;
+  typedef Alloc                                    allocator_type;
+  typedef typename allocator_type::pointer         pointer;
+  typedef typename allocator_type::const_pointer   const_pointer;
+  typedef typename allocator_type::reference       reference;
+  typedef typename allocator_type::const_reference const_reference;
+  typedef implementation-defined                   size_type;
+  typedef implementation-defined                   difference_type;
+  typedef  implementation-defined                  iterator;
+  typedef  implementation-defined                  const_iterator;
+  typedef  implementation-defined                  local_iterator;
+  typedef  implementation-defined                  const_local_iterator;
+
+  // construct/destroy/copy
+  explicit unordered_set(size_type n = implementation-defined ,
+                         const hasher& hf = hasher(),
+                         const key_equal& eql = key_equal(),
+                         const allocator_type& a = allocator_type());
+
+  template <class InputIterator>
+  unordered_set(InputIterator f, InputIterator l,
+                size_type n = implementation-defined ,
+                const hasher& hf = hasher(),
+                const key_equal& eql = key_equal(),
+                const allocator_type& a = allocator_type());
+
+  unordered_set(const unordered_set&);
+  ~unordered_set();
+  unordered_set& operator=(const unordered_set&);
+
+  allocator_type get_allocator() const;
+
+  // size and capacity
+  bool empty() const;
+  size_type size() const;
+  size_type max_size() const;
+
+  // iterators
+  iterator            begin();
+  const_iterator      begin() const;
+  iterator            end();
+  const_iterator      end() const;
+
+  // modifiers
+  std::pair<iterator, bool> insert(const value_type& obj);
+  iterator            insert(iterator hint,       const value_type& obj);
+  const_iterator insert(const_iterator hint, const value_type& obj);
+  template <class InputIterator> void insert(InputIterator first, InputIterator last);
+
+  iterator            erase(iterator position);
+  const_iterator      erase(const_iterator position);
+  size_type           erase(const key_type& k);
+  iterator            erase(iterator first,       iterator last);
+  const_iterator      erase(const_iterator first, const_iterator last);
+  void clear();
+  void swap(unordered_set&);
+
+  // observers
+  hasher hash_function() const;
+  key_equal key_eq() const;
+
+  // lookup
+  iterator            find(const key_type& k);
+  const_iterator find(const key_type& k) const;
+  size_type count(const key_type& k) const;
+
+  std::pair<iterator, iterator>                  equal_range(const key_type& k);
+  std::pair<const_iterator, const_iterator> equal_range(const key_type& k) const;
+
+  // bucket interface
+  size_type bucket_count() const;
+  size_type max_bucket_count() const;
+  size_type bucket_size(size_type n) const;
+  size_type bucket(const key_type& k) const;
+  local_iterator begin(size_type n);
+  const_local_iterator begin(size_type n) const;
+  local_iterator end(size_type n);
+  const_local_iterator end(size_type n) const;
+
+  // hash policy
+  float load_factor() const;
+  float max_load_factor() const;
+  void max_load_factor(float z);
+  void rehash(size_type n);
+};
+
+template <class Value,
+           class Hash = hash<Value>,
+           class Pred = std::equal_to<Value>,
+           class Alloc = std::allocator<Value> >
+class unordered_multiset
+{
+public:
+  // types
+  typedef Value                                    key_type;
+  typedef Value                                    value_type;
+  typedef Hash                                     hasher;
+  typedef Pred                                     key_equal;
+  typedef Alloc                                    allocator_type;
+  typedef typename allocator_type::pointer         pointer;
+  typedef typename allocator_type::const_pointer   const_pointer;
+  typedef typename allocator_type::reference       reference;
+  typedef typename allocator_type::const_reference const_reference;
+  typedef implementation-defined                   size_type;
+  typedef implementation-defined                   difference_type;
+
+  typedef    implementation-defined                     iterator;
+  typedef    implementation-defined                     const_iterator;
+  typedef    implementation-defined                     local_iterator;
+  typedef    implementation-defined                     const_local_iterator;
+  // construct/destroy/copy
+  explicit unordered_multiset(size_type n = implementation-defined ,
+                              const hasher& hf = hasher(),
+                              const key_equal& eql = key_equal(),
+                              const allocator_type& a = allocator_type());
+  template <class InputIterator>
+  unordered_multiset(InputIterator f, InputIterator l,
+                     size_type n = implementation-defined ,
+                     const hasher& hf = hasher(),
+                     const key_equal& eql = key_equal(),
+                     const allocator_type& a = allocator_type());
+  unordered_multiset(const unordered_multiset&);
+
+  ~unordered_multiset();
+
+  unordered_multiset& operator=(const unordered_multiset&);
+
+  allocator_type get_allocator() const;
+
+  // size and capacity
+  bool empty() const;
+  size_type size() const;
+  size_type max_size() const;
+
+  // iterators
+  iterator            begin();
+  const_iterator      begin() const;
+  iterator            end();
+  const_iterator      end() const;
+
+  // modifiers
+  iterator insert(const value_type& obj);
+  iterator            insert(iterator hint,       const value_type& obj);
+  const_iterator insert(const_iterator hint, const value_type& obj);
+  template <class InputIterator> void insert(InputIterator first, InputIterator last);
+  iterator            erase(iterator position);
+  const_iterator      erase(const_iterator position);
+  size_type           erase(const key_type& k);
+  iterator            erase(iterator first,       iterator last);
+  const_iterator      erase(const_iterator first, const_iterator last);
+  void clear();
+  void swap(unordered_multiset&);
+
+  // observers
+  hasher hash_function() const;
+  key_equal key_eq() const;
+
+  // lookup
+  iterator             find(const key_type& k);
+  const_iterator find(const key_type& k) const;
+  size_type count(const key_type& k) const;
+  std::pair<iterator, iterator>                  equal_range(const key_type& k);
+  std::pair<const_iterator, const_iterator> equal_range(const key_type& k) const;
+
+   // bucket interface
+  size_type bucket_count() const;
+  size_type max_bucket_count() const;
+  size_type bucket_size(size_type n);
+  size_type bucket(const key_type& k) const;
+  local_iterator begin(size_type n) const;
+  const_local_iterator begin(size_type n) const;
+  local_iterator end(size_type n);
+  const_local_iterator end(size_type n) const;
+
+   // hash policy
+  float load_factor() const;
+  float max_load_factor() const;
+  void max_load_factor(float z);
+  void rehash(size_type n);
+};
+
+template <class Value, class Hash, class Pred, class Alloc>
+void swap(unordered_multiset<Value, Hash, Pred, Alloc>& x,
+          unordered_multiset<Value, Hash, Pred, Alloc>& y);
+
+} // namespace tr1
+} // namespace std
+
+*/
+
+#include <ewlconfig>
+#include <functional>   // for hash
+#include <hash_table>   // CodeWarrior::hash_table
+
+#ifdef __CWCC__
+#pragma options align=native
+#endif
+
+#ifdef _EWL_FORCE_ENUMS_ALWAYS_INT
+	#if _EWL_FORCE_ENUMS_ALWAYS_INT
+		#pragma enumsalwaysint on
+	#else
+		#pragma enumsalwaysint off
+	#endif
+#endif  // _EWL_FORCE_ENUMS_ALWAYS_INT
+
+#ifdef _EWL_FORCE_ENABLE_BOOL_SUPPORT
+	#if _EWL_FORCE_ENABLE_BOOL_SUPPORT
+		#pragma bool on
+	#else
+		#pragma bool off
+	#endif
+#endif  // _EWL_FORCE_ENABLE_BOOL_SUPPORT
+
+#if __CWCC__ >= 0x3200
+
+extern "C++" {
+
+_EWL_START_TR1_NAMESPACE
+
+template <class Value,
+          class Hash = hash<Value>,
+          class Pred = _STD::equal_to<Value>,
+          class Alloc = _STD::allocator<Value> >
+class unordered_set
+{
+private:
+  typedef CodeWarrior::hash_table<Value,Hash,Pred,Alloc> hash_type;
+  hash_type table_;
+public:
+  typedef Value                                     key_type;
+  typedef Value                                     value_type;
+  typedef Hash                                      hasher;
+  typedef Pred                                      key_equal;
+  typedef typename hash_type::allocator_type        allocator_type;
+
+  typedef typename allocator_type::pointer          pointer;
+  typedef typename allocator_type::const_pointer    const_pointer;
+  typedef typename allocator_type::reference        reference;
+  typedef typename allocator_type::const_reference  const_reference;
+
+  typedef typename hash_type::size_type             size_type;
+  typedef typename hash_type::difference_type       difference_type;
+  typedef typename hash_type::iterator              iterator;
+  typedef typename hash_type::const_iterator        const_iterator;
+
+  typedef typename hash_type::local_iterator        local_iterator;
+  typedef typename hash_type::const_local_iterator  const_local_iterator;
+
+  explicit
+  unordered_set(size_type num_buckets = 0,
+                const hasher& hf = hasher(),
+                const key_equal& eql = key_equal(),
+                const allocator_type& a = allocator_type()):
+    table_(num_buckets,hf,eql,1.F,4.F,a){}
+
+  template <class InputIterator>
+  unordered_set(InputIterator f, InputIterator l,
+                size_type num_buckets = 0,
+                const hasher& hf = hasher(),
+                const key_equal& eql = key_equal(),
+                const allocator_type& a = allocator_type()):
+    table_(f,l,false /* multi */,num_buckets,hf,eql,1.F,4.F,a){}
+
+#ifdef _EWL_MOVE
+  unordered_set(unordered_set&& us) : table_(_STD::move(us.table_)) {}
+  unordered_set& operator=(unordered_set&& us) { swap(_STD::move(us)); return *this; }
+#endif
+
+  allocator_type
+  get_allocator() const
+  { return table_.get_allocator(); }
+
+  // Size and capacity
+  bool
+  empty() const
+  { return table_.empty(); }
+
+  size_type
+  size() const
+  { return table_.size(); }
+
+  size_type
+  max_size() const
+  { return table_.max_size(); }
+
+  // Iterators
+  iterator
+  begin()
+  { return table_.begin();  }
+
+  const_iterator
+  begin() const
+  { return table_.begin(); }
+
+  iterator
+  end()
+  { return table_.end(); }
+
+  const_iterator
+  end() const
+  { return table_.end(); }
+
+  // Modifiers
+  _STD::pair<iterator,bool>
+  insert(const value_type & obj)
+  { return table_.insert_one(obj); }
+
+  iterator
+  insert(iterator /*hint*/, const value_type & obj)
+  { return table_.insert_one(obj).first; }
+
+  const_iterator
+  insert(const_iterator /*hint*/, const value_type & obj)
+  { return table_.insert_one(obj).first; }
+
+  template<typename InputIterator>
+  void insert(InputIterator first, InputIterator last)
+  { table_.insert_one(first,last); }
+
+#ifdef _EWL_MOVE
+  _STD::pair<iterator, bool>
+  insert(value_type&& x)
+  {return table_.insert_one(_STD::move(x));}
+
+  iterator
+  insert(iterator, value_type&& x)
+  {return table_.insert_one(_STD::move(x)).first;}
+#endif  // _EWL_MOVE
+
+  iterator
+  erase(iterator position)
+  { return table_.erase(position); }
+
+  const_iterator
+  erase(const_iterator position)
+  { return table_.erase(position); }
+
+  size_type
+  erase(const key_type& k)
+  { return table_.erase_one(k); }
+
+  iterator
+  erase(iterator first, iterator last)
+  { return table_.erase(first,last); }
+
+  const_iterator
+  erase(const_iterator first, const_iterator last)
+  { return table_.erase(first,last); }
+
+  void clear()
+  { table_.clear(); }
+
+#ifdef _EWL_MOVE
+  void
+  swap(unordered_set&& y)
+  {CodeWarrior::swap(table_, y.table_);}
+#else
+  void
+  swap(unordered_set& y)
+  {CodeWarrior::swap(table_, y.table_);}
+#endif
+
+  // Observers
+  hasher
+  hash_function() const
+  { return table_.value_hash(); }
+
+  key_equal
+  key_eq() const
+  { return table_.value_comp(); }
+
+  // lookup
+  iterator
+  find(const key_type & k)
+  { return table_.find(k); }
+
+  const_iterator
+  find(const key_type & k) const
+  { return table_.find(k); }
+
+  size_type
+  count(const key_type & k) const
+  { return table_.count_one(k); }
+
+  _STD::pair<iterator, iterator>
+  equal_range(const key_type & k)
+  { return table_.equal_range(k); }
+
+  _STD::pair<const_iterator,const_iterator>
+  equal_range(const key_type & k) const
+  { return table_.equal_range(k); }
+
+  // bucket interface
+  size_type
+  bucket_count() const
+  { return table_.bucket_count(); }
+
+  size_type
+  max_bucket_count() const
+  { return table_.max_size(); }
+
+  size_type
+  bucket_size(size_type which_bucket) const
+  { return table_.bucket_size(which_bucket); }
+
+  size_type
+  bucket(const key_type & k) const
+  { return table_.bucket(k); }
+
+  local_iterator
+  begin(size_type n)
+  { return table_.begin(n); }
+
+  const_local_iterator
+  begin(size_type n) const
+  { return table_.begin(n); }
+
+  local_iterator
+  end(size_type n)
+  { return table_.end(n); }
+
+  const_local_iterator
+  end(size_type n) const
+  { return table_.end(n); }
+
+  // hash policy
+  float
+  load_factor() const
+  { return table_.load_factor(); }
+
+  float
+  max_load_factor() const
+  { return table_.load_factor_limit(); }
+
+  void
+  max_load_factor(float z)
+  { table_.load_factor_limit(z); }
+
+  void
+  rehash(size_type n)
+  { table_.bucket_count(n); }
+
+};
+
+template <class Value, class Hash, class Pred, class Alloc>
+void swap(unordered_set<Value, Hash, Pred, Alloc>& x,
+          unordered_set<Value, Hash, Pred, Alloc>& y)
+{
+  x.swap(y);
+}
+
+#ifdef _EWL_MOVE
+
+template <class Value, class Hash, class Pred, class Alloc>
+void swap(unordered_set<Value, Hash, Pred, Alloc>&& x,
+          unordered_set<Value, Hash, Pred, Alloc>& y)
+{
+  y.swap(_STD::move(x));
+}
+
+template <class Value, class Hash, class Pred, class Alloc>
+void swap(unordered_set<Value, Hash, Pred, Alloc>& x,
+          unordered_set<Value, Hash, Pred, Alloc>&& y)
+{
+  x.swap(_STD::move(y));
+}
+
+#endif // _EWL_MOVE
+
+template <class Value,
+          class Hash = hash<Value>,
+          class Pred = _STD::equal_to<Value>,
+          class Alloc = _STD::allocator<Value> >
+class unordered_multiset
+{
+private:
+  typedef CodeWarrior::hash_table<Value,Hash,Pred,Alloc> hash_type;
+  hash_type table_;
+public:
+  typedef Value                                     key_type;
+  typedef Value                                     value_type;
+  typedef Hash                                      hasher;
+  typedef Pred                                      key_equal;
+  typedef typename hash_type::allocator_type        allocator_type;
+
+  typedef typename allocator_type::pointer          pointer;
+  typedef typename allocator_type::const_pointer    const_pointer;
+  typedef typename allocator_type::reference        reference;
+  typedef typename allocator_type::const_reference  const_reference;
+
+  typedef typename hash_type::size_type             size_type;
+  typedef typename hash_type::difference_type       difference_type;
+  typedef typename hash_type::iterator              iterator;
+  typedef typename hash_type::const_iterator        const_iterator;
+
+  typedef typename hash_type::local_iterator        local_iterator;
+  typedef typename hash_type::const_local_iterator  const_local_iterator;
+
+  explicit
+  unordered_multiset(size_type num_buckets = 0,
+                const hasher& hf = hasher(),
+                const key_equal& eql = key_equal(),
+                const allocator_type& a = allocator_type()):
+    table_(num_buckets,hf,eql,1.F,4.F,a){}
+
+  template <class InputIterator>
+  unordered_multiset(InputIterator f, InputIterator l,
+                size_type num_buckets = 0,
+                const hasher& hf = hasher(),
+                const key_equal& eql = key_equal(),
+                const allocator_type& a = allocator_type()):
+    table_(f,l,true /* multi */,num_buckets,hf,eql,1.F,4.F,a){}
+
+#ifdef _EWL_MOVE
+  unordered_multiset(unordered_multiset&& um) : table_(_STD::move(um.table_)) {}
+  unordered_multiset& operator=(unordered_multiset&& um){swap(_STD::move(um)); return *this;}
+#endif
+
+  allocator_type
+  get_allocator() const
+  { return table_.get_allocator(); }
+
+  // Size and capacity
+  bool
+  empty() const
+  { return table_.empty(); }
+
+  size_type
+  size() const
+  { return table_.size(); }
+
+  size_type
+  max_size() const
+  { return table_.max_size(); }
+
+  // Iterators
+  iterator
+  begin()
+  { return table_.begin();  }
+
+  const_iterator
+  begin() const
+  { return table_.begin(); }
+
+  iterator
+  end()
+  { return table_.end(); }
+
+  const_iterator
+  end() const
+  { return table_.end(); }
+
+  // Modifiers
+  iterator
+  insert(const value_type & obj)
+  { return table_.insert_multi(obj); }
+
+  iterator
+  insert(iterator hint, const value_type & obj)
+  { return table_.insert_multi(hint,obj); }
+
+  const_iterator
+  insert(const_iterator hint, const value_type & obj)
+  { return table_.insert_multi(hint,obj); }
+
+  template<typename InputIterator>
+  void insert(InputIterator first, InputIterator last)
+  { table_.insert_multi(first,last); }
+
+#ifdef _EWL_MOVE
+  iterator
+  insert(value_type&& x)
+  { return table_.insert_multi(_STD::move(x)); }
+
+  iterator
+  insert(iterator p, value_type&& x)
+  { return table_.insert_multi(p, _STD::move(x)); }
+#endif  // _EWL_MOVE
+
+  iterator
+  erase(iterator position)
+  { return table_.erase(position); }
+
+  const_iterator
+  erase(const_iterator position)
+  { return table_.erase(position); }
+
+  size_type
+  erase(const key_type& k)
+  { return table_.erase_multi(k); }
+
+  iterator
+  erase(iterator first, iterator last)
+  { return table_.erase(first,last); }
+
+  const_iterator
+  erase(const_iterator first, const_iterator last)
+  { return table_.erase(first,last); }
+
+  void clear()
+  { table_.clear(); }
+
+#ifdef _EWL_MOVE
+  void
+  swap(unordered_multiset && rhs)
+  {CodeWarrior::swap(table_,rhs.table_); }
+#else
+  void
+  swap(unordered_multiset & rhs)
+  { CodeWarrior::swap(table_,rhs.table_); }
+#endif
+
+  // Observers
+  hasher
+  hash_function() const
+  { return table_.value_hash(); }
+
+  key_equal
+  key_eq() const
+  { return table_.value_comp(); }
+
+  // lookup
+  iterator
+  find(const key_type & k)
+  { return table_.find(k); }
+
+  const_iterator
+  find(const key_type & k) const
+  { return table_.find(k); }
+
+  size_type
+  count(const key_type & k) const
+  { return table_.count_multi(k); }
+
+  _STD::pair<iterator, iterator>
+  equal_range(const key_type & k)
+  { return table_.equal_range(k); }
+
+  _STD::pair<const_iterator,const_iterator>
+  equal_range(const key_type & k) const
+  { return table_.equal_range(k); }
+
+  // bucket interface
+  size_type
+  bucket_count() const
+  { return table_.bucket_count(); }
+
+  size_type
+  max_bucket_count() const
+  { return table_.max_size(); }
+
+  size_type
+  bucket_size(size_type which_bucket) const
+  { return table_.bucket_size(which_bucket); }
+
+  size_type
+  bucket(const key_type & k) const
+  { return table_.bucket(k); }
+
+  local_iterator
+  begin(size_type n)
+  { return table_.begin(n); }
+
+  const_local_iterator
+  begin(size_type n) const
+  { return table_.begin(n); }
+
+  local_iterator
+  end(size_type n)
+  { return table_.end(n); }
+
+  const_local_iterator
+  end(size_type n) const
+  { return table_.end(n); }
+
+  // hash policy
+  float
+  load_factor() const
+  { return table_.load_factor(); }
+
+  float
+  max_load_factor() const
+  { return table_.load_factor_limit(); }
+
+  void
+  max_load_factor(float z)
+  { table_.load_factor_limit(z); }
+
+  void
+  rehash(size_type n)
+  { table_.bucket_count(n); }
+
+};
+
+template <class Value, class Hash, class Pred, class Alloc>
+void swap(unordered_multiset<Value, Hash, Pred, Alloc>& x,
+          unordered_multiset<Value, Hash, Pred, Alloc>& y)
+{
+  x.swap(y);
+}
+
+#ifdef _EWL_MOVE
+
+template <class Value, class Hash, class Pred, class Alloc>
+void swap(unordered_multiset<Value, Hash, Pred, Alloc>&& x,
+          unordered_multiset<Value, Hash, Pred, Alloc>& y)
+{
+  y.swap(_STD::move(x));
+}
+
+template <class Value, class Hash, class Pred, class Alloc>
+void swap(unordered_multiset<Value, Hash, Pred, Alloc>& x,
+          unordered_multiset<Value, Hash, Pred, Alloc>&& y)
+{
+  x.swap(_STD::move(y));
+}
+
+#endif
+
+_EWL_END_TR1_NAMESPACE
+
+} // extern "C++"
+
+#endif  // __CWCC__ >= 0x3200
+
+#ifdef _EWL_FORCE_ENUMS_ALWAYS_INT
+	#pragma enumsalwaysint reset
+#endif
+
+#ifdef _EWL_FORCE_ENABLE_BOOL_SUPPORT
+	#pragma bool reset
+#endif
+
+#ifdef __CWCC__
+#pragma options align=reset
+#endif
+
+#endif // _UNORDERED_SET

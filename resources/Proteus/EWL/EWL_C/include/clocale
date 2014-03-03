@@ -1,0 +1,256 @@
+/* EWL
+ * Copyright © 1995-2009 Freescale Corporation.  All rights reserved.
+ *
+ * $Date: 2012/06/01 15:39:37 $
+ * $Revision: 1.1 $
+ */
+
+#ifndef _EWL_CLOCALE
+#define _EWL_CLOCALE
+
+#include <ansi_parms.h>
+
+#if !_EWL_USING_CW_C_HEADERS_
+
+	#include <locale.h>
+
+	#if _EWL_PUT_THIRD_PARTY_C_IN_STD
+		#include <ewl_cpp_std_locale.h>
+	#endif
+	
+#elif _AEABI_PORTABILITY_LEVEL
+
+	#include <arm/clocale_aeabi>
+
+#else
+
+#include <null.h>
+
+_EWL_BEGIN_NAMESPACE_STD
+_EWL_BEGIN_EXTERN_C
+
+#ifndef LC_FIRST
+	#define LC_FIRST		0
+#endif
+#ifndef LC_COLLATE
+	#define LC_COLLATE		0x01
+#endif
+#ifndef LC_CTYPE
+	#define LC_CTYPE		0x02
+#endif
+#ifndef LC_MONETARY
+	#define LC_MONETARY		0x04
+#endif
+#ifndef LC_NUMERIC
+	#define LC_NUMERIC		0x08
+#endif
+#ifndef LC_TIME
+	#define LC_TIME			0x10
+#endif
+#ifndef LC_ALL
+	#define LC_ALL			0x1F
+#endif
+#ifndef LC_LAST
+	#define LC_LAST			LC_ALL
+#endif
+
+#pragma pack(push,4)
+
+	struct lconv
+	{
+		/** The decimal-point character used to format nonmonetary quantities.
+		 */
+		char *decimal_point;
+
+		/** The character used to separate groups of digits before the decimal-point
+		 *	character in formatted nonmonetary quantities.
+		 */
+		char *thousands_sep;
+
+		/** A string whose elements indicate the size of each group of digits in
+		 *	formatted nonmonetary quantities.
+		 */
+		char *grouping;
+
+		/** The decimal-point used to format monetary quantities.
+		 */
+		char *mon_decimal_point;
+
+		/** The separator for groups of digits before the decimal-point in formatted
+		 *	monetary quantities.
+		 */
+		char *mon_thousands_sep;
+
+		/** A string whose elements indicate the size of each group of digits in
+		 *	formatted monetary quantities.
+		 */
+		char *mon_grouping;
+
+		/** The string used to indicate a nonnegative-valued formatted monetary quantity.
+		 */
+		char *positive_sign;
+
+		/** The string used to indicate a negative-valued formatted monetary quantity.
+		 */
+		char *negative_sign;
+
+		/** The local currency symbol applicable to the current locale.
+		 */
+		char *currency_symbol;
+
+		/** The number of fractional digits (those after the decimal-point) to be
+		 *	displayed in a locally formatted monetary quantity.
+		 */
+		char frac_digits;
+
+		/** Set to 1 or 0 if the currency_symbol respectively precedes or
+		 *	succeeds the value for a nonnegative locally formatted monetary quantity.
+		 */
+		char p_cs_precedes;
+
+		/** Set to 1 or 0 if the currency_symbol respectively precedes or
+		 *	succeeds the value for a negative locally formatted monetary quantity.
+		 */
+		char n_cs_precedes;
+
+		/**	Set to a value indicating the separation of the currency_symbol, the sign
+		 *	string, and the value for a nonnegative locally formatted monetary quantity.
+		 */
+		char p_sep_by_space;
+
+		/**	Set to a value indicating the separation of the currency_symbol, the sign
+		 *	sign string, and the value for a negative locally formatted monetary quantity.
+		 */
+		char n_sep_by_space;
+
+		/**	Set to a value indicating the positioning of the positive_sign for a
+		 *	nonnegative locally formatted monetary quantity.
+		 */
+		char p_sign_posn;
+
+		/** Set to a value indicating the positioning of the negative_sign for a
+		 *	negative locally formatted monetary quantity.
+		 */
+		char n_sign_posn;
+
+		/** The international currency symbol applicable to the current locale. The
+		 * 	first three characters contain the alphabetic international currency symbol
+		 *	in accordance with those specified in ISO 4217. The fourth character
+		 *	(immediately preceding the null character) is the character used to separate
+		 *	the international currency symbol from the monetary quantity.
+		 */
+		char *int_curr_symbol;
+
+		/**	The number of fractional digits (those after the decimal-point) to be
+		 *	displayed in an internationally formatted monetary quantity.
+		 */
+		char int_frac_digits;
+
+#if _EWL_C99
+		/**	Set to 1 or 0 if the int_curr_symbol respectively precedes or succeeds
+		 *	the value for a nonnegative internationally formatted monetary quantity.
+		 */
+		char int_p_cs_precedes;
+
+		/**	Set to 1 or 0 if the int_curr_symbol respectively precedes or succeeds
+		 * the value for a negative internationally formatted monetary quantity.
+		 */
+		char int_n_cs_precedes;
+
+		/**	Set to a value indicating the separation of the int_curr_symbol, the
+		 *	sign string, and the value for a nonnegative internationally formatted
+		 *	monetary quantity.
+		 */
+		char int_p_sep_by_space;
+
+		/**	Set to a value indicating the separation of the int_curr_symbol, the sign
+		 *	string, and the value for a negative internationally formatted monetary quantity.
+		 */
+		char int_n_sep_by_space;
+
+		/**	Set to a value indicating the positioning of the positive_sign for a
+		 *	nonnegative internationally formatted monetary quantity.
+		 */
+		char int_p_sign_posn;
+
+		/**	Set to a value indicating the positioning of the negative_sign for a
+		 *	negative internationally formatted monetary quantity.
+		 */
+		char int_n_sign_posn;
+#endif /* _EWL_C99 */
+
+	};
+
+#pragma pack(pop)
+
+	/**	The setlocale function selects the appropriate portion of the program’s locale as
+	 *	specified by the category and locale arguments. The setlocale function may be
+	 *	used to change or query the program’s entire current locale or portions thereof.
+	 *	The value LC_ALL for category names the program’s entire locale; the other values for
+	 *	category name only a portion of the program’s locale. LC_COLLATE affects the
+	 *	behavior of the strcoll and strxfrm functions. LC_CTYPE affects the behavior of
+	 *	the character handling functions and the multibyte and wide character functions.
+	 *	LC_MONETARY affects the monetary formatting information returned by the
+	 *	localeconv function. LC_NUMERIC affects the decimal-point character for the
+	 *	formatted input/output functions and the string conversion functions, as well as the
+	 *	nonmonetary formatting information returned by the localeconv function. LC_TIME
+	 *	affects the behavior of the strftime and wcsftime functions.
+	 *	A value of "C" for locale specifies the minimal environment for C translation; a value
+	 *	of "" for locale specifies the locale-specific native environment. Other
+	 *	implementation-defined strings may be passed as the second argument to setlocale.
+	 *
+	 *	When _EMBEDDED_WARRIOR_HAS_NO_LOCALE is defined only the "C" locale is supported
+	 *	and no explicit current locale is kept, affecting wide char and time functionality.
+	 *
+	 *	When _EWL_C_LOCALE_ONLY and _EMBEDDED_WARRIOR_HAS_NO_LOCALE are undefined, the following
+	 *	locales are supported: "", "C", "C-UTF-8"
+	 */
+	_EWL_IMP_EXP_C char * _EWL_CDECL setlocale(int category, const char *locale) _EWL_CANT_THROW;
+
+	/** The localeconv function sets the components of an object with type struct lconv
+	 *	with values appropriate for the formatting of numeric quantities (monetary and
+	 *	otherwise) according to the rules of the current locale.
+	 *
+	 *	When _EMBEDDED_WARRIOR_HAS_NO_LOCALE is defined only the "C" locale is supported
+	 *  and localeconv returns this struct : 
+	 *		{
+	 *		"."			decimal_point
+	 *		nullstring	thousands_sep
+	 *		nullstring	grouping
+	 *		nullstring	mon_decimal_point
+	 *		nullstring	mon_thousands_sep
+	 *		nullstring	mon_grouping
+	 *		nullstring	positive_sign
+	 *		nullstring	negative_sign
+	 *		nullstring	currency_symbol
+	 *		CHAR_MAX	frac_digits
+	 *		CHAR_MAX	p_cs_precedes
+	 *		CHAR_MAX	n_cs_precedes
+	 *		CHAR_MAX	p_sep_by_space
+	 *		CHAR_MAX	n_sep_by_space
+	 *		CHAR_MAX	p_sign_posn
+	 *		CHAR_MAX	n_sign_posn
+	 *		nullstring	int_curr_symbol
+	 *		CHAR_MAX	int_frac_digits
+	 *		CHAR_MAX	int_p_cs_precedes
+	 *		CHAR_MAX	int_n_cs_precedes
+	 *		CHAR_MAX	int_p_sep_by_space
+	 *		CHAR_MAX	int_n_sep_by_space
+	 *		CHAR_MAX	int_p_sign_posn
+	 *		CHAR_MAX	int_n_sign_posn
+	 *		};
+	 *	where all nullstring refer to the same .rodata location and CHAR_MAX indicates
+	 *	unavailability.
+	 */
+	_EWL_IMP_EXP_C struct lconv * _EWL_CDECL localeconv(void) _EWL_CANT_THROW;
+
+_EWL_END_EXTERN_C
+_EWL_END_NAMESPACE_STD
+
+#if defined(_EWL_EXPORT_CNAMES) && defined(__cplusplus) && defined(_EWL_USING_NAMESPACE)
+#include <locale.h>
+#endif /*  defined(_EWL_EXPORT_CNAMES) && defined(__cplusplus) && defined(_EWL_USING_NAMESPACE) */
+
+#endif /* _EWL_USING_CW_C_HEADERS_ */
+
+#endif /* _EWL_CLOCALE */

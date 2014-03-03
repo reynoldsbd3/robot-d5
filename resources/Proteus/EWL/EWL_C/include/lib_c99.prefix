@@ -1,0 +1,25 @@
+/* EWL
+ * Copyright © 1995-2009 Freescale Corporation.  All rights reserved.
+ *
+ * $Date: 2012/06/01 15:39:38 $
+ * $Revision: 1.1 $
+ */
+
+#define _EWL_WIDE_CHAR							1
+#define _EWL_C99								1
+#define _EWL_C99_PRINTF_SCANF					1
+#define __STDC_WANT_LIB_EXT1__					1
+#define _EWL_FLOATING_POINT_PRINTF_SCANF		1
+#define __pformatter_s							__pformatter
+#define __sformatter_s							__sformatter
+#define _EWL_LONGLONG_PRINTF_SCANF				1
+#define _EWL_FLOATING_POINT						1
+#define _EMBEDDED_WARRIOR_CTYPE					0
+#define _EMBEDDED_WARRIOR_MEMFUNCS				0
+#define _EWL_TR1_NAMESPACE						1
+
+#if __COLDFIRE__ || __PPC_EABI__ || __arm || __arm__
+#define _EWL_USES_MSL_GLUE			1
+#endif
+#include <common.prefix>
+#include <ewl_c_version.h>

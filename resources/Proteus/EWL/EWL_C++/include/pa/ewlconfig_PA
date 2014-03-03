@@ -1,0 +1,247 @@
+/* EWL
+ * Copyright © 1995-2009 Freescale Corporation.  All rights reserved.
+ *
+ * $Date: 2012/06/01 16:03:01 $
+ * $Revision: 1.1 $ 
+ */
+
+#ifndef _EWLCONFIG_PA
+#define _EWLCONFIG_PA
+
+#include <ansi_parms.h>
+
+//	#define _EWL_DEBUG
+
+	// define _EWL_USING_EWL_C if using EWL for the C lib
+    #define _EWL_USING_EWL_C
+
+	#define _EWL_USING_NAMESPACE  // uncomment if C in std (defined in C lib for Pro)
+//	#define _EWL_NO_CPP_NAMESPACE // uncomment if C++ in global namespace
+
+	#define _EWL_FORCE_ENUMS_ALWAYS_INT       0
+	#define _EWL_FORCE_ENABLE_BOOL_SUPPORT    1
+
+		#ifdef _EWL_FORCE_ENUMS_ALWAYS_INT
+			#if _EWL_FORCE_ENUMS_ALWAYS_INT
+				#pragma enumsalwaysint on
+			#else
+				#pragma enumsalwaysint off
+			#endif
+		#endif
+
+		#ifdef _EWL_FORCE_ENABLE_BOOL_SUPPORT
+			#if _EWL_FORCE_ENABLE_BOOL_SUPPORT
+				#pragma bool on
+			#else
+				#pragma bool off
+			#endif
+		#endif
+
+	#if !__option(exceptions)
+		// Recompile the C++ lib when flipping this switch
+		#define _EWL_NO_EXCEPTIONS
+	#endif
+	#if !__option(bool)
+		// Recompile the C++ lib when flipping this switch
+		#define _EWL_NO_BOOL
+	#endif
+	#if !__option(wchar_type)
+		// Recompile the C++ lib when flipping this switch
+		#define _EWL_NO_WCHART_LANG_SUPPORT
+	#endif
+
+	#if defined(_EWL_WIDE_CHAR) && !_EWL_WIDE_CHAR && !defined(_EWL_NO_WCHART_C_SUPPORT)
+		#define _EWL_NO_WCHART_C_SUPPORT
+	#endif
+//	#define _EWL_NO_WCHART_CPP_SUPPORT
+
+
+	#ifdef _EWL_USING_EWL_C
+		#if !_EWL_C99
+			#define _EWL_CX_LIMITED_RANGE
+		#endif
+	#endif
+
+	// This environment lacks the C99 math support to handle not
+	// having this flag on
+	#ifndef _EWL_CX_LIMITED_RANGE
+		#define _EWL_CX_LIMITED_RANGE
+	#endif
+
+	#ifndef _EWL_LITTLE_ENDIAN
+		#if __option(little_endian)
+			#define _EWL_LITTLE_ENDIAN 1
+		#else
+			#define _EWL_LITTLE_ENDIAN 0
+		#endif
+	#endif
+
+	#if _EWL_THREADSAFE
+		// Recompile the C++ lib when flipping this switch
+		#ifndef _EWL_SINGLE_THREAD
+			#ifndef _EWL_USE_PTHREADS
+				#define _EWL_USE_PTHREADS
+			#endif
+		#endif
+	#endif
+
+	#define _EWL_HAS_GETDATETIME
+
+	#define _EWL_NO_TIME_SUPPORT
+	
+	// _EWL_SHARED_PTR_HAS_MUTEX
+	// When defined, std::tr1::shared_ptr has an internal mutex per shared count
+	// that will protect the count in a multi-threaded program.  This is not
+	// turned on by default even when in multi-threaded mode because it may be
+	// more effcient to protect the shared_ptr at a higher level, or not at all
+	// if it is not used across threads.  Recompile the C++ lib when flipping this
+	// switch.
+//	#define _EWL_SHARED_PTR_HAS_MUTEX
+
+	// _EWL_MINIMUM_NAMED_LOCALE when defined, turns off all of the named locale
+	// stuff except for "C" and "" (which will be the same as "C")
+#if _EWL_C_LOCALE_ONLY
+	#define _EWL_MINIMUM_NAMED_LOCALE
+#endif
+	// _EWL_NO_LOCALE will create a C++ lib which does not have locale capability
+	// This will reduce the size of the lib for those apps not wishing to take
+	// advantage of this part of the C++ lib.  Code savings can be on the order of
+	// 50 to 80 Kb.  This switch should also be set when building the C++ lib as a
+	// shared lib.
+	// Recompile the C++ lib when flipping this switch
+
+//#if _EWL_C_LOCALE_ONLY	
+//	#define _EWL_NO_LOCALE
+//#endif
+
+	// _EWL_EXTENDED_PRECISION_OUTP allows the output of floating point output to
+	// be printed with precision greater than DECIMAL_DIG.  With this option, an
+	// exact binary to decimal conversion can be performed (by bumping precision
+	// high enough).  The cost is about 5-6Kb in code size.
+	// Recompile the C++ lib when flipping this switch
+//	#define _EWL_EXTENDED_PRECISION_OUTP
+
+	// _Inhibit_Container_Optimization, if uncommented will disable pointer
+	// specializations in the containers.  This may make debugging easier.
+	// Recompile the C++ lib when flipping this switch
+//	#define _Inhibit_Container_Optimization
+
+	// _EWL_NO_VECTOR_BOOL, if uncommented will disable the standard vector<bool>
+	// partial specialization.  You can still instantiate vector<bool>, but it will
+	// not have the space optimization of one bool per bit.  No need to recompile
+	// the C++ lib when flipping this switch, but do remake any precompiled headers
+	// you might be using.
+//	#define _EWL_NO_VECTOR_BOOL
+
+	// _Inhibit_Optimize_RB_bit is a space optimization that compacts the red/black
+	// flag with the parent pointer in each node.  By uncommenting this
+	// define, the optimization is turned off, and the red/black flag will
+	// be stored as an enum in each node.
+//	#define _Inhibit_Optimize_RB_bit
+
+//	#define _EWL_ARRAY_AUTO_PTR
+
+	// _EWL_USE_AUTO_PTR_96 will disable the standard auto_ptr and enable the
+	// version of auto_ptr that appeared in the Dec. '96 CD2.
+//	#define _EWL_USE_AUTO_PTR_96
+
+	// _EWL_EXTENDED_BINDERS adds defaulted template parameters to binder1st
+	// and binder2nd.  This allows client code to alter the type of the value
+	// that is stored.  This is especially useful when you want the binder to
+	// store the value by const reference instead of by value to save on an
+	// expensive copy construction.  This also allows for the use of polymorphic
+	// operators by specifying reference types for the operator.
+	#define _EWL_EXTENDED_BINDERS
+
+	// _EWL_RAW_ITERATORS if defined will cause string and vector to use pointers
+	// for their iterators, else nested classes are used.  The nested classes behave
+	// a little better with respect to Koenig lookup.
+//	#define _EWL_RAW_ITERATORS
+
+	#define _EWL_NO_TEMPLATE_FRIENDS
+//	#define _EWL_NO_THROW_SPECS
+//	#define _EWL_NO_EXPLICIT_FUNC_TEMPLATE_ARG
+//	#define _EWL_MUST_INLINE_MEMBER_TEMPLATE
+
+//	#define _EWL_NO_IO
+
+#if !_EWL_OS_DISK_FILE_SUPPORT
+	#define _EWL_NO_FILE_IO
+#endif
+	
+#if !_EWL_CONSOLE_SUPPORT	
+	#define _EWL_NO_CONSOLE_IO
+#endif
+
+#ifndef _EWL_NO_FILE_IO
+
+//	#define _EWL_POSIX_STREAM
+//	#define _EWL_CFILE_STREAM
+//	#define _EWL_WIDE_FILENAME
+
+	// Define _EWL_LL_FILE_SUPPORT to 0 to insist that streamoff be defined as a long
+	// Define _EWL_LL_FILE_SUPPORT to 1 to insist that streamoff be defined as a long long
+	// Leave _EWL_LL_FILE_SUPPORT undefined to let the library decide what it will be.  The
+	// library will make streamoff a long long if long long support is enabled.
+//	#define _EWL_LL_FILE_SUPPORT 0
+//	#define _EWL_LL_FILE_SUPPORT 1
+
+#endif
+
+#if !_EWL_FLOATING_POINT
+	#define _EWL_NO_FLOATING_POINT
+#endif
+		#ifdef _EWL_FORCE_ENUMS_ALWAYS_INT
+			#pragma enumsalwaysint reset
+		#endif
+
+		#ifdef _EWL_FORCE_ENABLE_BOOL_SUPPORT
+			#pragma bool reset
+		#endif
+
+
+
+#ifdef _EWL_NO_EXCEPTIONS
+
+	#ifndef _EWL_ERROR_FUNC
+		#define _EWL_ERROR_FUNC 0
+	#endif
+
+#if _EWL_OS_DISK_FILE_SUPPORT	
+	#include <cstdio>
+#endif
+
+	#include <cstdlib>
+
+	#ifndef _EWL_NO_CPP_NAMESPACE
+		namespace std {
+	#endif
+
+	#if _EWL_ERROR_FUNC == 0
+
+		inline
+		void
+		__ewl_error(const char* 
+
+		#if _EWL_OS_DISK_FILE_SUPPORT
+		str
+		#endif
+
+		)
+
+		{
+		#if _EWL_OS_DISK_FILE_SUPPORT
+			fprintf(stderr, str);
+		#endif
+			abort();
+		}
+
+	#endif
+
+	#ifndef _EWL_NO_CPP_NAMESPACE
+		} // namespace std
+	#endif
+
+#endif
+
+#endif //// ewlconfig_PA

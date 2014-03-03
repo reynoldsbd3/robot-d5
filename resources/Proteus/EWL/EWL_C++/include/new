@@ -1,0 +1,172 @@
+/* EWL
+ * Copyright © 1995-2009 Freescale Corporation.  All rights reserved.
+ *
+ * $Date: 2012/07/12 22:31:16 $
+ * $Revision: 1.3 $
+ */
+
+#ifndef _NEW
+#define _NEW
+
+#ifdef __CWCC__
+#pragma warn_undefmacro off
+#endif
+
+/*  new synopsis
+
+namespace std
+{
+
+class bad_alloc
+	: public exception
+{
+public:
+	bad_alloc() throw();
+	bad_alloc(const bad_alloc&) throw();
+	bad_alloc& operator=(const bad_alloc&) throw();
+	virtual ~bad_alloc() throw();
+	virtual const char* what() const throw();
+};
+
+struct nothrow_t {};
+extern const nothrow_t nothrow;
+
+typedef void (*new_handler)();
+new_handler set_new_handler(new_handler new_p) throw();
+
+}  // std
+
+void* operator new(std::size_t size) throw(std::bad_alloc);
+void* operator new(std::size_t size, const std::nothrow_t&) throw();
+
+void  operator delete(void* ptr) throw();
+void  operator delete(void* ptr, const std::nothrow_t&) throw();
+
+void* operator new[](std::size_t size) throw(std::bad_alloc);
+void* operator new[](std::size_t size, const std::nothrow_t&) throw();
+
+void  operator delete[](void* ptr) throw();
+void  operator delete[](void* ptr, const std::nothrow_t&) throw();
+
+void* operator new  (std::size_t size, void* ptr) throw();
+void* operator new[](std::size_t size, void* ptr) throw();
+
+void  operator delete  (void* ptr, void*) throw();
+void  operator delete[](void* ptr, void*) throw();
+
+*/
+
+#include <ewlconfig>
+#include <cstddef>
+#include <exception> 
+
+#ifdef __CWCC__
+#pragma options align=native
+
+#ifdef _EWL_FORCE_ENUMS_ALWAYS_INT
+	#if _EWL_FORCE_ENUMS_ALWAYS_INT
+		#pragma enumsalwaysint on
+	#else
+		#pragma enumsalwaysint off
+	#endif
+#endif  // _EWL_FORCE_ENUMS_ALWAYS_INT
+
+#ifdef _EWL_FORCE_ENABLE_BOOL_SUPPORT
+	#if _EWL_FORCE_ENABLE_BOOL_SUPPORT
+		#pragma bool on
+	#else
+		#pragma bool off
+	#endif
+#endif  // _EWL_FORCE_ENABLE_BOOL_SUPPORT
+#endif
+
+#ifdef __GNUC__
+extern "C++" {	// some GCC implementation assume we're in extern "C" because some headers have .h as extension
+#endif // __GNUC__
+
+#ifndef _EWL_NO_CPP_NAMESPACE
+	_EWL_BEGIN_NAMESPACE_STD
+#endif
+
+	class bad_alloc : public exception {
+	public:
+		bad_alloc () _EWL_NO_THROW {}
+		bad_alloc (const bad_alloc&) _EWL_NO_THROW {}
+		bad_alloc& operator= (const bad_alloc&) _EWL_NO_THROW {return *this;}
+		virtual ~bad_alloc () _EWL_NO_THROW {};
+		virtual const char* what () const _EWL_NO_THROW {return "bad_alloc";}
+	};
+
+	struct nothrow_t {}; 
+	extern _EWL_IMP_EXP_RUNTIME nothrow_t nothrow;
+
+	typedef void (*new_handler)();
+
+	_EWL_IMP_EXP_RUNTIME new_handler set_new_handler(new_handler new_p) _EWL_NO_THROW;
+
+#ifndef _EWL_NO_CPP_NAMESPACE
+	_EWL_END_NAMESPACE_STD
+#endif
+
+
+#ifndef _EWL_NO_THROW_SPECS
+	_EWL_IMP_EXP_RUNTIME void* operator new(_CSTD::size_t size) throw(_STD::bad_alloc);
+#else
+	_EWL_IMP_EXP_RUNTIME void* operator new(_CSTD::size_t size);
+#endif
+
+_EWL_IMP_EXP_RUNTIME void* operator new(_CSTD::size_t size, const _STD::nothrow_t&) _EWL_NO_THROW;
+inline void* operator new(_CSTD::size_t, void* ptr) _EWL_NO_THROW {return ptr;}
+
+_EWL_IMP_EXP_RUNTIME void  operator delete(void* ptr) _EWL_NO_THROW;
+
+_EWL_IMP_EXP_RUNTIME void  operator delete(void* ptr, const _STD::nothrow_t&) _EWL_NO_THROW;
+inline void  operator delete  (void*, void*) _EWL_NO_THROW {}
+
+#ifndef _EWL_NO_THROW_SPECS
+	_EWL_IMP_EXP_RUNTIME void* operator new[](_CSTD::size_t size) throw(_STD::bad_alloc);
+#else
+	_EWL_IMP_EXP_RUNTIME void* operator new[](_CSTD::size_t size);
+#endif
+
+_EWL_IMP_EXP_RUNTIME void* operator new[](_CSTD::size_t size, const _STD::nothrow_t&) _EWL_NO_THROW;
+inline void* operator new[](_CSTD::size_t, void* ptr) _EWL_NO_THROW {return ptr;}
+
+_EWL_IMP_EXP_RUNTIME void  operator delete[](void* ptr) _EWL_NO_THROW;
+
+_EWL_IMP_EXP_RUNTIME void  operator delete[](void* ptr, const _STD::nothrow_t&) _EWL_NO_THROW;
+inline void  operator delete[](void*, void*) _EWL_NO_THROW {}
+
+#ifndef _EWL_NO_CPP_NAMESPACE
+	_EWL_BEGIN_NAMESPACE_STD
+#endif
+
+//	non-standard functions
+extern char __throws_bad_alloc;
+extern void __throw_bad_alloc();
+extern void _set_newpoolsize(size_t);       //  default: 0x00010000L
+extern void _set_newnonptrmax(size_t);      //  default: 0x00001000L
+extern char _prealloc_newpool(size_t);      //  preallocte a new buffer
+
+#ifndef _EWL_NO_CPP_NAMESPACE
+	_EWL_END_NAMESPACE_STD
+#endif
+
+#ifdef __GNUC__
+} // extern "C++"
+#endif // __GNUC__
+
+#ifdef __CWCC__
+#ifdef _EWL_FORCE_ENUMS_ALWAYS_INT
+	#pragma enumsalwaysint reset
+#endif
+
+#ifdef _EWL_FORCE_ENABLE_BOOL_SUPPORT
+	#pragma bool reset
+#endif
+
+#pragma options align=reset
+#pragma warn_undefmacro reset
+#endif
+
+#endif // _NEW

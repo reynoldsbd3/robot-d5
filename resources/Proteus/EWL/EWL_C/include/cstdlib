@@ -1,0 +1,627 @@
+/* EWL
+ * Copyright © 1995-2009 Freescale Corporation.  All rights reserved.
+ *
+ * $Date: 2012/06/01 15:39:37 $
+ * $Revision: 1.1 $
+ */
+
+#ifndef _EWL_CSTDLIB
+#define _EWL_CSTDLIB
+
+#ifdef __STARCORE__
+#pragma reject_floats off 
+#endif 
+
+#include <ansi_parms.h>
+
+#if !_EWL_USING_CW_C_HEADERS_
+  #include <stdlib.h>
+
+  #if _EWL_PUT_THIRD_PARTY_C_IN_STD
+    #include <ewl_cpp_std_stdlib.h>
+  #endif
+#else
+
+#include <div_t.h>
+#include <null.h>
+#include <size_t.h>
+#include <ewl_lib_ext1.h>
+#include <ewl_rsize_t.h>
+
+#if _EWL_WIDE_CHAR
+  #include <wchar_t.h>
+#endif
+
+#if _EWL_NEEDS_EXTRAS
+  #include <extras_stdlib.h>
+#endif
+
+#include <stdint.h>
+
+_EWL_BEGIN_NAMESPACE_STD
+_EWL_BEGIN_EXTERN_C
+
+#define RAND_MAX        32767
+
+#if defined(__STDC_WANT_LIB_EXT1__) && __STDC_WANT_LIB_EXT1__
+  #define RAND_MAX_S      32767
+#endif /* __STDC_WANT_LIB_EXT1__ */
+
+#if _AEABI_PORTABILITY_LEVEL
+
+  extern int __aeabi_MB_CUR_MAX(void);
+  #define _EWL_MB_CUR_MAX __aeabi_MB_CUR_MAX()
+
+  /* mandatory portatibility declaration C Library ABI for ARM architecture section 5.1.1 */
+  #define _AEABI_PORTABLE 1
+
+#endif /* _AEABI_PORTABILITY_LEVEL */
+
+#ifndef _EWL_MB_CUR_MAX
+  #define _EWL_MB_CUR_MAX 3
+#endif
+
+#define MB_CUR_MAX          _EWL_MB_CUR_MAX
+
+#define EXIT_SUCCESS      0
+#define EXIT_FAILURE      1
+
+#define _MAX_PATH        1024
+
+#if defined(__STDC_WANT_LIB_EXT1__) && __STDC_WANT_LIB_EXT1__
+
+	typedef void  (*constraint_handler_t)(const char * _EWL_RESTRICT, void * _EWL_RESTRICT, errno_t);
+
+	_EWL_IMP_EXP_C void			_EWL_CDECL  __ewl_runtime_constraint_violation_s(const char * _EWL_RESTRICT, void * _EWL_RESTRICT, errno_t) _EWL_CANT_THROW;
+
+	_EWL_IMP_EXP_C constraint_handler_t _EWL_CDECL  set_constraint_handler_s(constraint_handler_t) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C void			_EWL_CDECL  abort_handler_s(const char * _EWL_RESTRICT, void * _EWL_RESTRICT, errno_t) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C void 		_EWL_CDECL  ignore_handler_s(const char * _EWL_RESTRICT, void * _EWL_RESTRICT, errno_t) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C void			_EWL_CDECL  strict_handler_s(const char * _EWL_RESTRICT, void * _EWL_RESTRICT, errno_t) _EWL_CANT_THROW;
+
+#endif /* defined(__STDC_WANT_LIB_EXT1__) && __STDC_WANT_LIB_EXT1__ */
+
+#if _EWL_FLOATING_POINT
+	/**	The atof function converts the initial portion of the string pointed to by nptr to
+	 *	double representation
+	 */
+	_EWL_IMP_EXP_C double		_EWL_CDECL	atof(const char *nptr) _EWL_CANT_THROW;
+	
+	/** The strtod, strtof, and strtold functions convert the initial portion of the string
+	 *	pointed to by nptr to double, float, and long double representation,
+	 *	respectively. First, they decompose the input string into three parts: an initial, possibly
+	 *	empty, sequence of white-space characters (as specified by the isspace function), a
+	 *	subject sequence resembling a floating-point constant or representing an infinity or NaN;
+	 *	and a final string of one or more unrecognized characters, including the terminating null
+	 *	character of the input string. Then, they attempt to convert the subject sequence to a
+	 *	floating-point number, and return the result.
+	 *
+	 *	The expected form of the subject sequence is an optional plus or minus sign, then one of
+	 *	the following:
+	 *	
+	 *	 a nonempty sequence of decimal digits optionally containing a decimal-point
+	 *		character, then an optional exponent part as defined in 6.4.4.2;
+	 *	
+	 *	 a0x or 0X, then a nonempty sequence of hexadecimal digits optionally containing a
+	 *		decimal-point character, then an optional binary exponent part as defined in 6.4.4.2;
+	 *	
+	 *	 INF or INFINITY, ignoring case
+	 *
+	 *	 NAN or NAN(n-char-sequenceopt), ignoring case in the NAN part, where:
+	 *			n-char-sequence:
+	 *			digit
+	 *			nondigit
+	 *			n-char-sequence digit
+	 *			n-char-sequence nondigit
+	 *
+	 *	The subject sequence is defined as the longest initial subsequence of the input string,
+	 *	starting with the first non-white-space character, that is of the expected form. The subject
+	 *	sequence contains no characters if the input string is not of the expected form.
+	 *
+	 *	If the subject sequence has the expected form for a floating-point number, the sequence of
+	 *	characters starting with the first digit or the decimal-point character (whichever occurs
+	 *	first) is interpreted as a floating constant according to the rules of 6.4.4.2, except that the
+	 *	decimal-point character is used in place of a period, and that if neither an exponent part
+	 *	nor a decimal-point character appears in a decimal floating point number, or if a binary
+	 *	exponent part does not appear in a hexadecimal floating point number, an exponent part
+	 *	of the appropriate type with value zero is assumed to follow the last digit in the string. If
+	 *	the subject sequence begins with a minus sign, the sequence is interpreted as negated.252)
+	 *	A character sequence INF or INFINITY is interpreted as an infinity, if representable in
+	 *	the return type, else like a floating constant that is too large for the range of the return
+	 *	type. A character sequence NAN or NAN(n-char-sequenceopt), is interpreted as a quiet
+	 *	NaN, if supported in the return type, else like a subject sequence part that does not have
+	 *	the expected form; the meaning of the n-char sequences is implementation-defined.253) A
+	 *	pointer to the final string is stored in the object pointed to by endptr, provided that
+	 *	endptr is not a null pointer.
+	 *
+	 *	If the subject sequence has the hexadecimal form and FLT_RADIX is a power of 2, the
+	 *	value resulting from the conversion is correctly rounded.
+	 *
+	 *	In other than the "C" locale, additional locale-specific subject sequence forms may be
+	 *	accepted.
+	 *
+	 *	If the subject sequence is empty or does not have the expected form, no conversion is
+	 *	performed; the value of nptr is stored in the object pointed to by endptr, provided
+	 *	that endptr is not a null pointer.
+	 *
+	 *	The functions return the converted value, if any. If no conversion could be performed,
+	 *	zero is returned. If the correct value is outside the range of representable values, plus or
+	 *	minus HUGE_VAL, HUGE_VALF, or HUGE_VALL is returned (according to the return
+	 *	type and sign of the value), and the value of the macro ERANGE is stored in errno. If
+	 *	the result underflows (7.12.1), the functions return a value whose magnitude is no greater
+	 *	than the smallest normalized positive number in the return type; whether errno acquires
+	 *	the value ERANGE is implementation-defined.
+	 */
+	_EWL_IMP_EXP_C double 		_EWL_CDECL	strtod(const char * _EWL_RESTRICT, char ** _EWL_RESTRICT) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C long double	_EWL_CDECL	strtold(const char * _EWL_RESTRICT, char ** _EWL_RESTRICT) _EWL_CANT_THROW;
+	#if _EWL_C99
+	  _EWL_IMP_EXP_C float 		_EWL_CDECL	strtof(const char * _EWL_RESTRICT, char ** _EWL_RESTRICT) _EWL_CANT_THROW;
+	#endif /* _EWL_C99 */
+#endif /* _EWL_FLOATING_POINT */
+
+	/** The atoi, atol, and atoll functions convert the initial portion of the string pointed
+	 *	to by nptr to int, long int, and long long int representation, respectively.
+	 */
+_EWL_IMP_EXP_C int				_EWL_CDECL  atoi(const char *nptr) _EWL_CANT_THROW;
+_EWL_IMP_EXP_C long				_EWL_CDECL  atol(const char *nptr) _EWL_CANT_THROW;
+
+#if _EWL_LONGLONG
+	_EWL_IMP_EXP_C long long	_EWL_CDECL  atoll(const char *nptr) _EWL_CANT_THROW;
+#endif /* _EWL_LONGLONG */
+
+	/** The strtol, strtoll, strtoul, and strtoull functions convert the initial
+	 *	portion of the string pointed to by nptr to long int, long long int, unsigned
+	 *	long int, and unsigned long long int representation, respectively. First,
+	 *	they decompose the input string into three parts: an initial, possibly empty, sequence of
+	 *	white-space characters (as specified by the isspace function), a subject sequence
+	 *	resembling an integer represented in some radix determined by the value of base, and a
+	 *	final string of one or more unrecognized characters, including the terminating null
+	 *	character of the input string. Then, they attempt to convert the subject sequence to an
+	 *	integer, and return the result.
+	 *	
+	 *	If the value of base is zero, the expected form of the subject sequence is that of an
+	 *	integer constant as described in 6.4.4.1, optionally preceded by a plus or minus sign, but
+	 *	not including an integer suffix. If the value of base is between 2 and 36 (inclusive), the
+	 *	expected form of the subject sequence is a sequence of letters and digits representing an
+	 *	integer with the radix specified by base, optionally preceded by a plus or minus sign,
+	 *	but not including an integer suffix. The letters from a (or A) through z (or Z) are
+	 *	ascribed the values 10 through 35; only letters and digits whose ascribed values are less
+	 *	than that of base are permitted. If the value of base is 16, the characters 0x or 0X may
+	 *	optionally precede the sequence of letters and digits, following the sign if present.
+	 *	
+	 *	The subject sequence is defined as the longest initial subsequence of the input string,
+	 *	starting with the first non-white-space character, that is of the expected form. The subject
+	 *	sequence contains no characters if the input string is empty or consists entirely of white
+	 *	space, or if the first non-white-space character is other than a sign or a permissible letter
+	 *	or digit.
+	 *	
+	 *	If the subject sequence has the expected form and the value of base is zero, the sequence
+	 *	of characters starting with the first digit is interpreted as an integer constant according to
+	 *	the rules of 6.4.4.1. If the subject sequence has the expected form and the value of base
+	 *	is between 2 and 36, it is used as the base for conversion, ascribing to each letter its value
+	 *	as given above. If the subject sequence begins with a minus sign, the value resulting from
+	 *	the conversion is negated (in the return type). A pointer to the final string is stored in the
+	 *	object pointed to by endptr, provided that endptr is not a null pointer.
+	 *	
+	 *	In other than the "C" locale, additional locale-specific subject sequence forms may be
+	 *	accepted.
+	 *	
+	 *	If the subject sequence is empty or does not have the expected form, no conversion is
+	 *	performed; the value of nptr is stored in the object pointed to by endptr, provided
+	 *	that endptr is not a null pointer.
+	 *	
+	 *	The strtol, strtoll, strtoul, and strtoull functions return the converted
+	 *	value, if any. If no conversion could be performed, zero is returned. If the correct value
+	 *	is outside the range of representable values, LONG_MIN, LONG_MAX, LLONG_MIN,
+	 *	LLONG_MAX, ULONG_MAX, or ULLONG_MAX is returned (according to the return type
+	 *	and sign of the value, if any), and the value of the macro ERANGE is stored in errno.
+	 */
+_EWL_IMP_EXP_C long  			_EWL_CDECL  strtol(const char * _EWL_RESTRICT, char ** _EWL_RESTRICT, int) _EWL_CANT_THROW;
+_EWL_IMP_EXP_C unsigned long 	_EWL_CDECL  strtoul(const char * _EWL_RESTRICT, char ** _EWL_RESTRICT, int) _EWL_CANT_THROW;
+
+#if _EWL_LONGLONG
+  _EWL_IMP_EXP_C long long		_EWL_CDECL  strtoll(const char * _EWL_RESTRICT, char ** _EWL_RESTRICT, int) _EWL_CANT_THROW;
+  _EWL_IMP_EXP_C unsigned long long _EWL_CDECL  strtoull(const char * _EWL_RESTRICT, char ** _EWL_RESTRICT, int) _EWL_CANT_THROW;
+#endif /* _EWL_LONGLONG */
+
+	/** The rand function computes a sequence of pseudo-random integers in the range 0 to RAND_MAX.
+	 */
+_EWL_IMP_EXP_C int 				_EWL_CDECL	rand(void) _EWL_CANT_THROW;
+
+	/** The srand function uses the argument as a seed for a new sequence of pseudo-random
+	 *	numbers to be returned by subsequent calls to rand. If srand is then called with the
+	 *	same seed value, the sequence of pseudo-random numbers shall be repeated. If rand is
+	 *	called before any calls to srand have been made, the same sequence shall be generated
+	 *	as when srand is first called with a seed value of 1.
+	 */
+_EWL_IMP_EXP_C void 			_EWL_CDECL	srand(unsigned int) _EWL_CANT_THROW;
+
+	/** The calloc function allocates space for an array of nmemb objects, each of whose size
+	 * is size. The space is initialized to all bits zero.
+	 * The calloc function returns either a null pointer or a pointer to the allocated space.
+	 */
+_EWL_IMP_EXP_C void * 			_EWL_CDECL	calloc(size_t , size_t) _EWL_CANT_THROW;
+
+	/** The free function causes the space pointed to by ptr to be deallocated, that is, made
+	 *	available for further allocation. If ptr is a null pointer, no action occurs. Otherwise, if
+	 *	the argument does not match a pointer earlier returned by the calloc, malloc, or
+	 *	realloc function, or if the space has been deallocated by a call to free or realloc,
+	 *	the behavior is undefined.
+	 */
+_EWL_IMP_EXP_C void 			_EWL_CDECL	free(void *) _EWL_CANT_THROW;
+
+	/** The malloc function allocates space for an object whose size is specified by size and
+	 *	whose value is indeterminate.
+	 *	The malloc function returns either a null pointer or a pointer to the allocated space.
+	 */
+_EWL_IMP_EXP_C void * 			_EWL_CDECL	malloc(size_t) _EWL_CANT_THROW;
+
+	/** The realloc function deallocates the old object pointed to by ptr and returns a
+	 *	pointer to a new object that has the size specified by size. The contents of the new
+	 *	object shall be the same as that of the old object prior to deallocation, up to the lesser of
+	 *	the new and old sizes. Any bytes in the new object beyond the size of the old object have
+	 *	indeterminate values.
+	 *
+	 *	If ptr is a null pointer, the realloc function behaves like the malloc function for the
+	 *	specified size. Otherwise, if ptr does not match a pointer earlier returned by the
+	 *	calloc, malloc, or realloc function, or if the space has been deallocated by a call
+	 *	to the free or realloc function, the behavior is undefined. If memory for the new
+	 *	object cannot be allocated, the old object is not deallocated and its value is unchanged.
+	 *
+	 *	The realloc function returns a pointer to the new object (which may have the same
+	 *	value as a pointer to the old object), or a null pointer if the new object could not be
+	 *	allocated.
+	 */
+_EWL_IMP_EXP_C void * 			_EWL_CDECL	realloc(void *, size_t) _EWL_CANT_THROW;
+
+#if !_EMBEDDED_WARRIOR_MALLOC
+
+	#if !_EWL_CLASSIC_MALLOC
+		_EWL_IMP_EXP_C size_t 			_EWL_CDECL	__msize(void *) _EWL_CANT_THROW;
+	#endif /* _EWL_CLASSIC_MALLOC */
+	 
+	#ifndef _EWL_ALLOCATE_SIZE
+	  #define _EWL_ALLOCATE_SIZE __allocate_size
+	#endif
+
+	#ifndef _EWL_ALLOCATE
+	  #define _EWL_ALLOCATE __allocate
+	#endif
+
+	#ifndef _EWL_ALLOCATE_RESIZE
+	  #define _EWL_ALLOCATE_RESIZE __allocate_resize
+	#endif
+
+	#ifndef _EWL_ALLOCATE_EXPAND
+	  #define _EWL_ALLOCATE_EXPAND __allocate_expand
+	#endif
+
+	_EWL_IMP_EXP_C size_t _EWL_CDECL _EWL_ALLOCATE_SIZE(void*) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C void* _EWL_CDECL _EWL_ALLOCATE(size_t, size_t*) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C int _EWL_CDECL _EWL_ALLOCATE_RESIZE(void*, size_t, size_t*) _EWL_CANT_THROW;
+	_EWL_IMP_EXP_C int _EWL_CDECL _EWL_ALLOCATE_EXPAND(void*, size_t, size_t, size_t*) _EWL_CANT_THROW;
+
+#endif /* !_EMBEDDED_WARRIOR_MALLOC && !_EWL_CLASSIC_MALLOC */
+
+#ifdef __VEC__
+  /* AltiVec memory-related routines which 16-byte align the blocks. */
+  _EWL_IMP_EXP_C void * _EWL_CDECL  vec_calloc(size_t, size_t) _EWL_CANT_THROW;
+  _EWL_IMP_EXP_C void   _EWL_CDECL  vec_free(void *) _EWL_CANT_THROW;
+  _EWL_IMP_EXP_C void * _EWL_CDECL  vec_malloc(size_t) _EWL_CANT_THROW;
+  _EWL_IMP_EXP_C void * _EWL_CDECL  vec_realloc(void *, size_t) _EWL_CANT_THROW;
+
+  #if _EWL_USE_INLINE && _EWL_MALLOC_IS_ALTIVEC_ALIGNED
+    _EWL_INLINE void * _EWL_CDECL   vec_calloc(size_t _nmemb, size_t _size) _EWL_CANT_THROW { return calloc(_nmemb, _size); }
+    _EWL_INLINE void   _EWL_CDECL   vec_free(void* _ptr) _EWL_CANT_THROW { free(_ptr); }
+    _EWL_INLINE void * _EWL_CDECL   vec_malloc(size_t _size) _EWL_CANT_THROW { return malloc(_size); }
+    _EWL_INLINE void * _EWL_CDECL   vec_realloc(void* _ptr, size_t _size) _EWL_CANT_THROW { return realloc(_ptr, _size); }
+  #endif /* _EWL_USE_INLINE && _EWL_MALLOC_IS_ALTIVEC_ALIGNED */
+#endif /* __VEC__ */
+
+	/** The abort function causes abnormal program termination to occur, unless the signal
+	 *	SIGABRT is being caught and the signal handler does not return. Whether open streams
+	 *	with unwritten buffered data are flushed, open streams are closed, or temporary files
+	 *	are removed is implementation-defined. An implementation-defined form of the status
+	 *	unsuccessful termination is returned to the host environment by means of the function
+	 *	call raise(SIGABRT).
+	 */
+	_EWL_IMP_EXP_C void _EWL_CDECL    abort(void) _EWL_CANT_THROW;
+	
+	/** The atexit function registers the function pointed to by func, to be called without
+	 *	arguments at normal program termination.
+	 */
+	_EWL_IMP_EXP_C int  _EWL_CDECL    atexit(void (_EWL_CDECL *func)(void)) _EWL_CANT_THROW;
+
+	/** The exit function causes normal program termination to occur. If more than one call to
+	 *	the exit function is executed by a program, the behavior is undefined.
+	 *	
+	 *	First, all functions registered by the atexit function are called, in the reverse order of
+	 *	their registration,256) except that a function is called after any previously registered
+	 *	functions that had already been called at the time it was registered. If, during the call to
+	 *	any such function, a call to the longjmp function is made that would terminate the call
+	 *	to the registered function, the behavior is undefined.
+	 *	
+	 *	Next, all open streams with unwritten buffered data are flushed, all open streams are
+	 *	closed, and all files created by the tmpfile function are removed.
+	 *	
+	 *	Finally, control is returned to the host environment. If the value of status is zero or
+	 *	EXIT_SUCCESS, an implementation-defined form of the status successful termination is
+	 *	returned. If the value of status is EXIT_FAILURE, an implementation-defined form
+	 *	of the status unsuccessful termination is returned. Otherwise the status returned is
+	 *	implementation-defined.
+	 */
+	_EWL_IMP_EXP_C void _EWL_CDECL    exit(int);
+
+#if _EWL_C99
+	/**	The _Exit function causes normal program termination to occur and control to be
+	 *	returned to the host environment. No functions registered by the atexit function or
+	 *	signal handlers registered by the signal function are called. The status returned to the
+	 *	host environment is determined in the same way as for the exit function (7.20.4.3).
+	 *	Whether open streams with unwritten buffered data are flushed, open streams are closed,
+	 *	or temporary files are removed is implementation-defined.
+	 */
+	_EWL_IMP_EXP_C void _EWL_CDECL    _Exit(int) _EWL_CANT_THROW;
+#endif /* _EWL_C99 */
+
+#if defined(__cplusplus) && defined(_CWCC_)
+   #if __option(ANSI_strict)
+    extern "C" typedef void (_EWL_CDECL *__C_ATEXIT_FUNCTION_POINTER)(void);
+    extern "C++" inline int atexit(void (_EWL_CDECL *func)(void)) _EWL_CANT_THROW
+    {  /*  this code assumes that there is no difference between an */
+      /*  'extern "C" void f(void)' and an 'extern "C++" void f(void)' function pointer call. */
+      return atexit(reinterpret_cast<__C_ATEXIT_FUNCTION_POINTER>(func));
+    }
+   #endif
+#endif  /* defined(__cplusplus) */
+
+	/** The getenv function searches an environment list, provided by the host environment,
+	 *	for a string that matches the string pointed to by name. The set of environment names
+	 *	and the method for altering the environment list are implementation-defined.
+	 */
+_EWL_IMP_EXP_C char * _EWL_CDECL	getenv(const char *) _EWL_CANT_THROW;
+
+	/** If string is a null pointer, the system function determines whether the host
+	 *	environment has a command processor. If string is not a null pointer, the system
+	 *	function passes the string pointed to by string to that command processor to be
+	 *	executed in a manner which the implementation shall document; this might then cause the
+	 *	program calling system to behave in a non-conforming manner or to terminate.
+	 *
+	 *	If the argument is a null pointer, the system function returns nonzero only if a
+	 *	command processor is available. If the argument is not a null pointer, and the system
+	 *	function does return, it returns an implementation-defined value.
+	 */
+_EWL_IMP_EXP_C int _EWL_CDECL		system(const char *) _EWL_CANT_THROW;
+
+typedef int (*_compare_function)(const void*, const void*);
+
+	/** The bsearch function searches an array of nmemb objects, the initial element of which
+	 *	is pointed to by base, for an element that matches the object pointed to by key. The
+	 *	size of each element of the array is specified by size.
+	 *
+	 *	The comparison function pointed to by compar is called with two arguments that point
+	 *	to the key object and to an array element, in that order. The function shall return an
+	 *	integer less than, equal to, or greater than zero if the key object is considered,
+	 *	respectively, to be less than, to match, or to be greater than the array element. The array
+	 *	shall consist of: all the elements that compare less than, all the elements that compare
+	 *	equal to, and all the elements that compare greater than the key object, in that order.
+	 *
+	 *	The bsearch function returns a pointer to a matching element of the array, or a null
+	 *	pointer if no match is found. If two elements compare as equal, which element is
+	 *	matched is unspecified.
+	 */
+_EWL_IMP_EXP_C void * _EWL_CDECL		bsearch(const void *, const void *, size_t, size_t, _compare_function);
+
+	/** The qsort function sorts an array of nmemb objects, the initial element of which is
+	 *	pointed to by base. The size of each object is specified by size.
+	 *
+	 *	The contents of the array are sorted into ascending order according to a comparison
+	 *	function pointed to by compar, which is called with two arguments that point to the
+	 *	objects being compared. The function shall return an integer less than, equal to, or
+	 *	greater than zero if the first argument is considered to be respectively less than, equal to,
+	 *	or greater than the second.
+	 *	
+	 *	If two elements compare as equal, their order in the resulting sorted array is unspecified.
+	 */
+_EWL_IMP_EXP_C void   _EWL_CDECL		qsort(void *, size_t, size_t, _compare_function);
+
+#if defined(__cplusplus) && defined(_CWCC_)
+	#if __option(ANSI_strict)
+		extern "C" typedef int (*_Ccompare_function)(const void*, const void*);
+		extern "C++" inline void *bsearch(const void *__a, const void *__b, size_t __c, size_t __d, int (*__e)(const void*, const void*))
+		{	/*  this code assumes that there is no difference between an */
+			/*  'extern "C" and an 'extern "C++" function pointer call. */
+			return bsearch(__a, __b, __c, __d, reinterpret_cast<_Ccompare_function>(__e));
+		}
+		extern "C++" inline void qsort(void *__a, size_t __b, size_t __c,  int (*__d)(const void*, const void*))
+		{	/*  this code assumes that there is no difference between an */
+			/*  'extern "C" and an 'extern "C++" function pointer call. */
+			qsort(__a, __b, __c, reinterpret_cast<_Ccompare_function>(__d));
+		}
+	#endif
+#endif  /* defined(__cplusplus) */
+
+#if defined(__STDC_WANT_LIB_EXT1__) && __STDC_WANT_LIB_EXT1__
+  _EWL_IMP_EXP_C errno_t _EWL_CDECL       getenv_s(size_t * _EWL_RESTRICT, char * _EWL_RESTRICT, rsize_t, const char * _EWL_RESTRICT) _EWL_CANT_THROW;
+
+  typedef int (*_compare_function_s)(const void*, const void*, void*);
+
+  _EWL_IMP_EXP_C void * _EWL_CDECL	      bsearch_s(const void *, const void *, rsize_t, rsize_t, _compare_function_s, void *);
+  _EWL_IMP_EXP_C void   _EWL_CDECL	      qsort_s(void *, rsize_t, rsize_t, _compare_function_s, void *);
+
+  #if _EWL_WIDE_CHAR
+    _EWL_IMP_EXP_C int     _EWL_CDECL     wctomb_s(int * _EWL_RESTRICT, char * _EWL_RESTRICT, rsize_t, wchar_t) _EWL_CANT_THROW;
+    _EWL_IMP_EXP_C errno_t _EWL_CDECL     wcstombs_s(size_t * _EWL_RESTRICT, char * _EWL_RESTRICT, rsize_t, const wchar_t * _EWL_RESTRICT, rsize_t) _EWL_CANT_THROW;
+    _EWL_IMP_EXP_C errno_t _EWL_CDECL     mbstowcs_s(size_t * _EWL_RESTRICT, wchar_t * _EWL_RESTRICT, rsize_t, const char * _EWL_RESTRICT, rsize_t) _EWL_CANT_THROW;
+  #endif /* _EWL_WIDE_CHAR */
+#endif /* __STDC_WANT_LIB_EXT1__ */
+
+	/** The abs, labs, and llabs functions compute the absolute value of an integer j. If the
+	 *	result cannot be represented, the behavior is undefined.
+	 */
+_EWL_IMP_EXP_C int _EWL_CDECL             abs(int) _EWL_CANT_THROW;
+_EWL_IMP_EXP_C long  _EWL_CDECL           labs(long) _EWL_CANT_THROW;
+
+#if _EWL_LONGLONG
+#if (_EWL_C99 || defined( __cplusplus))
+  _EWL_IMP_EXP_C long long _EWL_CDECL     llabs(long long) _EWL_CANT_THROW;
+#endif /* _EWL_C99 */
+#endif /* _EWL_LONGLONG */
+
+#ifdef __POWERPC__
+
+  #ifndef __cplusplus
+    #if !defined(__MOTO__) && !defined(__MRC__)
+      #define abs(n)  __abs(n)
+      #define labs(n)  __labs(n)
+    #endif
+  #endif
+
+#endif /* __POWERPC__ */
+
+	/**	The div, ldiv, and lldiv, functions compute numer / denom and numer %
+	 *	denom in a single operation.
+	 *	
+	 *	The div, ldiv, and lldiv functions return a structure of type div_t, ldiv_t, and
+	 *	lldiv_t, respectively, comprising both the quotient and the remainder. The structures
+	 *	shall contain (in either order) the members quot (the quotient) and rem (the remainder),
+	 *	each of which has the same type as the arguments numer and denom. If either part of
+	 *	the result cannot be represented, the behavior is undefined.
+	 */
+_EWL_IMP_EXP_C div_t _EWL_CDECL           div(int,int) _EWL_CANT_THROW;
+_EWL_IMP_EXP_C ldiv_t _EWL_CDECL          ldiv(long,long) _EWL_CANT_THROW;
+
+#if _EWL_LONGLONG
+#if (_EWL_C99 || defined(__cplusplus))
+  _EWL_IMP_EXP_C lldiv_t _EWL_CDECL       lldiv(long long,long long) _EWL_CANT_THROW;
+#endif /* _EWL_C99 */
+#endif /* _EWL_LONGLONG */
+
+#if defined(__cplusplus)
+  _EWL_END_EXTERN_C
+
+  extern "C++" {
+
+    inline long _EWL_CDECL abs(long n)
+      {return labs(n);}
+    inline ldiv_t _EWL_CDECL div(long numerator, long denominator)
+      {return ldiv(numerator, denominator);}
+
+    #if _EWL_LONGLONG && ! _EWL_C99
+      inline long long _EWL_CDECL abs(long long n)
+        {return llabs(n);}
+      inline lldiv_t _EWL_CDECL div(long long numerator, long long denominator)
+        {return lldiv(numerator, denominator);}
+    #endif /*_EWL_LONGLONG*/
+
+  } /* extern "C" */
+
+  _EWL_BEGIN_EXTERN_C
+#endif /* __cplusplus */
+
+#if _EWL_WIDE_CHAR
+	/** If s is not a null pointer, the mblen function determines the number of bytes contained
+	 *	in the multibyte character pointed to by s. Except that the conversion state of the
+	 *	mbtowc function is not affected, it is equivalent to
+	 *	mbtowc((wchar_t *)0, s, n);
+	 *
+	 *	The implementation shall behave as if no library function calls the mblen function.
+	 *
+	 *	If s is a null pointer, the mblen function returns a nonzero or zero value, if multibyte
+	 *	character encodings, respectively, do or do not have state-dependent encodings. If s is
+	 *	not a null pointer, the mblen function either returns 0 (if s points to the null character),
+	 *	or returns the number of bytes that are contained in the multibyte character (if the next n
+	 *	or fewer bytes form a valid multibyte character), or returns -1 (if they do not form a valid
+	 *	multibyte character).
+	 */
+	_EWL_IMP_EXP_C int    _EWL_CDECL        mblen(const char *, size_t) _EWL_CANT_THROW;
+	
+	/** Ifs is not a null pointer, the mbtowc function inspects at most n bytes beginning with
+	 *	the byte pointed to by s to determine the number of bytes needed to complete the next
+	 *	multibyte character (including any shift sequences). If the function determines that the
+	 *	next multibyte character is complete and valid, it determines the value of the
+	 *	corresponding wide character and then, if pwc is not a null pointer, stores that value in
+	 *	the object pointed to by pwc. If the corresponding wide character is the null wide
+	 *	character, the function is left in the initial conversion state.
+	 *	
+	 *	The implementation shall behave as if no library function calls the mbtowc function.
+	 *	
+	 *	If s is a null pointer, the mbtowc function returns a nonzero or zero value, if multibyte
+	 *	character encodings, respectively, do or do not have state-dependent encodings. If s is
+	 *	not a null pointer, the mbtowc function either returns 0 (if s points to the null character),
+	 *	or returns the number of bytes that are contained in the converted multibyte character (if
+	 *	the next n or fewer bytes form a valid multibyte character), or returns -1 (if they do not
+	 *	form a valid multibyte character).
+	 *	
+	 *	In no case will the value returned be greater than n or the value of the MB_CUR_MAX
+	 *	macro.
+	 */
+	_EWL_IMP_EXP_C int    _EWL_CDECL        mbtowc(wchar_t * _EWL_RESTRICT, const char * _EWL_RESTRICT, size_t) _EWL_CANT_THROW;
+	
+	/** The wctomb function determines the number of bytes needed to represent the multibyte
+	 *	character corresponding to the wide character given by wc (including any shift
+	 *	sequences), and stores the multibyte character representation in the array whose first
+	 *	element is pointed to by s (if s is not a null pointer). At most MB_CUR_MAX characters
+	 *	are stored. If wc is a null wide character, a null byte is stored, preceded by any shift
+	 *	sequence needed to restore the initial shift state, and the function is left in the initial
+	 *	conversion state.
+	 *
+	 *	The implementation shall behave as if no library function calls the wctomb function.
+	 *
+	 *	Ifs is a null pointer, the wctomb function returns a nonzero or zero value, if multibyte
+	 *	character encodings, respectively, do or do not have state-dependent encodings. If s is
+	 *	not a null pointer, the wctomb function returns -1 if the value of wc does not correspond
+	 *	to a valid multibyte character, or returns the number of bytes that are contained in the
+	 *	multibyte character corresponding to the value of wc.
+	 */
+	_EWL_IMP_EXP_C int    _EWL_CDECL        wctomb(char *, wchar_t) _EWL_CANT_THROW;
+
+	/** The mbstowcs function converts a sequence of multibyte characters that begins in the
+	 *	initial shift state from the array pointed to by s into a sequence of corresponding wide
+	 *	characters and stores not more than n wide characters into the array pointed to by pwcs.
+	 *	No multibyte characters that follow a null character (which is converted into a null wide
+	 *	character) will be examined or converted. Each multibyte character is converted as if by
+	 *	a call to the mbtowc function, except that the conversion state of the mbtowc function is
+	 *	not affected.
+	 *	
+	 *	No more than n elements will be modified in the array pointed to by pwcs. If copying
+	 *	takes place between objects that overlap, the behavior is undefined.
+	 *	
+	 *	If an invalid multibyte character is encountered, the mbstowcs function returns
+	 *	(size_t)(-1). Otherwise, the mbstowcs function returns the number of array
+	 *	elements modified, not including a terminating null wide character, if any
+	 */
+	_EWL_IMP_EXP_C size_t _EWL_CDECL        mbstowcs(wchar_t * _EWL_RESTRICT, const char * _EWL_RESTRICT, size_t) _EWL_CANT_THROW;
+	
+	/** The wcstombs function converts a sequence of wide characters from the array pointed
+	 *	to by pwcs into a sequence of corresponding multibyte characters that begins in the
+	 *	initial shift state, and stores these multibyte characters into the array pointed to by s,
+	 *	stopping if a multibyte character would exceed the limit of n total bytes or if a null
+	 *	character is stored. Each wide character is converted as if by a call to the wctomb
+	 *	function, except that the conversion state of the wctomb function is not affected.
+	 *	
+	 *	No more than n bytes will be modified in the array pointed to by s. If copying takes place
+	 *	between objects that overlap, the behavior is undefined.
+	 *	
+	 *	If a wide character is encountered that does not correspond to a valid multibyte character,
+	 *	the wcstombs function returns (size_t)(-1). Otherwise, the wcstombs function
+	 *	returns the number of bytes modified, not including a terminating null character, if
+	 *	any.
+	 */
+	_EWL_IMP_EXP_C size_t _EWL_CDECL        wcstombs(char * _EWL_RESTRICT, const wchar_t * _EWL_RESTRICT, size_t) _EWL_CANT_THROW;
+
+#endif /* _EWL_WIDE_CHAR */
+
+_EWL_END_EXTERN_C
+_EWL_END_NAMESPACE_STD
+
+#if defined(_EWL_EXPORT_CNAMES) && defined(__cplusplus) && defined(_EWL_USING_NAMESPACE)
+#include <stdlib.h>
+#endif /*  defined(_EWL_EXPORT_CNAMES) && defined(__cplusplus) && defined(_EWL_USING_NAMESPACE) */
+
+#endif /* _EWL_USING_CW_C_HEADERS_ || __PALMOS_TRAPS__ */
+
+#ifdef __STARCORE__
+#pragma reject_floats reset
+#endif 
+
+#endif /* _EWL_CSTDLIB */

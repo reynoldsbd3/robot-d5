@@ -1,0 +1,32 @@
+===============================================================================
+EWL C Release Notes
+===============================================================================
+
+Version:			15.1
+Date:   			January 27, 2010
+Authors:  			Anca Burlacu-Zane, Monica Galatanu, Andreas Hommel
+Previous Authors:	Marcel Achim, Cecilia Galvan, Howard Hinnant
+
+(C) 2010 Freescale Semiconductor, Inc.
+
+===============================================================================
+Current version is:                              (__EWL__ == 0x00015001).
+These release notes document changes since 		 (__EWL__ == 0x00015000).
+===============================================================================
+
+===============================================================================
+New Features / Fixes in this release
+===============================================================================
+
+- Many C89 and C99 conformance improvements
+- Misra compliance changes (in progress)
+
+===============================================================================
+New Features / Fixes in previous releases
+===============================================================================
+
+Version 15.0:
+
+- initial release
+
+===============================================================================

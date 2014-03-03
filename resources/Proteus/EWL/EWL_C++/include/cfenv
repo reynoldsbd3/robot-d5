@@ -1,0 +1,31 @@
+/* EWL
+ * Copyright © 2009 Freescale Corporation.  All rights reserved.
+ *
+ * $Date: 2012/06/28 06:41:33 $
+ * $Revision: 1.2 $
+ */
+
+#ifndef _EWL_CFENV
+#define _EWL_CFENV
+
+#include <ewlconfig>
+#include <fenv.h>
+
+_EWL_START_TR1_NAMESPACE
+    using __std(fenv_t);
+    using __std(fexcept_t);
+    using __std(feclearexcept);
+    using __std(fegetexceptflag);
+    using __std(fesetexceptflag);
+    using __std(feraiseexcept);
+    using __std(fetestexcept);
+    using __std(fegetround);
+    using __std(fesetround);
+    using __std(fegetenv);
+    using __std(feholdexcept);
+    using __std(fesetenv);
+    using __std(feupdateenv);
+_EWL_END_TR1_NAMESPACE
+
+#endif /* _EWL_CFENV */
+

@@ -1,0 +1,82 @@
+/* EWL
+ * Copyright © 1995-2007 Freescale Corporation.  All rights reserved.
+ *
+ * $Date: 2012/06/01 15:40:17 $
+ * $Revision: 1.1 $
+ */
+
+#ifndef _EWL_CLOCALE_AEABI
+#define _EWL_CLOCALE_AEABI
+
+#include <ansi_parms.h>
+#include <null.h>
+
+_EWL_BEGIN_NAMESPACE_STD
+_EWL_BEGIN_EXTERN_C
+
+	#define LC_FIRST		0
+		
+	extern const int __aeabi_LC_COLLATE;
+	extern const int __aeabi_LC_CTYPE  ;
+	extern const int __aeabi_LC_MONETARY;
+	extern const int __aeabi_LC_NUMERIC;
+	extern const int __aeabi_LC_TIME;
+	extern const int __aeabi_LC_ALL;
+	
+	#define LC_COLLATE		__aeabi_LC_COLLATE
+	#define LC_CTYPE		__aeabi_LC_CTYPE
+	#define LC_MONETARY		__aeabi_LC_MONETARY
+	#define LC_NUMERIC		__aeabi_LC_NUMERIC
+	#define LC_TIME			__aeabi_LC_TIME
+	#define LC_ALL			__aeabi_LC_ALL
+	
+	#define LC_LAST			LC_ALL
+	
+	#pragma options align=native
+	#pragma warn_padding off
+	
+	struct __aeabi_lconv {
+		char *decimal_point;
+		char *thousands_sep;
+		char *grouping;
+		char *int_curr_symbol;
+		char *currency_symbol;
+		char *mon_decimal_point;
+		char *mon_thousands_sep;
+		char *mon_grouping;
+		char *positive_sign;
+		char *negative_sign;
+		char int_frac_digits;
+		char frac_digits;
+		char p_cs_precedes;
+		char p_sep_by_space;
+		char n_cs_precedes;
+		char n_sep_by_space;
+		char p_sign_posn;
+		char n_sign_posn;
+	/* The following fields are added by C99 */
+		char int_p_cs_precedes;
+		char int_n_cs_precedes;
+		char int_p_sep_by_space;
+		char int_n_sep_by_space;
+		char int_p_sign_posn;
+		char int_n_sign_posn;
+	};
+	
+	#pragma warn_padding reset
+	#pragma options align=reset
+	
+	struct __aeabi_lconv *__aeabi_localeconv(void);
+	
+	_EWL_IMP_EXP_C char * _EWL_CDECL setlocale(int, const char *) _EWL_CANT_THROW;
+
+_EWL_END_EXTERN_C
+_EWL_END_NAMESPACE_STD 
+
+#endif /* _EWL_CLOCALE_AEABI */
+
+ /* For _AEABI_PORTABILITY_LEVEL macro,__aeabi_lconv is defined.
+  * __aeabi_localeconv() is declared.
+  * __aeabi_LC_COLLATE,__aeabi_LC_CTYPE,__aeabi_LC_MONETARY,__aeabi_LC_NUMERIC,
+  * __aeabi_LC_TIME,__aeabi_LC_ALL are declared for _AEABI_PORTABILITY_LEVEL macro
+  */

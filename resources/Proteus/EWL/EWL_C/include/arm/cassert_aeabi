@@ -1,0 +1,38 @@
+/* EWL
+ * Copyright © 1995-2007 Freescale Corporation.  All rights reserved.
+ *
+ * $Date: 2012/06/01 15:40:17 $
+ * $Revision: 1.1 $
+ */
+
+/* mandatory portatibility declaration C Library ABI for ARM architecture section 5.1.1 */
+#if defined(_AEABI_PORTABILITY_LEVEL) && !defined(_AEABI_PORTABLE)
+#define _AEABI_PORTABLE 1
+#endif
+
+#ifdef assert
+	#undef assert
+#endif
+
+#ifdef NDEBUG
+	#define assert(ignore) ((void) 0)
+#else
+	#include <assert_api.h>
+	
+_EWL_BEGIN_EXTERN_C	
+	_EWL_IMP_EXP_C void _EWL_CDECL __aeabi_assert( char const *expr, char const *file, int line) _EWL_CANT_THROW;
+_EWL_END_EXTERN_C	
+
+	#if _EWL_ASSERT_DISPLAYS_FUNC		
+		#define assert(condition) ((condition) ? ((void)0) : __aeabi_assert(#condition, __FILE__,  __LINE__))
+	#else
+		#define assert(condition) ((condition) ? ((void)0) : __aeabi_assert(#condition, __FILE__,  __LINE__))			
+	#endif /* _EWL_ASSERT_DISPLAYS_FUNC */
+#endif /* def NDEBUG */
+
+  
+ /* 
+  * Section No. 5.2 from "C Library ABI for the ARM 
+  * architecture.pdf" __aeabi_assert macro definition added for 
+  * _AEABI_PORTABILITY_LEVEL.
+  */

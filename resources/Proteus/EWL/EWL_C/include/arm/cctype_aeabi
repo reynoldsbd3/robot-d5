@@ -1,0 +1,139 @@
+/* EWL
+ * Copyright © 1995-2007 Freescale Corporation.  All rights reserved.
+ *
+ * $Date: 2012/07/12 22:31:13 $
+ * $Revision: 1.2 $
+ */
+
+#ifndef _EWL_CCTYPE_AEABI
+#define _EWL_CCTYPE_AEABI		
+
+/* mandatory portatibility declaration C Library ABI for ARM architecture section 5.1.1 */
+#if defined(_AEABI_PORTABILITY_LEVEL) && !defined(_AEABI_PORTABLE)
+#define _AEABI_PORTABLE 1
+#endif
+
+#include <eof.h>
+#include <ctype_api.h>
+#include <locale_api.h>
+#include <ewl_thread_local_data.h>
+
+#define __aeabi_cmap_size 257
+
+#define __A 1			/* alphabetic           */
+#define __X 2			/* A-F and a-f          */
+#define __P 4			/* punctuation          */
+#define __B 8			/* blank                */
+#define __S 16			/* whitespace           */
+#define __L 32			/* lower case letter    */
+#define __U 64			/* upper case letter    */
+#define __C 128			/* control chars        */
+
+#ifdef _AEABI_LC_CTYPE
+# define _AEABI_CTYPE_TABLE(_X) __aeabi_ctype_table_ ## _X
+# define _AEABI_CTYPE(_X) _AEABI_CTYPE_TABLE(_X)
+# define __aeabi_ctype_table _AEABI_CTYPE(_AEABI_LC_CTYPE)
+#else
+# define __aeabi_ctype_table __aeabi_ctype_table_C		/* "C" locale is teh default locale */
+#endif
+
+extern unsigned char const __aeabi_ctype_table[__aeabi_cmap_size];  /* default locale */
+
+_EWL_BEGIN_NAMESPACE_STD
+_EWL_BEGIN_EXTERN_C
+
+	extern	_EWL_IMP_EXP_C int _EWL_CDECL isalnum(int) _EWL_CANT_THROW;
+	extern	_EWL_IMP_EXP_C int _EWL_CDECL isalpha(int) _EWL_CANT_THROW;
+	#if _EWL_C99
+	extern	_EWL_IMP_EXP_C int _EWL_CDECL isblank(int) _EWL_CANT_THROW;
+	#endif /* _EWL_C99 */
+	extern	_EWL_IMP_EXP_C int _EWL_CDECL iscntrl(int) _EWL_CANT_THROW;
+	extern	_EWL_IMP_EXP_C int _EWL_CDECL isdigit(int) _EWL_CANT_THROW;
+	extern	_EWL_IMP_EXP_C int _EWL_CDECL isgraph(int) _EWL_CANT_THROW;
+	extern	_EWL_IMP_EXP_C int _EWL_CDECL islower(int) _EWL_CANT_THROW;
+	extern	_EWL_IMP_EXP_C int _EWL_CDECL isprint(int) _EWL_CANT_THROW;
+	extern	_EWL_IMP_EXP_C int _EWL_CDECL ispunct(int) _EWL_CANT_THROW;
+	extern	_EWL_IMP_EXP_C int _EWL_CDECL isspace(int) _EWL_CANT_THROW;
+	extern	_EWL_IMP_EXP_C int _EWL_CDECL isupper(int) _EWL_CANT_THROW;
+	extern	_EWL_IMP_EXP_C int _EWL_CDECL isxdigit(int) _EWL_CANT_THROW;
+	extern	_EWL_IMP_EXP_C int _EWL_CDECL tolower(int) _EWL_CANT_THROW;
+	extern	_EWL_IMP_EXP_C int _EWL_CDECL toupper(int) _EWL_CANT_THROW;
+
+
+_EWL_END_EXTERN_C
+
+#if _EWL_USE_INLINE
+	_EWL_INLINE int _EWL_CDECL isalnum(int c) _EWL_CANT_THROW 
+	{
+		return (((unsigned)c >= __aeabi_cmap_size)) ? 0:((__aeabi_ctype_table+1)[c] << 30);	
+	}
+	_EWL_INLINE int _EWL_CDECL isalpha(int c)  _EWL_CANT_THROW 
+	{
+		return (((unsigned)c >= __aeabi_cmap_size)) ? 0:((__aeabi_ctype_table+1)[c] & __A);	
+	}
+	_EWL_INLINE int _EWL_CDECL iscntrl(int c) _EWL_CANT_THROW  
+	{
+		return (((unsigned)c >= __aeabi_cmap_size)) ? 0:((__aeabi_ctype_table+1)[c] & __C);	
+	}
+	_EWL_INLINE int _EWL_CDECL isdigit(int c) _EWL_CANT_THROW  
+	{
+		return (((unsigned)c - '0') < 10);	
+	}
+    
+	_EWL_INLINE int _EWL_CDECL isgraph(int c) _EWL_CANT_THROW 
+	{
+		return (((unsigned)c >= __aeabi_cmap_size)) ? 0:((__aeabi_ctype_table+1)[c] << 29);	
+	}
+    
+	_EWL_INLINE int _EWL_CDECL islower(int c) _EWL_CANT_THROW  
+	{
+		return (((unsigned)c >= __aeabi_cmap_size)) ? 0:((__aeabi_ctype_table+1)[c] & __L);	
+	}
+    
+    _EWL_INLINE  int _EWL_CDECL isprint(int c) _EWL_CANT_THROW 
+    {
+    	return (((unsigned)c >= __aeabi_cmap_size)) ? 0:((__aeabi_ctype_table+1)[c] << 28);
+    }
+    
+    _EWL_INLINE int _EWL_CDECL ispunct(int c) _EWL_CANT_THROW 
+    {
+    	return (((unsigned)c >= __aeabi_cmap_size)) ? 0:((__aeabi_ctype_table+1)[c] & __P);	
+    }     
+    
+    _EWL_INLINE int _EWL_CDECL isspace(int c) _EWL_CANT_THROW 
+    {
+    	return (((unsigned)c >= __aeabi_cmap_size)) ? 0:((__aeabi_ctype_table+1)[c] & __S) ;	
+    }
+     
+    _EWL_INLINE int _EWL_CDECL isupper(int c)  _EWL_CANT_THROW 
+    {
+    	return (((unsigned)c >= __aeabi_cmap_size)) ? 0:((__aeabi_ctype_table+1)[c] & __U);	
+    }   
+    
+    _EWL_INLINE int _EWL_CDECL isxdigit(int c) _EWL_CANT_THROW  
+    {
+    	return (((unsigned)c >= __aeabi_cmap_size)) ? 0:(((__aeabi_ctype_table+1)[c]) & __X); 
+    }
+    
+    _EWL_INLINE int _EWL_CDECL isblank(int c) _EWL_CANT_THROW  
+    {
+
+		return (((unsigned)c >= __aeabi_cmap_size)) ? 0:((c == 0x9) || ((__aeabi_ctype_table+1)[c] & __B));
+    }
+    
+    _EWL_INLINE int _EWL_CDECL toupper(int c) _EWL_CANT_THROW  
+    {
+    	return ((((unsigned)c < 0x61) || ((unsigned)c >= 0x7B)) ? c : (int) (c - 0x20));
+    }
+    
+	_EWL_INLINE int _EWL_CDECL tolower(int c)  _EWL_CANT_THROW 
+	{
+		return ((((unsigned)c < 0x41) || ((unsigned)c >= 0x5B)) ? c : (int) (c + 0x20));
+	}
+#endif /* _EWL_USE_INLINE */
+
+_EWL_END_NAMESPACE_STD
+
+#endif /* _EWL_CCTYPE_AEABI */
+
+
