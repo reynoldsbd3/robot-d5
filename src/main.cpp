@@ -68,9 +68,11 @@ int main() {
   // LCD.WriteLine("Waiting for signal light");
   // while (cds_0.Value() > 0.5);
 
-  fwd_time(&bot, 0.5);
-  fwd_time(&bot, 0.5);
-  fwd_time(&bot, 0.5);
+  fwd_time(&bot, 5.0);
+  LCD.Write("Left counts:  ");
+  LCD.WriteLine(l_enc.Counts());
+  LCD.Write("Right counts: ");
+  LCD.WriteLine(r_enc.Counts());
   
   // Program finished
   // rps.Disable();
