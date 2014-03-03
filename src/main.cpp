@@ -36,18 +36,17 @@ int main() {
 
   // Variable declaration
   struct robot bot;
-  int i;
   struct log_data *journal;
 
   // Initialize logging data
   journal = init_log();
 
   // Initialize RPS and WONKA communication
-  rps.InitializeMenu();
-  rps.Enable();
+  // rps.InitializeMenu();
+  // rps.Enable();
 
   // Allow time to initialize
-  Sleep(250);
+  // Sleep(250);
   
   // Pack the robot struct
   bot.l_mot = &l_mot;
@@ -62,15 +61,23 @@ int main() {
   bot.rps = &rps;
   bot.btns = &btns;
   bot.journal = journal;
-  bot.head = 90;
+  // bot.head = rps.Heading();
 
   //Wait for CdS cell
-  LCD.Clear();
-  LCD.WriteLine("Waiting for signal light");
-  while (cds_0.Value() > 0.5);
+  // LCD.Clear();
+  // LCD.WriteLine("Waiting for signal light");
+  // while (cds_0.Value() > 0.5);
+
+  fwd_time(&bot, 0.5);
+  fwd_time(&bot, 0.5);
+  fwd_time(&bot, 0.5);
   
   // Program finished
-  rps.Disable();
+  // rps.Disable();
+  LCD.Clear();
   LCD.WriteLine("Complete.");
+  LCD.WriteLine("Ready to dump...");
+  LCD.WriteLine("Press middle button");
+  dump(&bot);
   return 0;
 }

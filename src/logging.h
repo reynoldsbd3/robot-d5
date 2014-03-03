@@ -18,7 +18,7 @@ struct log_data {
 };
 
 // Logging functions
-void dump(struct log_data *first, struct robot *bot);
+void dump(struct robot *bot);
 struct log_data *init_log();
 struct log_data *log(struct log_data *data, struct log_data *last);
 
