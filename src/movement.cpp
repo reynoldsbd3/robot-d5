@@ -195,7 +195,7 @@ void fwd_dist(struct robot *bot, float distance) {
 void fwd_flw(struct robot *bot, float distance) {
 
   // Variable declarations
-  enum line_state current_state = LINE_CENTER;
+  enum line_state current_state = NEAR_EDGE;
   enum line_state last_state;
 
   // Ensure a clean count to begin
@@ -207,36 +207,6 @@ void fwd_flw(struct robot *bot, float distance) {
 
     // Respond to current state
     switch (current_state) {
-
-      case LINE_FAR_LEFT:
-        (*bot->l_mot).SetPower(LM_PWR_LR);
-        (*bot->l_mot).SetPower(RM_PWR_LR);
-        break;
-
-      case LINE_LEFT:
-        (*bot->l_mot).SetPower(LM_PWR_LT);
-        (*bot->l_mot).SetPower(RM_PWR_LT);
-        break;
-
-      case LINE_CENTER:
-        (*bot->l_mot).SetPower(LM_PWR_FW);
-        (*bot->l_mot).SetPower(RM_PWR_FW);
-        break;
-
-      case LINE_RIGHT:
-        (*bot->l_mot).SetPower(LM_PWR_RT);
-        (*bot->l_mot).SetPower(RM_PWR_RT);
-        break;
-
-      case LINE_FAR_RIGHT:
-        (*bot->l_mot).SetPower(LM_PWR_RR);
-        (*bot->l_mot).SetPower(RM_PWR_RR);
-        break;
-
-      case LINE_LOST:
-        (*bot->l_mot).SetPower(0);
-        (*bot->l_mot).SetPower(0);
-        break;
     }
 
     // Store current state
@@ -754,41 +724,44 @@ void ud_head(struct robot *bot) {
   int new_head;
 
   // Take cases
-  if (old_head < HEAD_ERR || old_head > 360 - HEAD_ERR) {
+  if (old_head > 45.0 && old_head <= 135.0) {
 
-    // Either RPS corresponds to mathematical heading,
-    // or it has moved counterclockwise and wrapped
-    if (raw_head < 90) {
-
-      new_head = raw_head;
-
-    } else {
-
-      new_head = 180 + raw_head;
-    }
-  } else if (old_head < 180 - HEAD_ERR) {
-
-    // In this case, raw RPS is correct
+    // New heading is in 1st or 4th quadrant
     new_head = raw_head;
 
-  } else if (old_head < 180 + HEAD_ERR) {
+  } else if (old_head > 135.0 && old_head <= 225.0) {
 
-    // Either the robot has moved clockwise and wrapped,
-    // or RPS is correct
-    if (raw_head < 90) {
+    // New heading is in 1st or 2nd quadrant
+    if (new_head >= 90.0) {
 
-      new_head = 180 + raw_head;
+      // 1st quadrant
+      new_head = raw_head;
 
     } else {
 
-      new_head = raw_head;
+      // 2nd quadrant
+      new_head = 180.0 + raw_head;
     }
+  } else if (old_head > 225.0 && old_head <= 315.0) {
+
+    // New heading is in 2nd or 3rd quadrant
+    new_head = 180.0 + raw_head;
+
   } else {
 
-    // In this case, the robot is certainly wrapped
-    new_head = 180 + raw_head;
+    // New heading is in 3rd or 4th quadrant
+    if (new_head >= 90.0) {
+
+      // 3rd quadrant
+      new_head = 180.0 + raw_head;
+
+    } else {
+
+      // 4th quadrant
+      new_head = raw_head;
+    }
   }
 
-  // Assign the newly computed heading
+  // Set new heading
   bot->head = new_head;
 }
