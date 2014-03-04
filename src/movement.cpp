@@ -207,6 +207,21 @@ void fwd_flw(struct robot *bot, float distance) {
 
     // Respond to current state
     switch (current_state) {
+
+      case ON_LINE: // Rotate right to find edge
+        (*bot->l_mot).SetPower(LM_PWR_RR);
+        (*bot->r_mot).SetPower(RM_PWR_RR);
+        break;
+
+      case NEAR_EDGE: // Continue straight
+        (*bot->l_mot).SetPower(LM_PWR_FW);
+        (*bot->r_mot).SetPower(RM_PWR_FW);
+        break;
+
+      case OFF_LINE: // Rotate left to find edge
+        (*bot->l_mot).SetPower(LM_PWR_LR);
+        (*bot->r_mot).SetPower(RM_PWR_LR);
+        break;
     }
 
     // Store current state
@@ -237,9 +252,23 @@ void fwd_flw(struct robot *bot, float distance) {
 
         // Robot is over line
         current_state = ON_LINE;
+
+      } else if ((*bot->opt_0).Value() < NONE_THRESH_SHOP_0) {
+
+        // Robot is over nothing
+        current_state = OFF_LINE;
+
+      } else {
+
+        // Robot is near edge
+        current_state = NEAR_EDGE;
       }
     }
   }
+
+  // Cease motion
+  (*bot->l_mot).SetPower(0);
+  (*bot->r_mot).SetPower(0);
 }
 
 /* Moves the robot forward indefinitely.
