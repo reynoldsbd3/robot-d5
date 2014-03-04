@@ -12,12 +12,14 @@
 #define HEAD_ERR 3.0           // Maximum allowable heading error
 #define FL_PWR -90             // Forklift power
 #define FTRY_THRESH 20         // Y-coordinate where shop ends
-#define LINE_THRESH_FTRY_0 1.5 // Threshold for opt_0 in factory
-#define LINE_THRESH_FTRY_1 1.5 // Threshold for opt_1 in factory
-#define LINE_THRESH_FTRY_2 1.5 // Threshold for opt_2 in factory
-#define LINE_THRESH_SHOP_0 1.5 // Threshold for opt_0 in shop
-#define LINE_THRESH_SHOP_1 1.5 // Threshold for opt_1 in shop
-#define LINE_THRESH_SHOP_2 1.5 // Threshold for opt_2 in shop
+#define LINE_THRESH_FTRY_0 1.0
+#define NONE_THRESH_FTRY_0 2.8
+#define LINE_THRESH_SHOP_0 2.8
+#define NONE_THRESH_SHOP_0 1.0
+#define LINE_THRESH_FTRY_1 1.0
+#define NONE_THRESH_FTRY_1 2.8
+#define LINE_THRESH_SHOP_1 2.8
+#define NONE_THRESH_SHOP_1 1.0
 #define LM_PWR_FW -98          // Left motor forward power
 #define LM_PWR_LR -90          // Left motor left rotation power
 #define LM_PWR_LT 30           // Left motor left turn power
@@ -42,12 +44,9 @@ void ud_head(struct robot);
 // Enumerations
 enum line_state {
 
-  LINE_FAR_LEFT,
-  LINE_LEFT,
-  LINE_CENTER,
-  LINE_RIGHT,
-  LINE_FAR_RIGHT,
-  LINE_LOST
+  ON_LINE,
+  NEAR_EDGE,
+  OFF_LINE
 };
 
 // Forward motion --------------------------------------------------------------
@@ -246,88 +245,28 @@ void fwd_flw(struct robot *bot, float distance) {
     // Branch depending on location of the robot
     if ((*bot->rps).Y() > FTRY_THRESH) { // Robot is in factory
 
-      if ((*bot->opt_0).Value() > LINE_THRESH_FTRY_0 &&
-        (*bot->opt_1).Value() < LINE_THRESH_FTRY_1 &&
-        (*bot->opt_2).Value() < LINE_THRESH_FTRY_2) {
+      if ((*bot->opt_0).Value() < LINE_THRESH_FTRY_0) { 
 
-        // Only the left optosensor detects the line
-        current_state = LINE_FAR_LEFT;
+        // Robot is over line
+        current_state = ON_LINE;
 
-      } else if ((*bot->opt_0).Value() > LINE_THRESH_FTRY_0 &&
-        (*bot->opt_1).Value() > LINE_THRESH_FTRY_1 &&
-        (*bot->opt_2).Value() < LINE_THRESH_FTRY_2) {
+      } else if ((*bot->opt_0).Value() > NONE_THRESH_FTRY_0) {
 
-        // Both left and center optosensors detect the line
-        current_state = LINE_LEFT;
-
-      } else if ((*bot->opt_0).Value() < LINE_THRESH_FTRY_0 &&
-        (*bot->opt_1).Value() > LINE_THRESH_FTRY_1 &&
-        (*bot->opt_2).Value() < LINE_THRESH_FTRY_2) {
-
-        // Only the center optosensor detects the line
-        current_state = LINE_CENTER;
-
-      } else if ((*bot->opt_0).Value() < LINE_THRESH_FTRY_0 &&
-        (*bot->opt_1).Value() > LINE_THRESH_FTRY_1 &&
-        (*bot->opt_2).Value() > LINE_THRESH_FTRY_2) {
-
-        // Both right and center optosensors detect the line
-        current_state = LINE_RIGHT;
-
-      } else if ((*bot->opt_0).Value() < LINE_THRESH_FTRY_0 &&
-        (*bot->opt_1).Value() < LINE_THRESH_FTRY_1 &&
-        (*bot->opt_2).Value() > LINE_THRESH_FTRY_2) {
-
-        // Only the right optosensor detects the line
-        current_state = LINE_FAR_RIGHT;
+        // Robot is over nothing
+        current_state = OFF_LINE;
 
       } else {
 
-        // Line was lost or read error
-        current_state = LINE_LOST;
+        // Robot is near edge
+        current_state = NEAR_EDGE;
       }
 
     } else { // Robot is in store
 
-      if ((*bot->opt_0).Value() < LINE_THRESH_FTRY_0 &&
-        (*bot->opt_1).Value() > LINE_THRESH_FTRY_1 &&
-        (*bot->opt_2).Value() > LINE_THRESH_FTRY_2) {
+      if ((*bot->opt_0).Value() > LINE_THRESH_SHOP_0) {
 
-        // Only the left optosensor detects the line
-        current_state = LINE_FAR_LEFT;
-
-      } else if ((*bot->opt_0).Value() < LINE_THRESH_FTRY_0 &&
-        (*bot->opt_1).Value() < LINE_THRESH_FTRY_1 &&
-        (*bot->opt_2).Value() > LINE_THRESH_FTRY_2) {
-
-        // Both left and center optosensors detect the line
-        current_state = LINE_LEFT;
-
-      } else if ((*bot->opt_0).Value() > LINE_THRESH_FTRY_0 &&
-        (*bot->opt_1).Value() < LINE_THRESH_FTRY_1 &&
-        (*bot->opt_2).Value() > LINE_THRESH_FTRY_2) {
-
-        // Only the center optosensor detects the line
-        current_state = LINE_CENTER;
-
-      } else if ((*bot->opt_0).Value() > LINE_THRESH_FTRY_0 &&
-        (*bot->opt_1).Value() < LINE_THRESH_FTRY_1 &&
-        (*bot->opt_2).Value() < LINE_THRESH_FTRY_2) {
-
-        // Both right and center optosensors detect the line
-        current_state = LINE_RIGHT;
-
-      } else if ((*bot->opt_0).Value() > LINE_THRESH_FTRY_0 &&
-        (*bot->opt_1).Value() > LINE_THRESH_FTRY_1 &&
-        (*bot->opt_2).Value() < LINE_THRESH_FTRY_2) {
-
-        // Only the right optosensor detects the line
-        current_state = LINE_FAR_RIGHT;
-
-      } else {
-
-        // Line was lost or read error
-        current_state = LINE_LOST;
+        // Robot is over line
+        current_state = ON_LINE;
       }
     }
   }
