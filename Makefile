@@ -32,7 +32,7 @@ else
 	fi
 
 endif
-	@cd $(FIRMWAREREPO) && make all TARGET=$(TARGET)
+	@cd $(FIRMWAREREPO) && make -f ../resources/Makefile all TARGET=$(TARGET)
 
 deploy:
 	@cd $(FIRMWAREREPO) && make deploy TARGET=$(TARGET)
