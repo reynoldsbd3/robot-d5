@@ -467,10 +467,10 @@ void rot_time(struct robot *bot, float time, bool cw) {
  * RETURN void
  *    This method returns nothing
  */
-void rot_deg(struct robot *bot, int degree) {
+void rot_deg(struct robot *bot, float degree) {
 
   // Variable declaration
-  int target;
+  float target;
 
   // Get an up to date reading
   ud_head(bot);
@@ -479,23 +479,18 @@ void rot_deg(struct robot *bot, int degree) {
   target = bot->head + degree;
 
   // Ensure target is valid
-  if (target >= 360) {
+  if (target >= 360.0) {
 
-    target -= 360;
+    target -= 360.0;
 
   } else if (target < 0) {
 
-    target += 360;
+    target += 360.0;
   }
 
   // Rotate to the target heading
-  do {
-
-    rot_head(bot, target);
-    ud_head(bot);
-
-  } while (head_diff(bot->head, target) > HEAD_ERR ||
-    head_diff(bot->head, target) < -1 * HEAD_ERR);
+  rot_head(bot, target);
+  ud_head(bot);
 }
 
 /* Rotates the robot such that it has a certain heading according
@@ -510,10 +505,10 @@ void rot_deg(struct robot *bot, int degree) {
  * RETURN void
  *    This method returns nothing
  */
-void rot_head(struct robot *bot, int head) {
+void rot_head(struct robot *bot, float head) {
 
   // Variable declarations
-  int diff;
+  float diff;
 
   // Get an up to date reading
   ud_head(bot);
@@ -525,13 +520,13 @@ void rot_head(struct robot *bot, int head) {
   while (diff > HEAD_ERR || diff < -1 * HEAD_ERR) {
 
     // Move in the appropriate direction
-    if (diff > 0) {
+    if (diff > HEAD_ERR) {
 
       // Counterclockwise
       (*bot->l_mot).SetPower(LM_PWR_LR);
       (*bot->r_mot).SetPower(RM_PWR_LR);
 
-    } else {
+    } else if (diff < -1 * HEAD_ERR){
 
       // Clockwise
       (*bot->l_mot).SetPower(LM_PWR_RR);
@@ -686,19 +681,19 @@ int r_tgt_cts(float distance) {
  *    Number of degrees seperating the robot from the
  *    desired heading
  */
-int head_diff(int head, int target) {
+float head_diff(float head, float target) {
 
   // Variable 
-  int difference = target - head;
+  float difference = target - head;
 
   // Reverse direction if need be
-  if (difference > 179) {
+  if (difference > 179.9) {
 
-    difference -= 360;
+    difference -= 360.0;
   }
-  if (difference < -179) {
+  if (difference < -179.9) {
 
-    difference += 360;
+    difference += 360.0;
   }
 
   return difference;
@@ -719,9 +714,9 @@ int head_diff(int head, int target) {
 void ud_head(struct robot *bot) {
 
   // Variable declarations
-  int old_head = bot->head;
-  int raw_head = (*bot->rps).Heading();
-  int new_head;
+  float old_head = bot->head;
+  float raw_head = (*bot->rps).Heading();
+  float new_head;
 
   // Take cases
   if (old_head > 45.0 && old_head <= 135.0) {

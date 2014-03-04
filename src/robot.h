@@ -22,7 +22,7 @@ struct robot {
   FEHWONKA *rps;         // Pointer to WONKA and RPS system
   ButtonBoard *btns;     // Pointer to button board
   
-  int head;              // Robot's current heading
+  float head;              // Robot's current heading
 
   struct log_data *journal; // Location of logging information
 };
