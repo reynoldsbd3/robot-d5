@@ -131,6 +131,7 @@ Discarded input sections
  .text          0x00000000        0x0 ../src/movement.o
  .data          0x00000000        0x0 ../src/movement.o
  .bss           0x00000000        0x0 ../src/movement.o
+ .rodata        0x00000000       0xd4 ../src/movement.o
  .text._Z8fwd_timeP5robotf
                 0x00000000       0x80 ../src/movement.o
  .text._Z8fwd_distP5robotf
@@ -166,6 +167,8 @@ Discarded input sections
  .text          0x00000000        0x0 ../src/logging.o
  .data          0x00000000        0x0 ../src/logging.o
  .bss           0x00000000        0x0 ../src/logging.o
+ .text._Z3logP8log_dataS0_
+                0x00000000       0x54 ../src/logging.o
  .text          0x00000000        0x0 Startup/__arm_start.o
  .data          0x00000000        0x0 Startup/__arm_start.o
  .bss           0x00000000        0x0 Startup/__arm_start.o
@@ -1358,8 +1361,8 @@ LOAD Libraries/FEHLCD.o
 LOAD Libraries/FEHBattery.o
 LOAD Drivers/FEHXBee.o
 LOAD Libraries/FEHWONKA.o
-                0x00012bb0                __pformatter = __pformatter_
-                [0x00012fa8]                __sformatter = __sformatter
+                0x00012b2c                __pformatter = __pformatter_
+                [0x00012f24]                __sformatter = __sformatter
 LOAD ../resources/Proteus/EWL/lib/armv7e-m\libstdc++.a
 LOAD ../resources/Proteus/EWL/lib/armv7e-m\libm.a
 START GROUP
@@ -1387,7 +1390,7 @@ END GROUP
  *(.cfmconfig)
                 0x0000c400                . = ALIGN (0x4)
 
-.text           0x0000c410     0x9338
+.text           0x0000c410     0x91b8
                 0x0000c410                . = ALIGN (0x4)
  *(.text)
  .text          0x0000c410      0x21c z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/armv7e-m\libgcc.a(_arm_addsubsf3.o)
@@ -1481,778 +1484,774 @@ END GROUP
  .text._GLOBAL__sub_I_l_mot
                 0x0000dcf4       0x14 ../src/main.o
  .text._Z7ud_headP5robot
-                0x0000dd08      0x1ac ../src/movement.o
+                0x0000dd08      0x17c ../src/movement.o
                 0x0000dd08                ud_head(robot*)
  .text._Z4dumpP5robot
-                0x0000deb4       0xbc ../src/logging.o
-                0x0000deb4                dump(robot*)
+                0x0000de84       0xbc ../src/logging.o
+                0x0000de84                dump(robot*)
  .text._Z8init_logv
-                0x0000df70       0x44 ../src/logging.o
-                0x0000df70                init_log()
- .text._Z3logP8log_dataS0_
-                0x0000dfb4       0x54 ../src/logging.o
-                0x0000dfb4                log(log_data*, log_data*)
+                0x0000df40       0x44 ../src/logging.o
+                0x0000df40                init_log()
  .text._Z6updateP8log_data
-                0x0000e008       0xc8 ../src/logging.o
-                0x0000e008                update(log_data*)
+                0x0000df84       0xc8 ../src/logging.o
+                0x0000df84                update(log_data*)
  .text.zero_fill_bss
-                0x0000e0d0       0x34 Startup/__arm_start.o
+                0x0000e04c       0x34 Startup/__arm_start.o
  .text.__thumb_startup
-                0x0000e104       0x34 Startup/__arm_start.o
-                0x0000e104                __thumb_startup
+                0x0000e080       0x34 Startup/__arm_start.o
+                0x0000e080                __thumb_startup
  .text.InitFEHProteus
-                0x0000e138      0x15c Startup/__arm_start.o
-                0x0000e138                InitFEHProteus
+                0x0000e0b4      0x15c Startup/__arm_start.o
+                0x0000e0b4                InitFEHProteus
  .text.pll_init_bl
-                0x0000e294      0x130 Startup/__arm_start.o
+                0x0000e210      0x130 Startup/__arm_start.o
  .text.InitPowerButton
-                0x0000e3c4       0x90 Startup/__arm_start.o
-                0x0000e3c4                InitPowerButton
+                0x0000e340       0x90 Startup/__arm_start.o
+                0x0000e340                InitPowerButton
  .text._ExitProcess
-                0x0000e454        0xc Startup/__arm_end.o
-                0x0000e454                _ExitProcess
+                0x0000e3d0        0xc Startup/__arm_end.o
+                0x0000e3d0                _ExitProcess
  .text.Default_Handler
-                0x0000e460        0xc Startup/kinetis_sysinit.o
-                0x0000e460                BusFault_Handler()
-                0x0000e460                HardFault_Handler()
-                0x0000e460                SysTick_Handler()
-                0x0000e460                PendSV_Handler()
-                0x0000e460                DebugMonitor_Handler()
-                0x0000e460                MemManage_Handler()
-                0x0000e460                NMI_Handler()
-                0x0000e460                SVC_Handler()
-                0x0000e460                Default_Handler
-                0x0000e460                UsageFault_Handler()
+                0x0000e3dc        0xc Startup/kinetis_sysinit.o
+                0x0000e3dc                BusFault_Handler()
+                0x0000e3dc                HardFault_Handler()
+                0x0000e3dc                SysTick_Handler()
+                0x0000e3dc                PendSV_Handler()
+                0x0000e3dc                DebugMonitor_Handler()
+                0x0000e3dc                MemManage_Handler()
+                0x0000e3dc                NMI_Handler()
+                0x0000e3dc                SVC_Handler()
+                0x0000e3dc                Default_Handler
+                0x0000e3dc                UsageFault_Handler()
  .text.__init_hardware
-                0x0000e46c       0x44 Startup/kinetis_sysinit.o
-                0x0000e46c                __init_hardware
+                0x0000e3e8       0x44 Startup/kinetis_sysinit.o
+                0x0000e3e8                __init_hardware
  .text._Z8PortDISRv
-                0x0000e4b0       0x5c Startup/kinetis_sysinit.o
-                0x0000e4b0                PortDISR()
+                0x0000e42c       0x5c Startup/kinetis_sysinit.o
+                0x0000e42c                PortDISR()
  .text._ZN8FEHMotorC2ENS_12FEHMotorPortE
-                0x0000e50c       0x28 Libraries/FEHMotor.o
-                0x0000e50c                FEHMotor::FEHMotor(FEHMotor::FEHMotorPort)
-                0x0000e50c                FEHMotor::FEHMotor(FEHMotor::FEHMotorPort)
+                0x0000e488       0x28 Libraries/FEHMotor.o
+                0x0000e488                FEHMotor::FEHMotor(FEHMotor::FEHMotorPort)
+                0x0000e488                FEHMotor::FEHMotor(FEHMotor::FEHMotorPort)
  .text._Z9uart_initPV11UART_MemMapii
-                0x0000e534      0x20c Drivers/uart.o
-                0x0000e534                uart_init(UART_MemMap volatile*, int, int)
+                0x0000e4b0      0x20c Drivers/uart.o
+                0x0000e4b0                uart_init(UART_MemMap volatile*, int, int)
  .text._Z12uart_getcharPV11UART_MemMap
-                0x0000e740       0x34 Drivers/uart.o
-                0x0000e740                uart_getchar(UART_MemMap volatile*)
+                0x0000e6bc       0x34 Drivers/uart.o
+                0x0000e6bc                uart_getchar(UART_MemMap volatile*)
  .text._Z12uart_putcharPV11UART_MemMapc
-                0x0000e774       0x38 Drivers/uart.o
-                0x0000e774                uart_putchar(UART_MemMap volatile*, char)
+                0x0000e6f0       0x38 Drivers/uart.o
+                0x0000e6f0                uart_putchar(UART_MemMap volatile*, char)
  .text._Z13time_delay_msm
-                0x0000e7ac       0xa4 Drivers/lptmr.o
-                0x0000e7ac                time_delay_ms(unsigned long)
+                0x0000e728       0xa4 Drivers/lptmr.o
+                0x0000e728                time_delay_ms(unsigned long)
  .text._Z41__static_initialization_and_destruction_0ii
-                0x0000e850       0x30 FEHProteus.o
+                0x0000e7cc       0x30 FEHProteus.o
  .text._GLOBAL__sub_I_Propeller
-                0x0000e880       0x14 FEHProteus.o
+                0x0000e7fc       0x14 FEHProteus.o
  .text._ZN12FEHPropellerC2Ev
-                0x0000e894       0x20 Drivers/FEHPropeller.o
-                0x0000e894                FEHPropeller::FEHPropeller()
-                0x0000e894                FEHPropeller::FEHPropeller()
+                0x0000e810       0x20 Drivers/FEHPropeller.o
+                0x0000e810                FEHPropeller::FEHPropeller()
+                0x0000e810                FEHPropeller::FEHPropeller()
  .text._ZN12FEHPropeller10InitializeEv
-                0x0000e8b4       0x94 Drivers/FEHPropeller.o
-                0x0000e8b4                FEHPropeller::Initialize()
+                0x0000e830       0x94 Drivers/FEHPropeller.o
+                0x0000e830                FEHPropeller::Initialize()
  .text._ZL5Delaymjj
-                0x0000e948       0xc4 Libraries/FEHUtility.o
+                0x0000e8c4       0xc4 Libraries/FEHUtility.o
  .text._Z5Sleepi
-                0x0000ea0c       0x34 Libraries/FEHUtility.o
-                0x0000ea0c                Sleep(int)
+                0x0000e988       0x34 Libraries/FEHUtility.o
+                0x0000e988                Sleep(int)
  .text._Z11TimeNowMSecv
-                0x0000ea40       0x44 Libraries/FEHUtility.o
-                0x0000ea40                TimeNowMSec()
+                0x0000e9bc       0x44 Libraries/FEHUtility.o
+                0x0000e9bc                TimeNowMSec()
  .text._ZN15DigitalInputPinC2Ev
-                0x0000ea84       0x18 Libraries/FEHIO.o
-                0x0000ea84                DigitalInputPin::DigitalInputPin()
-                0x0000ea84                DigitalInputPin::DigitalInputPin()
+                0x0000ea00       0x18 Libraries/FEHIO.o
+                0x0000ea00                DigitalInputPin::DigitalInputPin()
+                0x0000ea00                DigitalInputPin::DigitalInputPin()
  .text._ZN15DigitalInputPin10InitializeEN5FEHIO8FEHIOPinE
-                0x0000ea9c      0x224 Libraries/FEHIO.o
-                0x0000ea9c                DigitalInputPin::Initialize(FEHIO::FEHIOPin)
+                0x0000ea18      0x224 Libraries/FEHIO.o
+                0x0000ea18                DigitalInputPin::Initialize(FEHIO::FEHIOPin)
  .text._ZN15DigitalInputPin5ValueEv
-                0x0000ecc0      0x148 Libraries/FEHIO.o
-                0x0000ecc0                DigitalInputPin::Value()
+                0x0000ec3c      0x148 Libraries/FEHIO.o
+                0x0000ec3c                DigitalInputPin::Value()
  .text._ZN14AnalogInputPinC2EN5FEHIO8FEHIOPinE
-                0x0000ee08       0x20 Libraries/FEHIO.o
-                0x0000ee08                AnalogInputPin::AnalogInputPin(FEHIO::FEHIOPin)
-                0x0000ee08                AnalogInputPin::AnalogInputPin(FEHIO::FEHIOPin)
+                0x0000ed84       0x20 Libraries/FEHIO.o
+                0x0000ed84                AnalogInputPin::AnalogInputPin(FEHIO::FEHIOPin)
+                0x0000ed84                AnalogInputPin::AnalogInputPin(FEHIO::FEHIOPin)
  .text._ZN10FEHEncoder12EncoderValueEv
-                0x0000ee28       0xe4 Libraries/FEHIO.o
-                0x0000ee28                FEHEncoder::EncoderValue()
+                0x0000eda4       0xe4 Libraries/FEHIO.o
+                0x0000eda4                FEHEncoder::EncoderValue()
  .text._ZN14AnalogInputPin8InitADCsEv
-                0x0000ef0c      0x120 Libraries/FEHIO.o
-                0x0000ef0c                AnalogInputPin::InitADCs()
+                0x0000ee88      0x120 Libraries/FEHIO.o
+                0x0000ee88                AnalogInputPin::InitADCs()
  .text._Z8pit0_isrv
-                0x0000f02c       0x34 Libraries/FEHIO.o
-                0x0000f02c                pit0_isr()
+                0x0000efa8       0x34 Libraries/FEHIO.o
+                0x0000efa8                pit0_isr()
  .text._ZN10FEHEncoder4InitEv
-                0x0000f060       0x64 Libraries/FEHIO.o
-                0x0000f060                FEHEncoder::Init()
+                0x0000efdc       0x64 Libraries/FEHIO.o
+                0x0000efdc                FEHEncoder::Init()
  .text._ZN10FEHEncoder14SetCounterInitEj
-                0x0000f0c4       0x20 Libraries/FEHIO.o
-                0x0000f0c4                FEHEncoder::SetCounterInit(unsigned int)
+                0x0000f040       0x20 Libraries/FEHIO.o
+                0x0000f040                FEHEncoder::SetCounterInit(unsigned int)
  .text._ZN10FEHEncoderC2EN5FEHIO8FEHIOPinE
-                0x0000f0e4      0x194 Libraries/FEHIO.o
-                0x0000f0e4                FEHEncoder::FEHEncoder(FEHIO::FEHIOPin)
-                0x0000f0e4                FEHEncoder::FEHEncoder(FEHIO::FEHIOPin)
+                0x0000f060      0x194 Libraries/FEHIO.o
+                0x0000f060                FEHEncoder::FEHEncoder(FEHIO::FEHIOPin)
+                0x0000f060                FEHEncoder::FEHEncoder(FEHIO::FEHIOPin)
  .text._ZN10FEHEncoderD2Ev
-                0x0000f278       0xb8 Libraries/FEHIO.o
-                0x0000f278                FEHEncoder::~FEHEncoder()
-                0x0000f278                FEHEncoder::~FEHEncoder()
+                0x0000f1f4       0xb8 Libraries/FEHIO.o
+                0x0000f1f4                FEHEncoder::~FEHEncoder()
+                0x0000f1f4                FEHEncoder::~FEHEncoder()
  .text._ZN10FEHEncoder10ProcessIntEv
-                0x0000f330       0x80 Libraries/FEHIO.o
-                0x0000f330                FEHEncoder::ProcessInt()
+                0x0000f2ac       0x80 Libraries/FEHIO.o
+                0x0000f2ac                FEHEncoder::ProcessInt()
  .text._ZN10FEHEncoder14ProcessIntSelfEv
-                0x0000f3b0       0x80 Libraries/FEHIO.o
-                0x0000f3b0                FEHEncoder::ProcessIntSelf()
+                0x0000f32c       0x80 Libraries/FEHIO.o
+                0x0000f32c                FEHEncoder::ProcessIntSelf()
  .text._ZN10FEHEncoder11ResetCountsEv
-                0x0000f430       0x1c Libraries/FEHIO.o
-                0x0000f430                FEHEncoder::ResetCounts()
+                0x0000f3ac       0x1c Libraries/FEHIO.o
+                0x0000f3ac                FEHEncoder::ResetCounts()
  .text._ZN11ButtonBoardC2EN5FEHIO9FEHIOPortE
-                0x0000f44c      0x10c Libraries/FEHIO.o
-                0x0000f44c                ButtonBoard::ButtonBoard(FEHIO::FEHIOPort)
-                0x0000f44c                ButtonBoard::ButtonBoard(FEHIO::FEHIOPort)
+                0x0000f3c8      0x10c Libraries/FEHIO.o
+                0x0000f3c8                ButtonBoard::ButtonBoard(FEHIO::FEHIOPort)
+                0x0000f3c8                ButtonBoard::ButtonBoard(FEHIO::FEHIOPort)
  .text._ZN11ButtonBoard11LeftPressedEv
-                0x0000f558       0x24 Libraries/FEHIO.o
-                0x0000f558                ButtonBoard::LeftPressed()
+                0x0000f4d4       0x24 Libraries/FEHIO.o
+                0x0000f4d4                ButtonBoard::LeftPressed()
  .text._ZN11ButtonBoard13MiddlePressedEv
-                0x0000f57c       0x28 Libraries/FEHIO.o
-                0x0000f57c                ButtonBoard::MiddlePressed()
+                0x0000f4f8       0x28 Libraries/FEHIO.o
+                0x0000f4f8                ButtonBoard::MiddlePressed()
  .text._ZN11ButtonBoard12RightPressedEv
-                0x0000f5a4       0x28 Libraries/FEHIO.o
-                0x0000f5a4                ButtonBoard::RightPressed()
+                0x0000f520       0x28 Libraries/FEHIO.o
+                0x0000f520                ButtonBoard::RightPressed()
  .text._Z7ADC_CalPV10ADC_MemMap
-                0x0000f5cc      0x14c Drivers/adc16.o
-                0x0000f5cc                ADC_Cal(ADC_MemMap volatile*)
+                0x0000f548      0x14c Drivers/adc16.o
+                0x0000f548                ADC_Cal(ADC_MemMap volatile*)
  .text._Z14ADC_Config_AltPV10ADC_MemMapP7adc_cfg
-                0x0000f718       0x6c Drivers/adc16.o
-                0x0000f718                ADC_Config_Alt(ADC_MemMap volatile*, adc_cfg*)
+                0x0000f694       0x6c Drivers/adc16.o
+                0x0000f694                ADC_Config_Alt(ADC_MemMap volatile*, adc_cfg*)
  .text._ZN9FEHBuzzerC2Ev
-                0x0000f784       0x18 Libraries/FEHBuzzer.o
-                0x0000f784                FEHBuzzer::FEHBuzzer()
-                0x0000f784                FEHBuzzer::FEHBuzzer()
+                0x0000f700       0x18 Libraries/FEHBuzzer.o
+                0x0000f700                FEHBuzzer::FEHBuzzer()
+                0x0000f700                FEHBuzzer::FEHBuzzer()
  .text._Z41__static_initialization_and_destruction_0ii
-                0x0000f79c       0x30 Libraries/FEHBuzzer.o
+                0x0000f718       0x30 Libraries/FEHBuzzer.o
  .text._GLOBAL__sub_I_Buzzer
-                0x0000f7cc       0x14 Libraries/FEHBuzzer.o
+                0x0000f748       0x14 Libraries/FEHBuzzer.o
  .text._ZN8FEHServoC2ENS_12FEHServoPortE
-                0x0000f7e0       0x3c Libraries/FEHServo.o
-                0x0000f7e0                FEHServo::FEHServo(FEHServo::FEHServoPort)
-                0x0000f7e0                FEHServo::FEHServo(FEHServo::FEHServoPort)
+                0x0000f75c       0x3c Libraries/FEHServo.o
+                0x0000f75c                FEHServo::FEHServo(FEHServo::FEHServoPort)
+                0x0000f75c                FEHServo::FEHServo(FEHServo::FEHServoPort)
  .text._ZN8FEHServo9DigitalOnEv
-                0x0000f81c       0x64 Libraries/FEHServo.o
-                0x0000f81c                FEHServo::DigitalOn()
+                0x0000f798       0x64 Libraries/FEHServo.o
+                0x0000f798                FEHServo::DigitalOn()
  .text._ZN6FEHLCD11_InitializeEv
-                0x0000f880      0x5c0 Libraries/FEHLCD.o
-                0x0000f880                FEHLCD::_Initialize()
+                0x0000f7fc      0x5c0 Libraries/FEHLCD.o
+                0x0000f7fc                FEHLCD::_Initialize()
  .text._ZN6FEHLCDC2Ev
-                0x0000fe40       0x64 Libraries/FEHLCD.o
-                0x0000fe40                FEHLCD::FEHLCD()
-                0x0000fe40                FEHLCD::FEHLCD()
+                0x0000fdbc       0x64 Libraries/FEHLCD.o
+                0x0000fdbc                FEHLCD::FEHLCD()
+                0x0000fdbc                FEHLCD::FEHLCD()
  .text._ZN6FEHLCD10InitializeEv
-                0x0000fea4       0x38 Libraries/FEHLCD.o
-                0x0000fea4                FEHLCD::Initialize()
+                0x0000fe20       0x38 Libraries/FEHLCD.o
+                0x0000fe20                FEHLCD::Initialize()
  .text._ZN6FEHLCD10PrintImageEii
-                0x0000fedc       0xf4 Libraries/FEHLCD.o
-                0x0000fedc                FEHLCD::PrintImage(int, int)
+                0x0000fe58       0xf4 Libraries/FEHLCD.o
+                0x0000fe58                FEHLCD::PrintImage(int, int)
  .text._ZN6FEHLCD22ConvertFEHColorTo24BitENS_11FEHLCDColorE
-                0x0000ffd0       0x80 Libraries/FEHLCD.o
-                0x0000ffd0                FEHLCD::ConvertFEHColorTo24Bit(FEHLCD::FEHLCDColor)
+                0x0000ff4c       0x80 Libraries/FEHLCD.o
+                0x0000ff4c                FEHLCD::ConvertFEHColorTo24Bit(FEHLCD::FEHLCDColor)
  .text._ZN6FEHLCD24Convert24BitColorTo16BitEj
-                0x00010050       0x40 Libraries/FEHLCD.o
-                0x00010050                FEHLCD::Convert24BitColorTo16Bit(unsigned int)
+                0x0000ffcc       0x40 Libraries/FEHLCD.o
+                0x0000ffcc                FEHLCD::Convert24BitColorTo16Bit(unsigned int)
  .text._ZN6FEHLCD22ConvertRGBColorTo16BitEhhh
-                0x00010090       0x44 Libraries/FEHLCD.o
-                0x00010090                FEHLCD::ConvertRGBColorTo16Bit(unsigned char, unsigned char, unsigned char)
+                0x0001000c       0x44 Libraries/FEHLCD.o
+                0x0001000c                FEHLCD::ConvertRGBColorTo16Bit(unsigned char, unsigned char, unsigned char)
  .text._ZN6FEHLCD5ClearENS_11FEHLCDColorE
-                0x000100d4       0x28 Libraries/FEHLCD.o
-                0x000100d4                FEHLCD::Clear(FEHLCD::FEHLCDColor)
+                0x00010050       0x28 Libraries/FEHLCD.o
+                0x00010050                FEHLCD::Clear(FEHLCD::FEHLCDColor)
  .text._ZN6FEHLCD5ClearEj
-                0x000100fc       0x2c Libraries/FEHLCD.o
-                0x000100fc                FEHLCD::Clear(unsigned int)
+                0x00010078       0x2c Libraries/FEHLCD.o
+                0x00010078                FEHLCD::Clear(unsigned int)
  .text._ZN6FEHLCD5ClearEv
-                0x00010128       0x18 Libraries/FEHLCD.o
-                0x00010128                FEHLCD::Clear()
+                0x000100a4       0x18 Libraries/FEHLCD.o
+                0x000100a4                FEHLCD::Clear()
  .text._ZN6FEHLCD18SetBackgroundColorENS_11FEHLCDColorE
-                0x00010140       0x28 Libraries/FEHLCD.o
-                0x00010140                FEHLCD::SetBackgroundColor(FEHLCD::FEHLCDColor)
+                0x000100bc       0x28 Libraries/FEHLCD.o
+                0x000100bc                FEHLCD::SetBackgroundColor(FEHLCD::FEHLCDColor)
  .text._ZN6FEHLCD18SetBackgroundColorEj
-                0x00010168       0x28 Libraries/FEHLCD.o
-                0x00010168                FEHLCD::SetBackgroundColor(unsigned int)
+                0x000100e4       0x28 Libraries/FEHLCD.o
+                0x000100e4                FEHLCD::SetBackgroundColor(unsigned int)
  .text._ZN6FEHLCD12SetFontColorENS_11FEHLCDColorE
-                0x00010190       0x28 Libraries/FEHLCD.o
-                0x00010190                FEHLCD::SetFontColor(FEHLCD::FEHLCDColor)
+                0x0001010c       0x28 Libraries/FEHLCD.o
+                0x0001010c                FEHLCD::SetFontColor(FEHLCD::FEHLCDColor)
  .text._ZN6FEHLCD12SetFontColorEj
-                0x000101b8       0x28 Libraries/FEHLCD.o
-                0x000101b8                FEHLCD::SetFontColor(unsigned int)
+                0x00010134       0x28 Libraries/FEHLCD.o
+                0x00010134                FEHLCD::SetFontColor(unsigned int)
  .text._ZN6FEHLCD7WriteAtEPKcii
-                0x000101e0       0x58 Libraries/FEHLCD.o
-                0x000101e0                FEHLCD::WriteAt(char const*, int, int)
+                0x0001015c       0x58 Libraries/FEHLCD.o
+                0x0001015c                FEHLCD::WriteAt(char const*, int, int)
  .text._ZN6FEHLCD5WriteEPKc
-                0x00010238       0x5c Libraries/FEHLCD.o
-                0x00010238                FEHLCD::Write(char const*)
+                0x000101b4       0x5c Libraries/FEHLCD.o
+                0x000101b4                FEHLCD::Write(char const*)
  .text._ZN6FEHLCD5WriteEi
-                0x00010294       0x34 Libraries/FEHLCD.o
-                0x00010294                FEHLCD::Write(int)
+                0x00010210       0x34 Libraries/FEHLCD.o
+                0x00010210                FEHLCD::Write(int)
  .text._ZN6FEHLCD5WriteEf
-                0x000102c8       0xdc Libraries/FEHLCD.o
-                0x000102c8                FEHLCD::Write(float)
+                0x00010244       0xdc Libraries/FEHLCD.o
+                0x00010244                FEHLCD::Write(float)
  .text._ZN6FEHLCD5WriteEc
-                0x000103a4       0x30 Libraries/FEHLCD.o
-                0x000103a4                FEHLCD::Write(char)
+                0x00010320       0x30 Libraries/FEHLCD.o
+                0x00010320                FEHLCD::Write(char)
  .text._ZN6FEHLCD9WriteLineEPKc
-                0x000103d4       0x28 Libraries/FEHLCD.o
-                0x000103d4                FEHLCD::WriteLine(char const*)
+                0x00010350       0x28 Libraries/FEHLCD.o
+                0x00010350                FEHLCD::WriteLine(char const*)
  .text._ZN6FEHLCD9WriteLineEi
-                0x000103fc       0x28 Libraries/FEHLCD.o
-                0x000103fc                FEHLCD::WriteLine(int)
+                0x00010378       0x28 Libraries/FEHLCD.o
+                0x00010378                FEHLCD::WriteLine(int)
  .text._ZN6FEHLCD9WriteLineEf
-                0x00010424       0x28 Libraries/FEHLCD.o
-                0x00010424                FEHLCD::WriteLine(float)
+                0x000103a0       0x28 Libraries/FEHLCD.o
+                0x000103a0                FEHLCD::WriteLine(float)
  .text._ZN6FEHLCD9WriteLineEc
-                0x0001044c       0x2c Libraries/FEHLCD.o
-                0x0001044c                FEHLCD::WriteLine(char)
+                0x000103c8       0x2c Libraries/FEHLCD.o
+                0x000103c8                FEHLCD::WriteLine(char)
  .text._ZN6FEHLCD10WriteIndexEh
-                0x00010478      0x288 Libraries/FEHLCD.o
-                0x00010478                FEHLCD::WriteIndex(unsigned char)
+                0x000103f4      0x288 Libraries/FEHLCD.o
+                0x000103f4                FEHLCD::WriteIndex(unsigned char)
  .text._ZN6FEHLCD14WriteParameterEh
-                0x00010700      0x254 Libraries/FEHLCD.o
-                0x00010700                FEHLCD::WriteParameter(unsigned char)
+                0x0001067c      0x254 Libraries/FEHLCD.o
+                0x0001067c                FEHLCD::WriteParameter(unsigned char)
  .text._ZN6FEHLCD6_ClearEv
-                0x00010954      0x228 Libraries/FEHLCD.o
-                0x00010954                FEHLCD::_Clear()
+                0x000108d0      0x228 Libraries/FEHLCD.o
+                0x000108d0                FEHLCD::_Clear()
  .text._ZN6FEHLCD8NextLineEv
-                0x00010b7c       0x30 Libraries/FEHLCD.o
-                0x00010b7c                FEHLCD::NextLine()
+                0x00010af8       0x30 Libraries/FEHLCD.o
+                0x00010af8                FEHLCD::NextLine()
  .text._ZN6FEHLCD9CheckLineEv
-                0x00010bac       0x2c Libraries/FEHLCD.o
-                0x00010bac                FEHLCD::CheckLine()
+                0x00010b28       0x2c Libraries/FEHLCD.o
+                0x00010b28                FEHLCD::CheckLine()
  .text._ZN6FEHLCD8NextCharEv
-                0x00010bd8       0x34 Libraries/FEHLCD.o
-                0x00010bd8                FEHLCD::NextChar()
+                0x00010b54       0x34 Libraries/FEHLCD.o
+                0x00010b54                FEHLCD::NextChar()
  .text._ZN6FEHLCD13SetDrawRegionEiiii
-                0x00010c0c      0x10c Libraries/FEHLCD.o
-                0x00010c0c                FEHLCD::SetDrawRegion(int, int, int, int)
+                0x00010b88      0x10c Libraries/FEHLCD.o
+                0x00010b88                FEHLCD::SetDrawRegion(int, int, int, int)
  .text._ZN6FEHLCD9WriteCharEiic
-                0x00010d18       0x40 Libraries/FEHLCD.o
-                0x00010d18                FEHLCD::WriteChar(int, int, char)
+                0x00010c94       0x40 Libraries/FEHLCD.o
+                0x00010c94                FEHLCD::WriteChar(int, int, char)
  .text._ZN6FEHLCD11WriteCharAtEiic
-                0x00010d58      0x278 Libraries/FEHLCD.o
-                0x00010d58                FEHLCD::WriteCharAt(int, int, char)
+                0x00010cd4      0x278 Libraries/FEHLCD.o
+                0x00010cd4                FEHLCD::WriteCharAt(int, int, char)
  .text._ZN6FEHLCD11RepeatColorEv
-                0x00010fd0       0xbc Libraries/FEHLCD.o
-                0x00010fd0                FEHLCD::RepeatColor()
+                0x00010f4c       0xbc Libraries/FEHLCD.o
+                0x00010f4c                FEHLCD::RepeatColor()
  .text._ZN6FEHLCD10_ForePixelEv
-                0x0001108c      0x160 Libraries/FEHLCD.o
-                0x0001108c                FEHLCD::_ForePixel()
+                0x00011008      0x160 Libraries/FEHLCD.o
+                0x00011008                FEHLCD::_ForePixel()
  .text._ZN6FEHLCD10_BackPixelEv
-                0x000111ec      0x160 Libraries/FEHLCD.o
-                0x000111ec                FEHLCD::_BackPixel()
+                0x00011168      0x160 Libraries/FEHLCD.o
+                0x00011168                FEHLCD::_BackPixel()
  .text._ZN6FEHLCD22SetRegisterColorValuesEv
-                0x0001134c      0x4c0 Libraries/FEHLCD.o
-                0x0001134c                FEHLCD::SetRegisterColorValues()
+                0x000112c8      0x4c0 Libraries/FEHLCD.o
+                0x000112c8                FEHLCD::SetRegisterColorValues()
  .text._Z41__static_initialization_and_destruction_0ii
-                0x0001180c       0x30 Libraries/FEHLCD.o
+                0x00011788       0x30 Libraries/FEHLCD.o
  .text._GLOBAL__sub_I_image
-                0x0001183c       0x14 Libraries/FEHLCD.o
+                0x000117b8       0x14 Libraries/FEHLCD.o
  .text._ZN10FEHBatteryC2EN5FEHIO8FEHIOPinE
-                0x00011850       0x24 Libraries/FEHBattery.o
-                0x00011850                FEHBattery::FEHBattery(FEHIO::FEHIOPin)
-                0x00011850                FEHBattery::FEHBattery(FEHIO::FEHIOPin)
+                0x000117cc       0x24 Libraries/FEHBattery.o
+                0x000117cc                FEHBattery::FEHBattery(FEHIO::FEHIOPin)
+                0x000117cc                FEHBattery::FEHBattery(FEHIO::FEHIOPin)
  .text._Z41__static_initialization_and_destruction_0ii
-                0x00011874       0x34 Libraries/FEHBattery.o
+                0x000117f0       0x34 Libraries/FEHBattery.o
  .text._GLOBAL__sub_I_Battery
-                0x000118a8       0x14 Libraries/FEHBattery.o
+                0x00011824       0x14 Libraries/FEHBattery.o
  .text._ZN7FEHXBeeC2Ev
-                0x000118bc       0x20 Drivers/FEHXBee.o
-                0x000118bc                FEHXBee::FEHXBee()
-                0x000118bc                FEHXBee::FEHXBee()
+                0x00011838       0x20 Drivers/FEHXBee.o
+                0x00011838                FEHXBee::FEHXBee()
+                0x00011838                FEHXBee::FEHXBee()
  .text._ZN7FEHXBee10InitializeEv
-                0x000118dc      0x148 Drivers/FEHXBee.o
-                0x000118dc                FEHXBee::Initialize()
+                0x00011858      0x148 Drivers/FEHXBee.o
+                0x00011858                FEHXBee::Initialize()
  .text._ZN7FEHXBee13IsInitializedEv
-                0x00011a24       0x18 Drivers/FEHXBee.o
-                0x00011a24                FEHXBee::IsInitialized()
+                0x000119a0       0x18 Drivers/FEHXBee.o
+                0x000119a0                FEHXBee::IsInitialized()
  .text._ZN7FEHXBee17ReceiveDataSearchEPcjh
-                0x00011a3c       0xb4 Drivers/FEHXBee.o
-                0x00011a3c                FEHXBee::ReceiveDataSearch(char*, unsigned int, unsigned char)
+                0x000119b8       0xb4 Drivers/FEHXBee.o
+                0x000119b8                FEHXBee::ReceiveDataSearch(char*, unsigned int, unsigned char)
  .text._ZN7FEHXBee8SendDataEPcj
-                0x00011af0       0x50 Drivers/FEHXBee.o
-                0x00011af0                FEHXBee::SendData(char*, unsigned int)
+                0x00011a6c       0x50 Drivers/FEHXBee.o
+                0x00011a6c                FEHXBee::SendData(char*, unsigned int)
  .text._ZN7FEHXBee17SetPacketCallBackEPFvPhhE
-                0x00011b40       0x20 Drivers/FEHXBee.o
-                0x00011b40                FEHXBee::SetPacketCallBack(void (*)(unsigned char*, unsigned char))
+                0x00011abc       0x20 Drivers/FEHXBee.o
+                0x00011abc                FEHXBee::SetPacketCallBack(void (*)(unsigned char*, unsigned char))
  .text._Z9UART0_ISRv
-                0x00011b60      0x174 Drivers/FEHXBee.o
-                0x00011b60                UART0_ISR()
+                0x00011adc      0x174 Drivers/FEHXBee.o
+                0x00011adc                UART0_ISR()
  .text._ZN8FEHWONKAC2Ev
-                0x00011cd4       0x88 Libraries/FEHWONKA.o
-                0x00011cd4                FEHWONKA::FEHWONKA()
-                0x00011cd4                FEHWONKA::FEHWONKA()
+                0x00011c50       0x88 Libraries/FEHWONKA.o
+                0x00011c50                FEHWONKA::FEHWONKA()
+                0x00011c50                FEHWONKA::FEHWONKA()
  .text._ZN8FEHWONKA14InitializeMenuEv
-                0x00011d5c      0x1e8 Libraries/FEHWONKA.o
-                0x00011d5c                FEHWONKA::InitializeMenu()
+                0x00011cd8      0x1e8 Libraries/FEHWONKA.o
+                0x00011cd8                FEHWONKA::InitializeMenu()
  .text._ZN8FEHWONKA10InitializeEi
-                0x00011f44      0x740 Libraries/FEHWONKA.o
-                0x00011f44                FEHWONKA::Initialize(int)
+                0x00011ec0      0x740 Libraries/FEHWONKA.o
+                0x00011ec0                FEHWONKA::Initialize(int)
  .text._ZN8FEHWONKA10InitializeEc
-                0x00012684       0x4c Libraries/FEHWONKA.o
-                0x00012684                FEHWONKA::Initialize(char)
+                0x00012600       0x4c Libraries/FEHWONKA.o
+                0x00012600                FEHWONKA::Initialize(char)
  .text._ZN8FEHWONKA6EnableEv
-                0x000126d0       0x44 Libraries/FEHWONKA.o
-                0x000126d0                FEHWONKA::Enable()
+                0x0001264c       0x44 Libraries/FEHWONKA.o
+                0x0001264c                FEHWONKA::Enable()
  .text._ZN8FEHWONKA19CurrentRegionLetterEv
-                0x00012714       0x20 Libraries/FEHWONKA.o
-                0x00012714                FEHWONKA::CurrentRegionLetter()
+                0x00012690       0x20 Libraries/FEHWONKA.o
+                0x00012690                FEHWONKA::CurrentRegionLetter()
  .text._ZN8FEHWONKA13WaitForPacketEv
-                0x00012734       0x7c Libraries/FEHWONKA.o
-                0x00012734                FEHWONKA::WaitForPacket()
+                0x000126b0       0x7c Libraries/FEHWONKA.o
+                0x000126b0                FEHWONKA::WaitForPacket()
  .text._ZN8FEHWONKA7HeadingEv
-                0x000127b0       0x20 Libraries/FEHWONKA.o
-                0x000127b0                FEHWONKA::Heading()
+                0x0001272c       0x20 Libraries/FEHWONKA.o
+                0x0001272c                FEHWONKA::Heading()
  .text._Z16WONKADataProcessPhh
-                0x000127d0      0x128 Libraries/FEHWONKA.o
-                0x000127d0                WONKADataProcess(unsigned char*, unsigned char)
+                0x0001274c      0x128 Libraries/FEHWONKA.o
+                0x0001274c                WONKADataProcess(unsigned char*, unsigned char)
  .text._Z41__static_initialization_and_destruction_0ii
-                0x000128f8       0x40 Libraries/FEHWONKA.o
+                0x00012874       0x40 Libraries/FEHWONKA.o
  .text._GLOBAL__sub_I_WONKA
-                0x00012938       0x14 Libraries/FEHWONKA.o
- .text.sprintf  0x0001294c       0x1c ../resources/Proteus/EWL/lib/armv7e-m\libc.a(sprintf.o)
-                0x0001294c                sprintf
+                0x000128b4       0x14 Libraries/FEHWONKA.o
+ .text.sprintf  0x000128c8       0x1c ../resources/Proteus/EWL/lib/armv7e-m\libc.a(sprintf.o)
+                0x000128c8                sprintf
  .text.__StringWrite
-                0x00012968       0x28 ../resources/Proteus/EWL/lib/armv7e-m\libc.a(vsnprintf.o)
-                0x00012968                __StringWrite
+                0x000128e4       0x28 ../resources/Proteus/EWL/lib/armv7e-m\libc.a(vsnprintf.o)
+                0x000128e4                __StringWrite
  .text.vsnprintf
-                0x00012990       0x34 ../resources/Proteus/EWL/lib/armv7e-m\libc.a(vsnprintf.o)
-                0x00012990                vsnprintf
- .text.exit     0x000129c4       0x38 ../resources/Proteus/EWL/lib/armv7e-m\libc.a(exit.o)
-                0x000129c4                exit
- .text.memcpy   0x000129fc       0x12 ../resources/Proteus/EWL/lib/armv7e-m\libc.a(memcpy.o)
-                0x000129fc                memcpy
- .text.memset   0x00012a0e        0xc ../resources/Proteus/EWL/lib/armv7e-m\libc.a(memset.o)
-                0x00012a0e                memset
+                0x0001290c       0x34 ../resources/Proteus/EWL/lib/armv7e-m\libc.a(vsnprintf.o)
+                0x0001290c                vsnprintf
+ .text.exit     0x00012940       0x38 ../resources/Proteus/EWL/lib/armv7e-m\libc.a(exit.o)
+                0x00012940                exit
+ .text.memcpy   0x00012978       0x12 ../resources/Proteus/EWL/lib/armv7e-m\libc.a(memcpy.o)
+                0x00012978                memcpy
+ .text.memset   0x0001298a        0xc ../resources/Proteus/EWL/lib/armv7e-m\libc.a(memset.o)
+                0x0001298a                memset
  .text.long2str.isra.0
-                0x00012a1a      0x196 ../resources/Proteus/EWL/lib/armv7e-m\libc.a(printformat_.o)
+                0x00012996      0x196 ../resources/Proteus/EWL/lib/armv7e-m\libc.a(printformat_.o)
  .text.__pformatter_
-                0x00012bb0      0x3f8 ../resources/Proteus/EWL/lib/armv7e-m\libc.a(printformat_.o)
-                0x00012bb0                __pformatter_
+                0x00012b2c      0x3f8 ../resources/Proteus/EWL/lib/armv7e-m\libc.a(printformat_.o)
+                0x00012b2c                __pformatter_
  .text.__sformatter
-                0x00012fa8      0x74e ../resources/Proteus/EWL/lib/armv7e-m\libc.a(scanformat_.o)
-                0x00012fa8                __sformatter
- *fill*         0x000136f6        0x2 00
- .text.isalpha  0x000136f8       0x1c ../resources/Proteus/EWL/lib/armv7e-m\libc.a(ctype_aeabi.o)
-                0x000136f8                isalpha
- .text.isspace  0x00013714       0x1c ../resources/Proteus/EWL/lib/armv7e-m\libc.a(ctype_aeabi.o)
-                0x00013714                isspace
- .text.toupper  0x00013730        0xc ../resources/Proteus/EWL/lib/armv7e-m\libc.a(ctype_aeabi.o)
-                0x00013730                toupper
+                0x00012f24      0x74e ../resources/Proteus/EWL/lib/armv7e-m\libc.a(scanformat_.o)
+                0x00012f24                __sformatter
+ *fill*         0x00013672        0x2 00
+ .text.isalpha  0x00013674       0x1c ../resources/Proteus/EWL/lib/armv7e-m\libc.a(ctype_aeabi.o)
+                0x00013674                isalpha
+ .text.isspace  0x00013690       0x1c ../resources/Proteus/EWL/lib/armv7e-m\libc.a(ctype_aeabi.o)
+                0x00013690                isspace
+ .text.toupper  0x000136ac        0xc ../resources/Proteus/EWL/lib/armv7e-m\libc.a(ctype_aeabi.o)
+                0x000136ac                toupper
  .text.__strtoul
-                0x0001373c      0x1dc ../resources/Proteus/EWL/lib/armv7e-m\libc.a(__strtoul.o)
-                0x0001373c                __strtoul
+                0x000136b8      0x1dc ../resources/Proteus/EWL/lib/armv7e-m\libc.a(__strtoul.o)
+                0x000136b8                __strtoul
  .text.__fill_mem
-                0x00013918       0x76 ../resources/Proteus/EWL/lib/armv7e-m\libc.a(__filll_mem.o)
-                0x00013918                __fill_mem
- .text.memchr   0x0001398e       0x1a ../resources/Proteus/EWL/lib/armv7e-m\libc.a(memchr.o)
-                0x0001398e                memchr
- .text.strchr   0x000139a8       0x1c ../resources/Proteus/EWL/lib/armv7e-m\libc.a(strchr.o)
-                0x000139a8                strchr
- .text.strlen   0x000139c4       0x10 ../resources/Proteus/EWL/lib/armv7e-m\libc.a(strlen.o)
-                0x000139c4                strlen
+                0x00013894       0x76 ../resources/Proteus/EWL/lib/armv7e-m\libc.a(__filll_mem.o)
+                0x00013894                __fill_mem
+ .text.memchr   0x0001390a       0x1a ../resources/Proteus/EWL/lib/armv7e-m\libc.a(memchr.o)
+                0x0001390a                memchr
+ .text.strchr   0x00013924       0x1c ../resources/Proteus/EWL/lib/armv7e-m\libc.a(strchr.o)
+                0x00013924                strchr
+ .text.strlen   0x00013940       0x10 ../resources/Proteus/EWL/lib/armv7e-m\libc.a(strlen.o)
+                0x00013940                strlen
  .text.__init_cpp
-                0x000139d4       0x4c ../resources/Proteus/EWL/lib/armv7e-m\librt.a(gcc_ctor_dtor.o)
-                0x000139d4                __init_cpp
+                0x00013950       0x4c ../resources/Proteus/EWL/lib/armv7e-m\librt.a(gcc_ctor_dtor.o)
+                0x00013950                __init_cpp
  .text.__fini_cpp
-                0x00013a20       0x34 ../resources/Proteus/EWL/lib/armv7e-m\librt.a(gcc_ctor_dtor.o)
-                0x00013a20                __fini_cpp
+                0x0001399c       0x34 ../resources/Proteus/EWL/lib/armv7e-m\librt.a(gcc_ctor_dtor.o)
+                0x0001399c                __fini_cpp
  .text.__copy_rom_section
-                0x00013a54       0x44 ../resources/Proteus/EWL/lib/armv7e-m\librt.a(ROMCopy.o)
-                0x00013a54                __copy_rom_section
+                0x000139d0       0x44 ../resources/Proteus/EWL/lib/armv7e-m\librt.a(ROMCopy.o)
+                0x000139d0                __copy_rom_section
  .text.__copy_rom_sections_to_ram
-                0x00013a98       0x34 ../resources/Proteus/EWL/lib/armv7e-m\librt.a(ROMCopy.o)
-                0x00013a98                __copy_rom_sections_to_ram
+                0x00013a14       0x34 ../resources/Proteus/EWL/lib/armv7e-m\librt.a(ROMCopy.o)
+                0x00013a14                __copy_rom_sections_to_ram
  .text.__destroy_global_chain
-                0x00013acc       0x1c ../resources/Proteus/EWL/lib/armv7e-m\librt.a(__arm_eabi_init.o)
-                0x00013acc                __destroy_global_chain
+                0x00013a48       0x1c ../resources/Proteus/EWL/lib/armv7e-m\librt.a(__arm_eabi_init.o)
+                0x00013a48                __destroy_global_chain
  .text.__cxa_atexit
-                0x00013ae8       0x38 ../resources/Proteus/EWL/lib/armv7e-m\librt.a(__arm_eabi_init.o)
-                0x00013ae8                __cxa_atexit
+                0x00013a64       0x38 ../resources/Proteus/EWL/lib/armv7e-m\librt.a(__arm_eabi_init.o)
+                0x00013a64                __cxa_atexit
  .text.__aeabi_atexit
-                0x00013b20        0xa ../resources/Proteus/EWL/lib/armv7e-m\librt.a(__arm_eabi_init.o)
-                0x00013b20                __aeabi_atexit
- *fill*         0x00013b2a        0x2 00
+                0x00013a9c        0xa ../resources/Proteus/EWL/lib/armv7e-m\librt.a(__arm_eabi_init.o)
+                0x00013a9c                __aeabi_atexit
+ *fill*         0x00013aa6        0x2 00
  .text.__init_registers
-                0x00013b2c       0x20 ../resources/Proteus/EWL/lib/armv7e-m\librt.a(__arm_eabi_init.o)
-                0x00013b2c                __init_registers
+                0x00013aa8       0x20 ../resources/Proteus/EWL/lib/armv7e-m\librt.a(__arm_eabi_init.o)
+                0x00013aa8                __init_registers
  .text.__init_user
-                0x00013b4c        0x4 ../resources/Proteus/EWL/lib/armv7e-m\librt.a(__arm_eabi_init.o)
-                0x00013b4c                __init_user
+                0x00013ac8        0x4 ../resources/Proteus/EWL/lib/armv7e-m\librt.a(__arm_eabi_init.o)
+                0x00013ac8                __init_user
  .text._ZNSt9bad_allocD2Ev
-                0x00013b50        0xc ../resources/Proteus/EWL/lib/armv7e-m\librt.a(New.o)
-                0x00013b50                std::bad_alloc::~bad_alloc()
-                0x00013b50                std::bad_alloc::~bad_alloc()
+                0x00013acc        0xc ../resources/Proteus/EWL/lib/armv7e-m\librt.a(New.o)
+                0x00013acc                std::bad_alloc::~bad_alloc()
+                0x00013acc                std::bad_alloc::~bad_alloc()
  .text._ZNKSt9bad_alloc4whatEv
-                0x00013b5c        0x8 ../resources/Proteus/EWL/lib/armv7e-m\librt.a(New.o)
-                0x00013b5c                std::bad_alloc::what() const
- .text._Znwj    0x00013b64       0x4c ../resources/Proteus/EWL/lib/armv7e-m\librt.a(New.o)
-                0x00013b64                operator new(unsigned int)
- .text._ZdlPv   0x00013bb0        0x8 ../resources/Proteus/EWL/lib/armv7e-m\librt.a(New.o)
-                0x00013bb0                operator delete(void*)
+                0x00013ad8        0x8 ../resources/Proteus/EWL/lib/armv7e-m\librt.a(New.o)
+                0x00013ad8                std::bad_alloc::what() const
+ .text._Znwj    0x00013ae0       0x4c ../resources/Proteus/EWL/lib/armv7e-m\librt.a(New.o)
+                0x00013ae0                operator new(unsigned int)
+ .text._ZdlPv   0x00013b2c        0x8 ../resources/Proteus/EWL/lib/armv7e-m\librt.a(New.o)
+                0x00013b2c                operator delete(void*)
  .text._ZNSt9bad_allocD0Ev
-                0x00013bb8       0x14 ../resources/Proteus/EWL/lib/armv7e-m\librt.a(New.o)
-                0x00013bb8                std::bad_alloc::~bad_alloc()
+                0x00013b34       0x14 ../resources/Proteus/EWL/lib/armv7e-m\librt.a(New.o)
+                0x00013b34                std::bad_alloc::~bad_alloc()
  .text._ZNK10__cxxabiv117__class_type_info11__do_upcastEPKS0_PPv
-                0x00013bcc       0x38 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(class_type_info.o)
-                0x00013bcc                __cxxabiv1::__class_type_info::__do_upcast(__cxxabiv1::__class_type_info const*, void**) const
+                0x00013b48       0x38 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(class_type_info.o)
+                0x00013b48                __cxxabiv1::__class_type_info::__do_upcast(__cxxabiv1::__class_type_info const*, void**) const
  .text._ZNK10__cxxabiv117__class_type_info20__do_find_public_srcEiPKvPKS0_S2_
-                0x00013c04        0xc z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(class_type_info.o)
-                0x00013c04                __cxxabiv1::__class_type_info::__do_find_public_src(int, void const*, __cxxabiv1::__class_type_info const*, void const*) const
+                0x00013b80        0xc z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(class_type_info.o)
+                0x00013b80                __cxxabiv1::__class_type_info::__do_find_public_src(int, void const*, __cxxabiv1::__class_type_info const*, void const*) const
  .text._ZNK10__cxxabiv117__class_type_info11__do_upcastEPKS0_PKvRNS0_15__upcast_resultE
-                0x00013c10       0x1c z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(class_type_info.o)
-                0x00013c10                __cxxabiv1::__class_type_info::__do_upcast(__cxxabiv1::__class_type_info const*, void const*, __cxxabiv1::__class_type_info::__upcast_result&) const
+                0x00013b8c       0x1c z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(class_type_info.o)
+                0x00013b8c                __cxxabiv1::__class_type_info::__do_upcast(__cxxabiv1::__class_type_info const*, void const*, __cxxabiv1::__class_type_info::__upcast_result&) const
  .text._ZN10__cxxabiv117__class_type_infoD2Ev
-                0x00013c2c       0x14 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(class_type_info.o)
-                0x00013c2c                __cxxabiv1::__class_type_info::~__class_type_info()
-                0x00013c2c                __cxxabiv1::__class_type_info::~__class_type_info()
+                0x00013ba8       0x14 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(class_type_info.o)
+                0x00013ba8                __cxxabiv1::__class_type_info::~__class_type_info()
+                0x00013ba8                __cxxabiv1::__class_type_info::~__class_type_info()
  .text._ZN10__cxxabiv117__class_type_infoD0Ev
-                0x00013c40       0x1c z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(class_type_info.o)
-                0x00013c40                __cxxabiv1::__class_type_info::~__class_type_info()
+                0x00013bbc       0x1c z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(class_type_info.o)
+                0x00013bbc                __cxxabiv1::__class_type_info::~__class_type_info()
  .text._ZNK10__cxxabiv117__class_type_info12__do_dyncastEiNS0_10__sub_kindEPKS0_PKvS3_S5_RNS0_16__dyncast_resultE
-                0x00013c5c       0x3c z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(class_type_info.o)
-                0x00013c5c                __cxxabiv1::__class_type_info::__do_dyncast(int, __cxxabiv1::__class_type_info::__sub_kind, __cxxabiv1::__class_type_info const*, void const*, __cxxabiv1::__class_type_info const*, void const*, __cxxabiv1::__class_type_info::__dyncast_result&) const
+                0x00013bd8       0x3c z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(class_type_info.o)
+                0x00013bd8                __cxxabiv1::__class_type_info::__do_dyncast(int, __cxxabiv1::__class_type_info::__sub_kind, __cxxabiv1::__class_type_info const*, void const*, __cxxabiv1::__class_type_info const*, void const*, __cxxabiv1::__class_type_info::__dyncast_result&) const
  .text._ZNK10__cxxabiv117__class_type_info10__do_catchEPKSt9type_infoPPvj
-                0x00013c98       0x28 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(class_type_info.o)
-                0x00013c98                __cxxabiv1::__class_type_info::__do_catch(std::type_info const*, void**, unsigned int) const
+                0x00013c14       0x28 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(class_type_info.o)
+                0x00013c14                __cxxabiv1::__class_type_info::__do_catch(std::type_info const*, void**, unsigned int) const
  .text.__cxa_allocate_exception
-                0x00013cc0       0x70 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_alloc.o)
-                0x00013cc0                __cxa_allocate_exception
+                0x00013c3c       0x70 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_alloc.o)
+                0x00013c3c                __cxa_allocate_exception
  .text.__cxa_free_exception
-                0x00013d30       0x34 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_alloc.o)
-                0x00013d30                __cxa_free_exception
+                0x00013cac       0x34 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_alloc.o)
+                0x00013cac                __cxa_free_exception
  .text.__cxa_end_cleanup
-                0x00013d64        0xc z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_arm.o)
-                0x00013d64                __cxa_end_cleanup
+                0x00013ce0        0xc z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_arm.o)
+                0x00013ce0                __cxa_end_cleanup
  .text.__cxa_type_match
-                0x00013d70       0xec z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_arm.o)
-                0x00013d70                __cxa_type_match
+                0x00013cec       0xec z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_arm.o)
+                0x00013cec                __cxa_type_match
  .text.__cxa_begin_cleanup
-                0x00013e5c       0x78 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_arm.o)
-                0x00013e5c                __cxa_begin_cleanup
+                0x00013dd8       0x78 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_arm.o)
+                0x00013dd8                __cxa_begin_cleanup
  .text.__gnu_end_cleanup
-                0x00013ed4       0x7c z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_arm.o)
-                0x00013ed4                __gnu_end_cleanup
+                0x00013e50       0x7c z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_arm.o)
+                0x00013e50                __gnu_end_cleanup
  .text.__cxa_bad_typeid
-                0x00013f50       0x24 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_aux_runtime.o)
-                0x00013f50                __cxa_bad_typeid
+                0x00013ecc       0x24 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_aux_runtime.o)
+                0x00013ecc                __cxa_bad_typeid
  .text.__cxa_call_terminate
-                0x00013f74       0x50 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_call.o)
-                0x00013f74                __cxa_call_terminate
+                0x00013ef0       0x50 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_call.o)
+                0x00013ef0                __cxa_call_terminate
  .text.__cxa_call_unexpected
-                0x00013fc4      0x120 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_call.o)
-                0x00013fc4                __cxa_call_unexpected
+                0x00013f40      0x120 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_call.o)
+                0x00013f40                __cxa_call_unexpected
  .text.__cxa_begin_catch
-                0x000140e4       0x98 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_catch.o)
-                0x000140e4                __cxa_begin_catch
+                0x00014060       0x98 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_catch.o)
+                0x00014060                __cxa_begin_catch
  .text.__cxa_end_catch
-                0x0001417c       0x98 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_catch.o)
-                0x0001417c                __cxa_end_catch
+                0x000140f8       0x98 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_catch.o)
+                0x000140f8                __cxa_end_catch
  .text._ZNSt9exceptionD2Ev
-                0x00014214        0xc z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_exception.o)
-                0x00014214                std::exception::~exception()
-                0x00014214                std::exception::~exception()
+                0x00014190        0xc z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_exception.o)
+                0x00014190                std::exception::~exception()
+                0x00014190                std::exception::~exception()
  .text._ZNSt13bad_exceptionD2Ev
-                0x00014220        0xc z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_exception.o)
-                0x00014220                std::bad_exception::~bad_exception()
-                0x00014220                std::bad_exception::~bad_exception()
+                0x0001419c        0xc z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_exception.o)
+                0x0001419c                std::bad_exception::~bad_exception()
+                0x0001419c                std::bad_exception::~bad_exception()
  .text._ZNKSt9exception4whatEv
-                0x0001422c        0xc z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_exception.o)
-                0x0001422c                std::exception::what() const
+                0x000141a8        0xc z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_exception.o)
+                0x000141a8                std::exception::what() const
  .text._ZNKSt13bad_exception4whatEv
-                0x00014238        0xc z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_exception.o)
-                0x00014238                std::bad_exception::what() const
+                0x000141b4        0xc z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_exception.o)
+                0x000141b4                std::bad_exception::what() const
  .text._ZNSt13bad_exceptionD0Ev
-                0x00014244       0x14 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_exception.o)
-                0x00014244                std::bad_exception::~bad_exception()
+                0x000141c0       0x14 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_exception.o)
+                0x000141c0                std::bad_exception::~bad_exception()
  .text._ZNSt9exceptionD0Ev
-                0x00014258       0x14 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_exception.o)
-                0x00014258                std::exception::~exception()
+                0x000141d4       0x14 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_exception.o)
+                0x000141d4                std::exception::~exception()
  .text.__cxa_get_globals_fast
-                0x0001426c        0xc z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_globals.o)
-                0x0001426c                __cxa_get_globals_fast
+                0x000141e8        0xc z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_globals.o)
+                0x000141e8                __cxa_get_globals_fast
  .text.__cxa_get_globals
-                0x00014278        0xc z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_globals.o)
-                0x00014278                __cxa_get_globals
+                0x000141f4        0xc z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_globals.o)
+                0x000141f4                __cxa_get_globals
  .text._ZL12read_sleb128PKhPl
-                0x00014284       0x3c z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_personality.o)
+                0x00014200       0x3c z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_personality.o)
  .text._ZL28read_encoded_value_with_basehjPKhPj
-                0x000142c0       0xa4 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_personality.o)
+                0x0001423c       0xa4 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_personality.o)
  .text._ZL21base_of_encoded_valuehP15_Unwind_Context
-                0x00014364       0x4c z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_personality.o)
+                0x000142e0       0x4c z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_personality.o)
  .text._ZL17parse_lsda_headerP15_Unwind_ContextPKhP16lsda_header_info.constprop.1
-                0x000143b0       0x90 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_personality.o)
+                0x0001432c       0x90 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_personality.o)
  .text.__gxx_personality_v0
-                0x00014440      0x3bc z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_personality.o)
-                0x00014440                __gxx_personality_v0
+                0x000143bc      0x3bc z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_personality.o)
+                0x000143bc                __gxx_personality_v0
  .text._ZN10__cxxabiv111__terminateEPFvvE
-                0x000147fc       0x28 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_terminate.o)
-                0x000147fc                __cxxabiv1::__terminate(void (*)())
+                0x00014778       0x28 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_terminate.o)
+                0x00014778                __cxxabiv1::__terminate(void (*)())
  .text._ZSt9terminatev
-                0x00014824       0x10 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_terminate.o)
-                0x00014824                std::terminate()
+                0x000147a0       0x10 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_terminate.o)
+                0x000147a0                std::terminate()
  .text._ZN10__cxxabiv112__unexpectedEPFvvE
-                0x00014834        0x8 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_terminate.o)
-                0x00014834                __cxxabiv1::__unexpected(void (*)())
+                0x000147b0        0x8 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_terminate.o)
+                0x000147b0                __cxxabiv1::__unexpected(void (*)())
  .text._ZSt10unexpectedv
-                0x0001483c       0x14 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_terminate.o)
-                0x0001483c                std::unexpected()
+                0x000147b8       0x14 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_terminate.o)
+                0x000147b8                std::unexpected()
  .text._ZL23__gxx_exception_cleanup19_Unwind_Reason_CodeP21_Unwind_Control_Block
-                0x00014850       0x4c z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_throw.o)
+                0x000147cc       0x4c z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_throw.o)
  .text.__cxa_throw
-                0x0001489c       0x80 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_throw.o)
-                0x0001489c                __cxa_throw
+                0x00014818       0x80 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_throw.o)
+                0x00014818                __cxa_throw
  .text.__cxa_rethrow
-                0x0001491c       0x78 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_throw.o)
-                0x0001491c                __cxa_rethrow
+                0x00014898       0x78 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_throw.o)
+                0x00014898                __cxa_rethrow
  .text._ZN10__cxxabiv123__fundamental_type_infoD2Ev
-                0x00014994       0x14 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(fundamental_type_info.o)
-                0x00014994                __cxxabiv1::__fundamental_type_info::~__fundamental_type_info()
-                0x00014994                __cxxabiv1::__fundamental_type_info::~__fundamental_type_info()
+                0x00014910       0x14 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(fundamental_type_info.o)
+                0x00014910                __cxxabiv1::__fundamental_type_info::~__fundamental_type_info()
+                0x00014910                __cxxabiv1::__fundamental_type_info::~__fundamental_type_info()
  .text._ZN10__cxxabiv123__fundamental_type_infoD0Ev
-                0x000149a8       0x1c z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(fundamental_type_info.o)
-                0x000149a8                __cxxabiv1::__fundamental_type_info::~__fundamental_type_info()
+                0x00014924       0x1c z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(fundamental_type_info.o)
+                0x00014924                __cxxabiv1::__fundamental_type_info::~__fundamental_type_info()
  .text._ZNK10__cxxabiv119__pointer_type_info14__is_pointer_pEv
-                0x000149c4        0x4 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(pointer_type_info.o)
-                0x000149c4                __cxxabiv1::__pointer_type_info::__is_pointer_p() const
+                0x00014940        0x4 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(pointer_type_info.o)
+                0x00014940                __cxxabiv1::__pointer_type_info::__is_pointer_p() const
  .text._ZN10__cxxabiv119__pointer_type_infoD2Ev
-                0x000149c8       0x14 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(pointer_type_info.o)
-                0x000149c8                __cxxabiv1::__pointer_type_info::~__pointer_type_info()
-                0x000149c8                __cxxabiv1::__pointer_type_info::~__pointer_type_info()
+                0x00014944       0x14 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(pointer_type_info.o)
+                0x00014944                __cxxabiv1::__pointer_type_info::~__pointer_type_info()
+                0x00014944                __cxxabiv1::__pointer_type_info::~__pointer_type_info()
  .text._ZN10__cxxabiv119__pointer_type_infoD0Ev
-                0x000149dc       0x1c z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(pointer_type_info.o)
-                0x000149dc                __cxxabiv1::__pointer_type_info::~__pointer_type_info()
+                0x00014958       0x1c z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(pointer_type_info.o)
+                0x00014958                __cxxabiv1::__pointer_type_info::~__pointer_type_info()
  .text._ZNK10__cxxabiv119__pointer_type_info15__pointer_catchEPKNS_17__pbase_type_infoEPPvj
-                0x000149f8       0x44 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(pointer_type_info.o)
-                0x000149f8                __cxxabiv1::__pointer_type_info::__pointer_catch(__cxxabiv1::__pbase_type_info const*, void**, unsigned int) const
+                0x00014974       0x44 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(pointer_type_info.o)
+                0x00014974                __cxxabiv1::__pointer_type_info::__pointer_catch(__cxxabiv1::__pbase_type_info const*, void**, unsigned int) const
  .text._ZN10__cxxabiv120__si_class_type_infoD2Ev
-                0x00014a3c       0x14 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(si_class_type_info.o)
-                0x00014a3c                __cxxabiv1::__si_class_type_info::~__si_class_type_info()
-                0x00014a3c                __cxxabiv1::__si_class_type_info::~__si_class_type_info()
+                0x000149b8       0x14 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(si_class_type_info.o)
+                0x000149b8                __cxxabiv1::__si_class_type_info::~__si_class_type_info()
+                0x000149b8                __cxxabiv1::__si_class_type_info::~__si_class_type_info()
  .text._ZN10__cxxabiv120__si_class_type_infoD0Ev
-                0x00014a50       0x1c z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(si_class_type_info.o)
-                0x00014a50                __cxxabiv1::__si_class_type_info::~__si_class_type_info()
+                0x000149cc       0x1c z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(si_class_type_info.o)
+                0x000149cc                __cxxabiv1::__si_class_type_info::~__si_class_type_info()
  .text._ZNK10__cxxabiv120__si_class_type_info11__do_upcastEPKNS_17__class_type_infoEPKvRNS1_15__upcast_resultE
-                0x00014a6c       0x24 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(si_class_type_info.o)
-                0x00014a6c                __cxxabiv1::__si_class_type_info::__do_upcast(__cxxabiv1::__class_type_info const*, void const*, __cxxabiv1::__class_type_info::__upcast_result&) const
+                0x000149e8       0x24 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(si_class_type_info.o)
+                0x000149e8                __cxxabiv1::__si_class_type_info::__do_upcast(__cxxabiv1::__class_type_info const*, void const*, __cxxabiv1::__class_type_info::__upcast_result&) const
  .text._ZNK10__cxxabiv120__si_class_type_info12__do_dyncastEiNS_17__class_type_info10__sub_kindEPKS1_PKvS4_S6_RNS1_16__dyncast_resultE
-                0x00014a90       0x94 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(si_class_type_info.o)
-                0x00014a90                __cxxabiv1::__si_class_type_info::__do_dyncast(int, __cxxabiv1::__class_type_info::__sub_kind, __cxxabiv1::__class_type_info const*, void const*, __cxxabiv1::__class_type_info const*, void const*, __cxxabiv1::__class_type_info::__dyncast_result&) const
+                0x00014a0c       0x94 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(si_class_type_info.o)
+                0x00014a0c                __cxxabiv1::__si_class_type_info::__do_dyncast(int, __cxxabiv1::__class_type_info::__sub_kind, __cxxabiv1::__class_type_info const*, void const*, __cxxabiv1::__class_type_info const*, void const*, __cxxabiv1::__class_type_info::__dyncast_result&) const
  .text._ZNK10__cxxabiv120__si_class_type_info20__do_find_public_srcEiPKvPKNS_17__class_type_infoES2_
-                0x00014b24       0x34 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(si_class_type_info.o)
-                0x00014b24                __cxxabiv1::__si_class_type_info::__do_find_public_src(int, void const*, __cxxabiv1::__class_type_info const*, void const*) const
+                0x00014aa0       0x34 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(si_class_type_info.o)
+                0x00014aa0                __cxxabiv1::__si_class_type_info::__do_find_public_src(int, void const*, __cxxabiv1::__class_type_info const*, void const*) const
  .text._ZNSt9type_infoD2Ev
-                0x00014b58        0xc z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(tinfo.o)
-                0x00014b58                std::type_info::~type_info()
-                0x00014b58                std::type_info::~type_info()
+                0x00014ad4        0xc z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(tinfo.o)
+                0x00014ad4                std::type_info::~type_info()
+                0x00014ad4                std::type_info::~type_info()
  .text._ZNKSt9type_info14__is_pointer_pEv
-                0x00014b64        0x4 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(tinfo.o)
-                0x00014b64                std::type_info::__is_pointer_p() const
+                0x00014ae0        0x4 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(tinfo.o)
+                0x00014ae0                std::type_info::__is_pointer_p() const
  .text._ZNKSt9type_info15__is_function_pEv
-                0x00014b68        0x4 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(tinfo.o)
-                0x00014b68                std::type_info::__is_function_p() const
+                0x00014ae4        0x4 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(tinfo.o)
+                0x00014ae4                std::type_info::__is_function_p() const
  .text._ZNKSt9type_info11__do_upcastEPKN10__cxxabiv117__class_type_infoEPPv
-                0x00014b6c        0x4 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(tinfo.o)
-                0x00014b6c                std::type_info::__do_upcast(__cxxabiv1::__class_type_info const*, void**) const
+                0x00014ae8        0x4 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(tinfo.o)
+                0x00014ae8                std::type_info::__do_upcast(__cxxabiv1::__class_type_info const*, void**) const
  .text._ZNSt9type_infoD0Ev
-                0x00014b70       0x14 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(tinfo.o)
-                0x00014b70                std::type_info::~type_info()
+                0x00014aec       0x14 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(tinfo.o)
+                0x00014aec                std::type_info::~type_info()
  .text._ZNKSt9type_infoeqERKS_
-                0x00014b84       0x30 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(tinfo.o)
-                0x00014b84                std::type_info::operator==(std::type_info const&) const
+                0x00014b00       0x30 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(tinfo.o)
+                0x00014b00                std::type_info::operator==(std::type_info const&) const
  .text._ZNKSt9type_info10__do_catchEPKS_PPvj
-                0x00014bb4        0x4 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(tinfo.o)
-                0x00014bb4                std::type_info::__do_catch(std::type_info const*, void**, unsigned int) const
+                0x00014b30        0x4 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(tinfo.o)
+                0x00014b30                std::type_info::__do_catch(std::type_info const*, void**, unsigned int) const
  .text._ZNKSt10bad_typeid4whatEv
-                0x00014bb8        0xc z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(bad_typeid.o)
-                0x00014bb8                std::bad_typeid::what() const
+                0x00014b34        0xc z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(bad_typeid.o)
+                0x00014b34                std::bad_typeid::what() const
  .text._ZNSt10bad_typeidD2Ev
-                0x00014bc4       0x14 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(bad_typeid.o)
-                0x00014bc4                std::bad_typeid::~bad_typeid()
-                0x00014bc4                std::bad_typeid::~bad_typeid()
+                0x00014b40       0x14 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(bad_typeid.o)
+                0x00014b40                std::bad_typeid::~bad_typeid()
+                0x00014b40                std::bad_typeid::~bad_typeid()
  .text._ZNSt10bad_typeidD0Ev
-                0x00014bd8       0x1c z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(bad_typeid.o)
-                0x00014bd8                std::bad_typeid::~bad_typeid()
+                0x00014b54       0x1c z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(bad_typeid.o)
+                0x00014b54                std::bad_typeid::~bad_typeid()
  .text._ZNK10__cxxabiv117__pbase_type_info15__pointer_catchEPKS0_PPvj
-                0x00014bf4       0x10 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(pbase_type_info.o)
-                0x00014bf4                __cxxabiv1::__pbase_type_info::__pointer_catch(__cxxabiv1::__pbase_type_info const*, void**, unsigned int) const
+                0x00014b70       0x10 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(pbase_type_info.o)
+                0x00014b70                __cxxabiv1::__pbase_type_info::__pointer_catch(__cxxabiv1::__pbase_type_info const*, void**, unsigned int) const
  .text._ZN10__cxxabiv117__pbase_type_infoD2Ev
-                0x00014c04       0x14 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(pbase_type_info.o)
-                0x00014c04                __cxxabiv1::__pbase_type_info::~__pbase_type_info()
-                0x00014c04                __cxxabiv1::__pbase_type_info::~__pbase_type_info()
+                0x00014b80       0x14 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(pbase_type_info.o)
+                0x00014b80                __cxxabiv1::__pbase_type_info::~__pbase_type_info()
+                0x00014b80                __cxxabiv1::__pbase_type_info::~__pbase_type_info()
  .text._ZN10__cxxabiv117__pbase_type_infoD0Ev
-                0x00014c18       0x1c z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(pbase_type_info.o)
-                0x00014c18                __cxxabiv1::__pbase_type_info::~__pbase_type_info()
+                0x00014b94       0x1c z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(pbase_type_info.o)
+                0x00014b94                __cxxabiv1::__pbase_type_info::~__pbase_type_info()
  .text._ZNK10__cxxabiv117__pbase_type_info10__do_catchEPKSt9type_infoPPvj
-                0x00014c34       0x68 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(pbase_type_info.o)
-                0x00014c34                __cxxabiv1::__pbase_type_info::__do_catch(std::type_info const*, void**, unsigned int) const
- .text.abort    0x00014c9c       0x24 ../resources/Proteus/EWL/lib/armv7e-m\libc.a(abort.o)
-                0x00014c9c                abort
- .text.sbrk     0x00014cc0       0x28 ../resources/Proteus/EWL/lib/armv7e-m\libc.a(alloc.o)
-                0x00014cc0                sbrk
- .text.malloc   0x00014ce8      0x110 ../resources/Proteus/EWL/lib/armv7e-m\libc.a(alloc.o)
-                0x00014ce8                malloc
- .text.free     0x00014df8       0x10 ../resources/Proteus/EWL/lib/armv7e-m\libc.a(alloc.o)
-                0x00014df8                free
- .text.strcmp   0x00014e08       0x18 ../resources/Proteus/EWL/lib/armv7e-m\libc.a(strcmp.o)
-                0x00014e08                strcmp
- .text.raise    0x00014e20       0x3c ../resources/Proteus/EWL/lib/armv7e-m\libc.a(raise.o)
-                0x00014e20                raise
+                0x00014bb0       0x68 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(pbase_type_info.o)
+                0x00014bb0                __cxxabiv1::__pbase_type_info::__do_catch(std::type_info const*, void**, unsigned int) const
+ .text.abort    0x00014c18       0x24 ../resources/Proteus/EWL/lib/armv7e-m\libc.a(abort.o)
+                0x00014c18                abort
+ .text.sbrk     0x00014c3c       0x28 ../resources/Proteus/EWL/lib/armv7e-m\libc.a(alloc.o)
+                0x00014c3c                sbrk
+ .text.malloc   0x00014c64      0x110 ../resources/Proteus/EWL/lib/armv7e-m\libc.a(alloc.o)
+                0x00014c64                malloc
+ .text.free     0x00014d74       0x10 ../resources/Proteus/EWL/lib/armv7e-m\libc.a(alloc.o)
+                0x00014d74                free
+ .text.strcmp   0x00014d84       0x18 ../resources/Proteus/EWL/lib/armv7e-m\libc.a(strcmp.o)
+                0x00014d84                strcmp
+ .text.raise    0x00014d9c       0x3c ../resources/Proteus/EWL/lib/armv7e-m\libc.a(raise.o)
+                0x00014d9c                raise
  *(.rodata)
- .rodata        0x00014e5c       0x40 ../src/main.o
- .rodata        0x00014e9c       0xfc ../src/movement.o
- .rodata        0x00014f98       0x48 ../src/logging.o
- .rodata        0x00014fe0       0x34 Libraries/FEHLCD.o
- .rodata        0x00015014      0x150 Libraries/FEHWONKA.o
+ .rodata        0x00014dd8       0x40 ../src/main.o
+ .rodata        0x00014e18       0x48 ../src/logging.o
+ .rodata        0x00014e60       0x34 Libraries/FEHLCD.o
+ .rodata        0x00014e94      0x150 Libraries/FEHWONKA.o
  *(.rodata*)
  .rodata._ZL9GPIOPorts
-                0x00015164       0x20 Libraries/FEHIO.o
+                0x00014fe4       0x20 Libraries/FEHIO.o
  .rodata._ZL10ADCNumbers
-                0x00015184       0x24 Libraries/FEHIO.o
+                0x00015004       0x24 Libraries/FEHIO.o
  .rodata._ZL14GPIOPinNumbers
-                0x000151a8       0x80 Libraries/FEHIO.o
+                0x00015028       0x80 Libraries/FEHIO.o
  .rodata._ZL16AnalogPinNumbers
-                0x00015228       0x84 Libraries/FEHIO.o
+                0x000150a8       0x84 Libraries/FEHIO.o
  .rodata.str1.1
                 0x00000000        0x0 ../resources/Proteus/EWL/lib/armv7e-m\libc.a(printformat_.o)
                                   0x1 (size before relaxing)
  .rodata.__aeabi_ctype_table_C
-                0x000152ac      0x101 ../resources/Proteus/EWL/lib/armv7e-m\libc.a(ctype_aeabi.o)
-                0x000152ac                __aeabi_ctype_table_C
- *fill*         0x000153ad        0x3 00
+                0x0001512c      0x101 ../resources/Proteus/EWL/lib/armv7e-m\libc.a(ctype_aeabi.o)
+                0x0001512c                __aeabi_ctype_table_C
+ *fill*         0x0001522d        0x3 00
  .rodata._ZTVSt9bad_alloc
-                0x000153b0       0x18 ../resources/Proteus/EWL/lib/armv7e-m\librt.a(New.o)
-                0x000153b0                vtable for std::bad_alloc
+                0x00015230       0x18 ../resources/Proteus/EWL/lib/armv7e-m\librt.a(New.o)
+                0x00015230                vtable for std::bad_alloc
  .rodata._ZTISt9bad_alloc
-                0x000153c8        0xc ../resources/Proteus/EWL/lib/armv7e-m\librt.a(New.o)
-                0x000153c8                typeinfo for std::bad_alloc
+                0x00015248        0xc ../resources/Proteus/EWL/lib/armv7e-m\librt.a(New.o)
+                0x00015248                typeinfo for std::bad_alloc
  .rodata._ZTSSt9bad_alloc
-                0x000153d4        0xd ../resources/Proteus/EWL/lib/armv7e-m\librt.a(New.o)
-                0x000153d4                typeinfo name for std::bad_alloc
+                0x00015254        0xd ../resources/Proteus/EWL/lib/armv7e-m\librt.a(New.o)
+                0x00015254                typeinfo name for std::bad_alloc
  .rodata.str1.1
-                0x000153e1       0x14 ../resources/Proteus/EWL/lib/armv7e-m\librt.a(New.o)
- *fill*         0x000153f5        0x3 00
+                0x00015261       0x14 ../resources/Proteus/EWL/lib/armv7e-m\librt.a(New.o)
+ *fill*         0x00015275        0x3 00
  .rodata._ZTVN10__cxxabiv117__class_type_infoE
-                0x000153f8       0x30 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(class_type_info.o)
-                0x000153f8                vtable for __cxxabiv1::__class_type_info
+                0x00015278       0x30 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(class_type_info.o)
+                0x00015278                vtable for __cxxabiv1::__class_type_info
  .rodata._ZTIN10__cxxabiv117__class_type_infoE
-                0x00015428        0xc z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(class_type_info.o)
-                0x00015428                typeinfo for __cxxabiv1::__class_type_info
+                0x000152a8        0xc z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(class_type_info.o)
+                0x000152a8                typeinfo for __cxxabiv1::__class_type_info
  .rodata._ZTSN10__cxxabiv117__class_type_infoE
-                0x00015434       0x24 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(class_type_info.o)
-                0x00015434                typeinfo name for __cxxabiv1::__class_type_info
+                0x000152b4       0x24 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(class_type_info.o)
+                0x000152b4                typeinfo name for __cxxabiv1::__class_type_info
  .rodata._ZTVSt9exception
-                0x00015458       0x18 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_exception.o)
-                0x00015458                vtable for std::exception
+                0x000152d8       0x18 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_exception.o)
+                0x000152d8                vtable for std::exception
  .rodata._ZTIN10__cxxabiv115__forced_unwindE
-                0x00015470        0x8 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_exception.o)
-                0x00015470                typeinfo for __cxxabiv1::__forced_unwind
+                0x000152f0        0x8 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_exception.o)
+                0x000152f0                typeinfo for __cxxabiv1::__forced_unwind
  .rodata._ZTISt9exception
-                0x00015478        0x8 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_exception.o)
-                0x00015478                typeinfo for std::exception
+                0x000152f8        0x8 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_exception.o)
+                0x000152f8                typeinfo for std::exception
  .rodata._ZTSSt13bad_exception
-                0x00015480       0x14 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_exception.o)
-                0x00015480                typeinfo name for std::bad_exception
+                0x00015300       0x14 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_exception.o)
+                0x00015300                typeinfo name for std::bad_exception
  .rodata.str1.4
-                0x00015494       0x23 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_exception.o)
+                0x00015314       0x23 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_exception.o)
                                  0x24 (size before relaxing)
- *fill*         0x000154b7        0x1 00
+ *fill*         0x00015337        0x1 00
  .rodata._ZTSN10__cxxabiv119__foreign_exceptionE
-                0x000154b8       0x24 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_exception.o)
-                0x000154b8                typeinfo name for __cxxabiv1::__foreign_exception
+                0x00015338       0x24 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_exception.o)
+                0x00015338                typeinfo name for __cxxabiv1::__foreign_exception
  .rodata._ZTIN10__cxxabiv119__foreign_exceptionE
-                0x000154dc        0x8 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_exception.o)
-                0x000154dc                typeinfo for __cxxabiv1::__foreign_exception
- *fill*         0x000154e4        0x4 00
+                0x0001535c        0x8 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_exception.o)
+                0x0001535c                typeinfo for __cxxabiv1::__foreign_exception
+ *fill*         0x00015364        0x4 00
  .rodata._ZTVSt13bad_exception
-                0x000154e8       0x18 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_exception.o)
-                0x000154e8                vtable for std::bad_exception
+                0x00015368       0x18 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_exception.o)
+                0x00015368                vtable for std::bad_exception
  .rodata._ZTSSt9exception
-                0x00015500       0x10 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_exception.o)
-                0x00015500                typeinfo name for std::exception
+                0x00015380       0x10 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_exception.o)
+                0x00015380                typeinfo name for std::exception
  .rodata._ZTSN10__cxxabiv115__forced_unwindE
-                0x00015510       0x20 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_exception.o)
-                0x00015510                typeinfo name for __cxxabiv1::__forced_unwind
+                0x00015390       0x20 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_exception.o)
+                0x00015390                typeinfo name for __cxxabiv1::__forced_unwind
  .rodata._ZTISt13bad_exception
-                0x00015530        0xc z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_exception.o)
-                0x00015530                typeinfo for std::bad_exception
+                0x000153b0        0xc z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_exception.o)
+                0x000153b0                typeinfo for std::bad_exception
  .rodata._ZTIPv
-                0x0001553c       0x10 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(fundamental_type_info.o)
-                0x0001553c                typeinfo for void*
- .rodata._ZTIv  0x0001554c        0x8 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(fundamental_type_info.o)
-                0x0001554c                typeinfo for void
+                0x000153bc       0x10 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(fundamental_type_info.o)
+                0x000153bc                typeinfo for void*
+ .rodata._ZTIv  0x000153cc        0x8 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(fundamental_type_info.o)
+                0x000153cc                typeinfo for void
  .rodata._ZTSPv
-                0x00015554        0x4 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(fundamental_type_info.o)
-                0x00015554                typeinfo name for void*
- .rodata._ZTSv  0x00015558        0x4 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(fundamental_type_info.o)
-                0x00015558                typeinfo name for void
+                0x000153d4        0x4 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(fundamental_type_info.o)
+                0x000153d4                typeinfo name for void*
+ .rodata._ZTSv  0x000153d8        0x4 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(fundamental_type_info.o)
+                0x000153d8                typeinfo name for void
  .rodata._ZTIN10__cxxabiv123__fundamental_type_infoE
-                0x0001555c        0xc z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(fundamental_type_info.o)
-                0x0001555c                typeinfo for __cxxabiv1::__fundamental_type_info
+                0x000153dc        0xc z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(fundamental_type_info.o)
+                0x000153dc                typeinfo for __cxxabiv1::__fundamental_type_info
  .rodata._ZTSN10__cxxabiv123__fundamental_type_infoE
-                0x00015568       0x28 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(fundamental_type_info.o)
-                0x00015568                typeinfo name for __cxxabiv1::__fundamental_type_info
+                0x000153e8       0x28 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(fundamental_type_info.o)
+                0x000153e8                typeinfo name for __cxxabiv1::__fundamental_type_info
  .rodata._ZTVN10__cxxabiv123__fundamental_type_infoE
-                0x00015590       0x20 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(fundamental_type_info.o)
-                0x00015590                vtable for __cxxabiv1::__fundamental_type_info
+                0x00015410       0x20 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(fundamental_type_info.o)
+                0x00015410                vtable for __cxxabiv1::__fundamental_type_info
  .rodata._ZTSN10__cxxabiv119__pointer_type_infoE
-                0x000155b0       0x24 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(pointer_type_info.o)
-                0x000155b0                typeinfo name for __cxxabiv1::__pointer_type_info
+                0x00015430       0x24 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(pointer_type_info.o)
+                0x00015430                typeinfo name for __cxxabiv1::__pointer_type_info
  .rodata._ZTIN10__cxxabiv119__pointer_type_infoE
-                0x000155d4        0xc z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(pointer_type_info.o)
-                0x000155d4                typeinfo for __cxxabiv1::__pointer_type_info
+                0x00015454        0xc z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(pointer_type_info.o)
+                0x00015454                typeinfo for __cxxabiv1::__pointer_type_info
  .rodata._ZTVN10__cxxabiv119__pointer_type_infoE
-                0x000155e0       0x28 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(pointer_type_info.o)
-                0x000155e0                vtable for __cxxabiv1::__pointer_type_info
+                0x00015460       0x28 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(pointer_type_info.o)
+                0x00015460                vtable for __cxxabiv1::__pointer_type_info
  .rodata._ZTVN10__cxxabiv120__si_class_type_infoE
-                0x00015608       0x30 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(si_class_type_info.o)
-                0x00015608                vtable for __cxxabiv1::__si_class_type_info
+                0x00015488       0x30 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(si_class_type_info.o)
+                0x00015488                vtable for __cxxabiv1::__si_class_type_info
  .rodata._ZTIN10__cxxabiv120__si_class_type_infoE
-                0x00015638        0xc z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(si_class_type_info.o)
-                0x00015638                typeinfo for __cxxabiv1::__si_class_type_info
+                0x000154b8        0xc z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(si_class_type_info.o)
+                0x000154b8                typeinfo for __cxxabiv1::__si_class_type_info
  .rodata._ZTSN10__cxxabiv120__si_class_type_infoE
-                0x00015644       0x28 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(si_class_type_info.o)
-                0x00015644                typeinfo name for __cxxabiv1::__si_class_type_info
+                0x000154c4       0x28 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(si_class_type_info.o)
+                0x000154c4                typeinfo name for __cxxabiv1::__si_class_type_info
  .rodata._ZTISt9type_info
-                0x0001566c        0x8 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(tinfo.o)
-                0x0001566c                typeinfo for std::type_info
+                0x000154ec        0x8 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(tinfo.o)
+                0x000154ec                typeinfo for std::type_info
  .rodata._ZTSSt9type_info
-                0x00015674       0x10 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(tinfo.o)
-                0x00015674                typeinfo name for std::type_info
- *fill*         0x00015684        0x4 00
+                0x000154f4       0x10 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(tinfo.o)
+                0x000154f4                typeinfo name for std::type_info
+ *fill*         0x00015504        0x4 00
  .rodata._ZTVSt9type_info
-                0x00015688       0x20 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(tinfo.o)
-                0x00015688                vtable for std::type_info
+                0x00015508       0x20 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(tinfo.o)
+                0x00015508                vtable for std::type_info
  .rodata._ZTVSt10bad_typeid
-                0x000156a8       0x18 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(bad_typeid.o)
-                0x000156a8                vtable for std::bad_typeid
+                0x00015528       0x18 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(bad_typeid.o)
+                0x00015528                vtable for std::bad_typeid
  .rodata._ZTISt10bad_typeid
-                0x000156c0        0xc z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(bad_typeid.o)
-                0x000156c0                typeinfo for std::bad_typeid
+                0x00015540        0xc z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(bad_typeid.o)
+                0x00015540                typeinfo for std::bad_typeid
  .rodata.str1.4
-                0x000156cc       0x10 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(bad_typeid.o)
+                0x0001554c       0x10 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(bad_typeid.o)
  .rodata._ZTSSt10bad_typeid
-                0x000156dc       0x10 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(bad_typeid.o)
-                0x000156dc                typeinfo name for std::bad_typeid
+                0x0001555c       0x10 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(bad_typeid.o)
+                0x0001555c                typeinfo name for std::bad_typeid
  .rodata._ZTIN10__cxxabiv117__pbase_type_infoE
-                0x000156ec        0xc z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(pbase_type_info.o)
-                0x000156ec                typeinfo for __cxxabiv1::__pbase_type_info
+                0x0001556c        0xc z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(pbase_type_info.o)
+                0x0001556c                typeinfo for __cxxabiv1::__pbase_type_info
  .rodata._ZTSN10__cxxabiv117__pbase_type_infoE
-                0x000156f8       0x24 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(pbase_type_info.o)
-                0x000156f8                typeinfo name for __cxxabiv1::__pbase_type_info
- *fill*         0x0001571c        0x4 00
+                0x00015578       0x24 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(pbase_type_info.o)
+                0x00015578                typeinfo name for __cxxabiv1::__pbase_type_info
+ *fill*         0x0001559c        0x4 00
  .rodata._ZTVN10__cxxabiv117__pbase_type_infoE
-                0x00015720       0x28 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(pbase_type_info.o)
-                0x00015720                vtable for __cxxabiv1::__pbase_type_info
+                0x000155a0       0x28 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(pbase_type_info.o)
+                0x000155a0                vtable for __cxxabiv1::__pbase_type_info
  *(.glue_7)
  .glue_7        0x00000000        0x0 linker stubs
  *(.glue_7t)
@@ -2260,261 +2259,261 @@ END GROUP
  *(.eh_frame)
  *(.init)
  *(.fini)
-                0x00015748                . = ALIGN (0x4)
-                0x00015748                _etext = .
+                0x000155c8                . = ALIGN (0x4)
+                0x000155c8                _etext = .
 
-.vfp11_veneer   0x00015748        0x0
+.vfp11_veneer   0x000155c8        0x0
  .vfp11_veneer  0x00000000        0x0 linker stubs
 
-.v4_bx          0x00015748        0x0
+.v4_bx          0x000155c8        0x0
  .v4_bx         0x00000000        0x0 linker stubs
 
-.ARM.extab      0x00015748      0x114
+.ARM.extab      0x000155c8      0x114
  *(.ARM.extab* .gnu.linkonce.armextab.*)
  .ARM.extab.text._ZNSt9bad_allocD2Ev
-                0x00015748        0x0 ../resources/Proteus/EWL/lib/armv7e-m\librt.a(New.o)
+                0x000155c8        0x0 ../resources/Proteus/EWL/lib/armv7e-m\librt.a(New.o)
  .ARM.extab.text._ZNKSt9bad_alloc4whatEv
-                0x00015748        0x0 ../resources/Proteus/EWL/lib/armv7e-m\librt.a(New.o)
+                0x000155c8        0x0 ../resources/Proteus/EWL/lib/armv7e-m\librt.a(New.o)
  .ARM.extab.text._Znwj
-                0x00015748       0x20 ../resources/Proteus/EWL/lib/armv7e-m\librt.a(New.o)
+                0x000155c8       0x20 ../resources/Proteus/EWL/lib/armv7e-m\librt.a(New.o)
  .ARM.extab.text._ZNSt9bad_allocD0Ev
-                0x00015768        0x0 ../resources/Proteus/EWL/lib/armv7e-m\librt.a(New.o)
+                0x000155e8        0x0 ../resources/Proteus/EWL/lib/armv7e-m\librt.a(New.o)
  .ARM.extab.text.__cxa_bad_typeid
-                0x00015768        0xc z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_aux_runtime.o)
+                0x000155e8        0xc z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_aux_runtime.o)
  .ARM.extab.text.__cxa_call_unexpected
-                0x00015774       0x28 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_call.o)
+                0x000155f4       0x28 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_call.o)
  .ARM.extab.text.__cxa_begin_catch
-                0x0001579c       0x20 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_catch.o)
+                0x0001561c       0x20 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_catch.o)
  .ARM.extab.text._ZL21base_of_encoded_valuehP15_Unwind_Context
-                0x000157bc        0xc z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_personality.o)
+                0x0001563c        0xc z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_personality.o)
  .ARM.extab.text.__gxx_personality_v0
-                0x000157c8       0x20 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_personality.o)
+                0x00015648       0x20 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_personality.o)
  .ARM.extab.text._ZN10__cxxabiv111__terminateEPFvvE
-                0x000157e8       0x2c z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_terminate.o)
+                0x00015668       0x2c z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_terminate.o)
  .ARM.extab.text._ZN10__cxxabiv112__unexpectedEPFvvE
-                0x00015814        0xc z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_terminate.o)
+                0x00015694        0xc z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_terminate.o)
  .ARM.extab.text._ZSt10unexpectedv
-                0x00015820        0xc z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_terminate.o)
+                0x000156a0        0xc z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_terminate.o)
  .ARM.extab.text._ZNK10__cxxabiv117__pbase_type_info15__pointer_catchEPKS0_PPvj
-                0x0001582c        0x0 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(pbase_type_info.o)
- .ARM.extab     0x0001582c       0x18 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/armv7e-m\libgcc.a(unwind-arm.o)
- .ARM.extab     0x00015844       0x18 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/armv7e-m\libgcc.a(pr-support.o)
+                0x000156ac        0x0 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(pbase_type_info.o)
+ .ARM.extab     0x000156ac       0x18 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/armv7e-m\libgcc.a(unwind-arm.o)
+ .ARM.extab     0x000156c4       0x18 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/armv7e-m\libgcc.a(pr-support.o)
 
-.ARM            0x0001585c      0x1f0
-                0x0001585c                __exidx_start = .
+.ARM            0x000156dc      0x1f0
+                0x000156dc                __exidx_start = .
  *(.ARM.exidx*)
  .ARM.exidx.text._ZNSt9bad_allocD2Ev
-                0x0001591c        0x0 ../resources/Proteus/EWL/lib/armv7e-m\librt.a(New.o)
+                0x0001579c        0x0 ../resources/Proteus/EWL/lib/armv7e-m\librt.a(New.o)
                                   0x8 (size before relaxing)
  .ARM.exidx.text._ZNKSt9bad_alloc4whatEv
-                0x0001591c        0x0 ../resources/Proteus/EWL/lib/armv7e-m\librt.a(New.o)
+                0x0001579c        0x0 ../resources/Proteus/EWL/lib/armv7e-m\librt.a(New.o)
                                   0x8 (size before relaxing)
  .ARM.exidx.text._Znwj
-                0x0001591c        0x8 ../resources/Proteus/EWL/lib/armv7e-m\librt.a(New.o)
+                0x0001579c        0x8 ../resources/Proteus/EWL/lib/armv7e-m\librt.a(New.o)
  .ARM.exidx.text._ZdlPv
-                0x00015924        0x8 ../resources/Proteus/EWL/lib/armv7e-m\librt.a(New.o)
+                0x000157a4        0x8 ../resources/Proteus/EWL/lib/armv7e-m\librt.a(New.o)
  .ARM.exidx.text._ZNSt9bad_allocD0Ev
-                0x0001592c        0x0 ../resources/Proteus/EWL/lib/armv7e-m\librt.a(New.o)
+                0x000157ac        0x0 ../resources/Proteus/EWL/lib/armv7e-m\librt.a(New.o)
                                   0x8 (size before relaxing)
  .ARM.exidx.text._ZNK10__cxxabiv117__class_type_info11__do_upcastEPKS0_PPv
-                0x0001592c        0x8 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(class_type_info.o)
+                0x000157ac        0x8 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(class_type_info.o)
  .ARM.exidx.text._ZNK10__cxxabiv117__class_type_info20__do_find_public_srcEiPKvPKS0_S2_
-                0x00015934        0x8 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(class_type_info.o)
+                0x000157b4        0x8 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(class_type_info.o)
  .ARM.exidx.text._ZNK10__cxxabiv117__class_type_info11__do_upcastEPKS0_PKvRNS0_15__upcast_resultE
-                0x0001593c        0x8 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(class_type_info.o)
+                0x000157bc        0x8 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(class_type_info.o)
  .ARM.exidx.text._ZN10__cxxabiv117__class_type_infoD2Ev
-                0x00015944        0x8 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(class_type_info.o)
+                0x000157c4        0x8 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(class_type_info.o)
  .ARM.exidx.text._ZN10__cxxabiv117__class_type_infoD0Ev
-                0x0001594c        0x0 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(class_type_info.o)
+                0x000157cc        0x0 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(class_type_info.o)
                                   0x8 (size before relaxing)
  .ARM.exidx.text._ZNK10__cxxabiv117__class_type_info12__do_dyncastEiNS0_10__sub_kindEPKS0_PKvS3_S5_RNS0_16__dyncast_resultE
-                0x0001594c        0x8 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(class_type_info.o)
+                0x000157cc        0x8 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(class_type_info.o)
  .ARM.exidx.text._ZNK10__cxxabiv117__class_type_info10__do_catchEPKSt9type_infoPPvj
-                0x00015954        0x8 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(class_type_info.o)
+                0x000157d4        0x8 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(class_type_info.o)
  .ARM.exidx.text.__cxa_allocate_exception
-                0x0001595c        0x8 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_alloc.o)
+                0x000157dc        0x8 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_alloc.o)
  .ARM.exidx.text.__cxa_free_exception
-                0x00015964        0x0 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_alloc.o)
+                0x000157e4        0x0 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_alloc.o)
                                   0x8 (size before relaxing)
  .ARM.exidx.text.__cxa_type_match
-                0x00015964        0x8 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_arm.o)
+                0x000157e4        0x8 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_arm.o)
  .ARM.exidx.text.__cxa_begin_cleanup
-                0x0001596c        0x8 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_arm.o)
+                0x000157ec        0x8 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_arm.o)
  .ARM.exidx.text.__gnu_end_cleanup
-                0x00015974        0x0 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_arm.o)
+                0x000157f4        0x0 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_arm.o)
                                   0x8 (size before relaxing)
  .ARM.exidx.text.__cxa_bad_typeid
-                0x00015974        0x8 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_aux_runtime.o)
+                0x000157f4        0x8 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_aux_runtime.o)
  .ARM.exidx.text.__cxa_call_terminate
-                0x0001597c        0x8 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_call.o)
+                0x000157fc        0x8 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_call.o)
  .ARM.exidx.text.__cxa_call_unexpected
-                0x00015984        0x8 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_call.o)
+                0x00015804        0x8 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_call.o)
  .ARM.exidx.text.__cxa_begin_catch
-                0x0001598c        0x8 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_catch.o)
+                0x0001580c        0x8 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_catch.o)
  .ARM.exidx.text.__cxa_end_catch
-                0x00015994        0x8 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_catch.o)
+                0x00015814        0x8 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_catch.o)
  .ARM.exidx.text._ZNSt9exceptionD2Ev
-                0x0001599c        0x0 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_exception.o)
+                0x0001581c        0x0 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_exception.o)
                                   0x8 (size before relaxing)
  .ARM.exidx.text._ZNSt13bad_exceptionD2Ev
-                0x0001599c        0x0 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_exception.o)
+                0x0001581c        0x0 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_exception.o)
                                   0x8 (size before relaxing)
  .ARM.exidx.text._ZNKSt9exception4whatEv
-                0x0001599c        0x0 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_exception.o)
+                0x0001581c        0x0 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_exception.o)
                                   0x8 (size before relaxing)
  .ARM.exidx.text._ZNKSt13bad_exception4whatEv
-                0x0001599c        0x0 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_exception.o)
+                0x0001581c        0x0 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_exception.o)
                                   0x8 (size before relaxing)
  .ARM.exidx.text._ZNSt13bad_exceptionD0Ev
-                0x0001599c        0x0 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_exception.o)
+                0x0001581c        0x0 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_exception.o)
                                   0x8 (size before relaxing)
  .ARM.exidx.text._ZNSt9exceptionD0Ev
-                0x0001599c        0x0 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_exception.o)
+                0x0001581c        0x0 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_exception.o)
                                   0x8 (size before relaxing)
  .ARM.exidx.text.__cxa_get_globals_fast
-                0x0001599c        0x0 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_globals.o)
+                0x0001581c        0x0 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_globals.o)
                                   0x8 (size before relaxing)
  .ARM.exidx.text.__cxa_get_globals
-                0x0001599c        0x0 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_globals.o)
+                0x0001581c        0x0 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_globals.o)
                                   0x8 (size before relaxing)
  .ARM.exidx.text._ZL12read_sleb128PKhPl
-                0x0001599c        0x0 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_personality.o)
+                0x0001581c        0x0 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_personality.o)
                                   0x8 (size before relaxing)
  .ARM.exidx.text._ZL28read_encoded_value_with_basehjPKhPj
-                0x0001599c        0x8 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_personality.o)
+                0x0001581c        0x8 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_personality.o)
  .ARM.exidx.text._ZL21base_of_encoded_valuehP15_Unwind_Context
-                0x000159a4        0x8 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_personality.o)
+                0x00015824        0x8 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_personality.o)
  .ARM.exidx.text._ZL17parse_lsda_headerP15_Unwind_ContextPKhP16lsda_header_info.constprop.1
-                0x000159ac        0x8 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_personality.o)
+                0x0001582c        0x8 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_personality.o)
  .ARM.exidx.text.__gxx_personality_v0
-                0x000159b4        0x8 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_personality.o)
+                0x00015834        0x8 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_personality.o)
  .ARM.exidx.text._ZN10__cxxabiv111__terminateEPFvvE
-                0x000159bc        0x8 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_terminate.o)
+                0x0001583c        0x8 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_terminate.o)
  .ARM.exidx.text._ZSt9terminatev
-                0x000159c4        0x8 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_terminate.o)
+                0x00015844        0x8 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_terminate.o)
  .ARM.exidx.text._ZN10__cxxabiv112__unexpectedEPFvvE
-                0x000159cc        0x8 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_terminate.o)
+                0x0001584c        0x8 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_terminate.o)
  .ARM.exidx.text._ZSt10unexpectedv
-                0x000159d4        0x8 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_terminate.o)
+                0x00015854        0x8 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_terminate.o)
  .ARM.exidx.text._ZL23__gxx_exception_cleanup19_Unwind_Reason_CodeP21_Unwind_Control_Block
-                0x000159dc        0x8 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_throw.o)
+                0x0001585c        0x8 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_throw.o)
  .ARM.exidx.text.__cxa_throw
-                0x000159e4        0x8 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_throw.o)
+                0x00015864        0x8 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_throw.o)
  .ARM.exidx.text.__cxa_rethrow
-                0x000159ec        0x8 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_throw.o)
+                0x0001586c        0x8 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(eh_throw.o)
  .ARM.exidx.text._ZN10__cxxabiv123__fundamental_type_infoD2Ev
-                0x000159f4        0x0 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(fundamental_type_info.o)
+                0x00015874        0x0 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(fundamental_type_info.o)
                                   0x8 (size before relaxing)
  .ARM.exidx.text._ZN10__cxxabiv123__fundamental_type_infoD0Ev
-                0x000159f4        0x0 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(fundamental_type_info.o)
+                0x00015874        0x0 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(fundamental_type_info.o)
                                   0x8 (size before relaxing)
  .ARM.exidx.text._ZNK10__cxxabiv119__pointer_type_info14__is_pointer_pEv
-                0x000159f4        0x8 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(pointer_type_info.o)
+                0x00015874        0x8 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(pointer_type_info.o)
  .ARM.exidx.text._ZN10__cxxabiv119__pointer_type_infoD2Ev
-                0x000159fc        0x8 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(pointer_type_info.o)
+                0x0001587c        0x8 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(pointer_type_info.o)
  .ARM.exidx.text._ZN10__cxxabiv119__pointer_type_infoD0Ev
-                0x00015a04        0x0 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(pointer_type_info.o)
+                0x00015884        0x0 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(pointer_type_info.o)
                                   0x8 (size before relaxing)
  .ARM.exidx.text._ZNK10__cxxabiv119__pointer_type_info15__pointer_catchEPKNS_17__pbase_type_infoEPPvj
-                0x00015a04        0x8 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(pointer_type_info.o)
+                0x00015884        0x8 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(pointer_type_info.o)
  .ARM.exidx.text._ZN10__cxxabiv120__si_class_type_infoD2Ev
-                0x00015a0c        0x8 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(si_class_type_info.o)
+                0x0001588c        0x8 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(si_class_type_info.o)
  .ARM.exidx.text._ZN10__cxxabiv120__si_class_type_infoD0Ev
-                0x00015a14        0x0 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(si_class_type_info.o)
+                0x00015894        0x0 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(si_class_type_info.o)
                                   0x8 (size before relaxing)
  .ARM.exidx.text._ZNK10__cxxabiv120__si_class_type_info11__do_upcastEPKNS_17__class_type_infoEPKvRNS1_15__upcast_resultE
-                0x00015a14        0x8 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(si_class_type_info.o)
+                0x00015894        0x8 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(si_class_type_info.o)
  .ARM.exidx.text._ZNK10__cxxabiv120__si_class_type_info12__do_dyncastEiNS_17__class_type_info10__sub_kindEPKS1_PKvS4_S6_RNS1_16__dyncast_resultE
-                0x00015a1c        0x8 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(si_class_type_info.o)
+                0x0001589c        0x8 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(si_class_type_info.o)
  .ARM.exidx.text._ZNK10__cxxabiv120__si_class_type_info20__do_find_public_srcEiPKvPKNS_17__class_type_infoES2_
-                0x00015a24        0x8 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(si_class_type_info.o)
+                0x000158a4        0x8 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(si_class_type_info.o)
  .ARM.exidx.text._ZNSt9type_infoD2Ev
-                0x00015a2c        0x8 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(tinfo.o)
+                0x000158ac        0x8 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(tinfo.o)
  .ARM.exidx.text._ZNKSt9type_info14__is_pointer_pEv
-                0x00015a34        0x0 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(tinfo.o)
+                0x000158b4        0x0 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(tinfo.o)
                                   0x8 (size before relaxing)
  .ARM.exidx.text._ZNKSt9type_info15__is_function_pEv
-                0x00015a34        0x0 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(tinfo.o)
+                0x000158b4        0x0 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(tinfo.o)
                                   0x8 (size before relaxing)
  .ARM.exidx.text._ZNKSt9type_info11__do_upcastEPKN10__cxxabiv117__class_type_infoEPPv
-                0x00015a34        0x0 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(tinfo.o)
+                0x000158b4        0x0 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(tinfo.o)
                                   0x8 (size before relaxing)
  .ARM.exidx.text._ZNSt9type_infoD0Ev
-                0x00015a34        0x0 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(tinfo.o)
+                0x000158b4        0x0 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(tinfo.o)
                                   0x8 (size before relaxing)
  .ARM.exidx.text._ZNKSt9type_infoeqERKS_
-                0x00015a34        0x0 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(tinfo.o)
+                0x000158b4        0x0 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(tinfo.o)
                                   0x8 (size before relaxing)
  .ARM.exidx.text._ZNKSt9type_info10__do_catchEPKS_PPvj
-                0x00015a34        0x0 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(tinfo.o)
+                0x000158b4        0x0 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(tinfo.o)
                                   0x8 (size before relaxing)
  .ARM.exidx.text._ZNKSt10bad_typeid4whatEv
-                0x00015a34        0x0 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(bad_typeid.o)
+                0x000158b4        0x0 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(bad_typeid.o)
                                   0x8 (size before relaxing)
  .ARM.exidx.text._ZNSt10bad_typeidD2Ev
-                0x00015a34        0x0 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(bad_typeid.o)
+                0x000158b4        0x0 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(bad_typeid.o)
                                   0x8 (size before relaxing)
  .ARM.exidx.text._ZNSt10bad_typeidD0Ev
-                0x00015a34        0x0 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(bad_typeid.o)
+                0x000158b4        0x0 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(bad_typeid.o)
                                   0x8 (size before relaxing)
  .ARM.exidx.text._ZNK10__cxxabiv117__pbase_type_info15__pointer_catchEPKS0_PPvj
-                0x00015a34        0x8 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(pbase_type_info.o)
+                0x000158b4        0x8 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(pbase_type_info.o)
  .ARM.exidx.text._ZN10__cxxabiv117__pbase_type_infoD2Ev
-                0x00015a3c        0x0 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(pbase_type_info.o)
+                0x000158bc        0x0 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(pbase_type_info.o)
                                   0x8 (size before relaxing)
  .ARM.exidx.text._ZN10__cxxabiv117__pbase_type_infoD0Ev
-                0x00015a3c        0x0 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(pbase_type_info.o)
+                0x000158bc        0x0 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(pbase_type_info.o)
                                   0x8 (size before relaxing)
  .ARM.exidx.text._ZNK10__cxxabiv117__pbase_type_info10__do_catchEPKSt9type_infoPPvj
-                0x00015a3c       0x10 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(pbase_type_info.o)
+                0x000158bc       0x10 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/lib/armv7e-m\libsupc++.a(pbase_type_info.o)
                                   0x8 (size before relaxing)
- .ARM.exidx     0x0001585c       0x88 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/armv7e-m\libgcc.a(unwind-arm.o)
+ .ARM.exidx     0x000156dc       0x88 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/armv7e-m\libgcc.a(unwind-arm.o)
                                  0xc0 (size before relaxing)
- .ARM.exidx     0x000158e4       0x38 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/armv7e-m\libgcc.a(pr-support.o)
+ .ARM.exidx     0x00015764       0x38 z:/home/bobby/projects/robot-d5/resources/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/armv7e-m\libgcc.a(pr-support.o)
                                  0x48 (size before relaxing)
-                0x00015a4c                __exidx_end = .
+                0x000158cc                __exidx_end = .
 
-.ctors          0x00015a4c        0x0
-                0x00015a4c                __CTOR_LIST__ = .
+.ctors          0x000158cc        0x0
+                0x000158cc                __CTOR_LIST__ = .
  *crtbegin.o(.ctors)
  *(EXCLUDE_FILE(*crtend.o) .ctors)
  *(SORT(.ctors.*))
  *(.ctors)
-                0x00015a4c                __CTOR_END__ = .
+                0x000158cc                __CTOR_END__ = .
 
-.dtors          0x00015a4c        0x0
-                0x00015a4c                __DTOR_LIST__ = .
+.dtors          0x000158cc        0x0
+                0x000158cc                __DTOR_LIST__ = .
  *crtbegin.o(.dtors)
  *(EXCLUDE_FILE(*crtend.o) .dtors)
  *(SORT(.dtors.*))
  *(.dtors)
-                0x00015a4c                __DTOR_END__ = .
+                0x000158cc                __DTOR_END__ = .
 
-.preinit_array  0x00015a4c        0x0
-                0x00015a4c                PROVIDE (__preinit_array_start, .)
+.preinit_array  0x000158cc        0x0
+                0x000158cc                PROVIDE (__preinit_array_start, .)
  *(.preinit_array*)
-                0x00015a4c                PROVIDE (__preinit_array_end, .)
+                0x000158cc                PROVIDE (__preinit_array_end, .)
 
-.init_array     0x00015a4c       0x18
-                0x00015a4c                PROVIDE (__init_array_start, .)
+.init_array     0x000158cc       0x18
+                0x000158cc                PROVIDE (__init_array_start, .)
  *(SORT(.init_array.*))
  *(.init_array*)
- .init_array    0x00015a4c        0x4 ../src/main.o
- .init_array    0x00015a50        0x4 FEHProteus.o
- .init_array    0x00015a54        0x4 Libraries/FEHBuzzer.o
- .init_array    0x00015a58        0x4 Libraries/FEHLCD.o
- .init_array    0x00015a5c        0x4 Libraries/FEHBattery.o
- .init_array    0x00015a60        0x4 Libraries/FEHWONKA.o
-                0x00015a64                PROVIDE (__init_array_end, .)
+ .init_array    0x000158cc        0x4 ../src/main.o
+ .init_array    0x000158d0        0x4 FEHProteus.o
+ .init_array    0x000158d4        0x4 Libraries/FEHBuzzer.o
+ .init_array    0x000158d8        0x4 Libraries/FEHLCD.o
+ .init_array    0x000158dc        0x4 Libraries/FEHBattery.o
+ .init_array    0x000158e0        0x4 Libraries/FEHWONKA.o
+                0x000158e4                PROVIDE (__init_array_end, .)
 
-.fini_array     0x00015a64        0x0
-                0x00015a64                PROVIDE (__fini_array_start, .)
+.fini_array     0x000158e4        0x0
+                0x000158e4                PROVIDE (__fini_array_start, .)
  *(SORT(.fini_array.*))
  *(.fini_array*)
-                0x00015a64                PROVIDE (__fini_array_end, .)
-                0x00015a64                ___ROM_AT = .
+                0x000158e4                PROVIDE (__fini_array_end, .)
+                0x000158e4                ___ROM_AT = .
 
-.data           0x1fff0400     0x3228 load address 0x00015a64
+.data           0x1fff0400     0x3228 load address 0x000158e4
                 0x1fff0400                . = ALIGN (0x4)
                 0x1fff0400                _sdata = .
  *(.data)
@@ -2534,9 +2533,9 @@ END GROUP
                 0x1fff3628                . = ALIGN (0x4)
                 0x1fff3628                _edata = .
                 0x00003228                ___data_size = (_edata - _sdata)
-                0x00018c8c                ___m_data2_ROMStart = (___ROM_AT + SIZEOF (.data))
+                0x00018b0c                ___m_data2_ROMStart = (___ROM_AT + SIZEOF (.data))
 
-.user_data2     0x20000000        0x0 load address 0x00018c8c
+.user_data2     0x20000000        0x0 load address 0x00018b0c
                 0x20000000                . = ALIGN (0x4)
                 0x20000000                ___m_data2_RAMStart = .
  *(.data2)
@@ -2545,7 +2544,7 @@ END GROUP
                 0x00000000                ___m_data2_ROMSize = (___m_data2_RAMEnd - ___m_data2_RAMStart)
                 0x20000000                . = ALIGN (0x4)
 
-.bss            0x1fff3628      0xc80 load address 0x00018c90
+.bss            0x1fff3628      0xc80 load address 0x00018b10
                 0x1fff3628                __START_BSS = .
                 0x1fff3628                PROVIDE (__bss_start__, __START_BSS)
  *(.bss)
@@ -2690,7 +2689,7 @@ END GROUP
                 0x1fff42a8                PROVIDE (__bss_end__, __END_BSS)
 
 ._user_heap_stack
-                0x1fff42a8     0x1000 load address 0x00019910
+                0x1fff42a8     0x1000 load address 0x00019790
                 0x1fff42a8                . = ALIGN (0x4)
                 0x1fff42a8                PROVIDE (end, .)
                 0x1fff42a8                PROVIDE (_end, .)
@@ -2700,14 +2699,14 @@ END GROUP
                 0x1fff52a8                . = (. + __stack_size)
  *fill*         0x1fff4aa8      0x800 00
                 0x1fff52a8                . = ALIGN (0x4)
-                0x00018c8c                _romp_at = ((___ROM_AT + SIZEOF (.data)) + SIZEOF (.user_data2))
+                0x00018b0c                _romp_at = ((___ROM_AT + SIZEOF (.data)) + SIZEOF (.user_data2))
 
-.romp           0x20000000       0x24 load address 0x00018c8c
-                0x00018c8c                __S_romp = _romp_at
-                0x20000000        0x4 LONG 0x15a64 ___ROM_AT
+.romp           0x20000000       0x24 load address 0x00018b0c
+                0x00018b0c                __S_romp = _romp_at
+                0x20000000        0x4 LONG 0x158e4 ___ROM_AT
                 0x20000004        0x4 LONG 0x1fff0400 _sdata
                 0x20000008        0x4 LONG 0x3228 ___data_size
-                0x2000000c        0x4 LONG 0x18c8c ___m_data2_ROMStart
+                0x2000000c        0x4 LONG 0x18b0c ___m_data2_ROMStart
                 0x20000010        0x4 LONG 0x20000000 ___m_data2_RAMStart
                 0x20000014        0x4 LONG 0x0 ___m_data2_ROMSize
                 0x20000018        0x4 LONG 0x0
@@ -3071,49 +3070,49 @@ OUTPUT(../build/current.elf elf32-littlearm)
  .debug_aranges
                 0x00000c58       0x20 ../resources/Proteus/EWL/lib/armv7e-m\libc.a(signal.o)
 
-.debug_line     0x00000000     0x5c04
+.debug_line     0x00000000     0x5c03
  .debug_line    0x00000000      0x29c ../src/main.o
- .debug_line    0x0000029c      0x4e3 ../src/movement.o
- .debug_line    0x0000077f      0x2d1 ../src/logging.o
- .debug_line    0x00000a50      0x35a Startup/__arm_start.o
- .debug_line    0x00000daa      0x22e Startup/__arm_end.o
- .debug_line    0x00000fd8      0x1ea Startup/kinetis_sysinit.o
- .debug_line    0x000011c2      0x22d Libraries/FEHMotor.o
- .debug_line    0x000013ef      0x215 Drivers/uart.o
- .debug_line    0x00001604      0x1c3 Drivers/lptmr.o
- .debug_line    0x000017c7      0x1e6 FEHProteus.o
- .debug_line    0x000019ad      0x255 Drivers/FEHPropeller.o
- .debug_line    0x00001c02      0x283 Libraries/FEHUtility.o
- .debug_line    0x00001e85      0x55a Libraries/FEHIO.o
- .debug_line    0x000023df      0x212 Drivers/adc16.o
- .debug_line    0x000025f1      0x2e0 Libraries/FEHBuzzer.o
- .debug_line    0x000028d1      0x390 Libraries/FEHServo.o
- .debug_line    0x00002c61      0xe7f Libraries/FEHLCD.o
- .debug_line    0x00003ae0      0x219 Libraries/FEHBattery.o
- .debug_line    0x00003cf9      0x306 Drivers/FEHXBee.o
- .debug_line    0x00003fff      0x527 Libraries/FEHWONKA.o
- .debug_line    0x00004526       0x94 ../resources/Proteus/EWL/lib/armv7e-m\libc.a(sprintf.o)
- .debug_line    0x000045ba       0xd2 ../resources/Proteus/EWL/lib/armv7e-m\libc.a(vsnprintf.o)
- .debug_line    0x0000468c       0x94 ../resources/Proteus/EWL/lib/armv7e-m\libc.a(exit.o)
- .debug_line    0x00004720       0x8d ../resources/Proteus/EWL/lib/armv7e-m\libc.a(memcpy.o)
- .debug_line    0x000047ad       0x8f ../resources/Proteus/EWL/lib/armv7e-m\libc.a(memset.o)
- .debug_line    0x0000483c      0x2c6 ../resources/Proteus/EWL/lib/armv7e-m\libc.a(printformat_.o)
- .debug_line    0x00004b02      0x2e3 ../resources/Proteus/EWL/lib/armv7e-m\libc.a(scanformat_.o)
- .debug_line    0x00004de5      0x1dd ../resources/Proteus/EWL/lib/armv7e-m\libc.a(ctype_aeabi.o)
- .debug_line    0x00004fc2      0x141 ../resources/Proteus/EWL/lib/armv7e-m\libc.a(__strtoul.o)
- .debug_line    0x00005103      0x121 ../resources/Proteus/EWL/lib/armv7e-m\libc.a(__filll_mem.o)
- .debug_line    0x00005224       0xa3 ../resources/Proteus/EWL/lib/armv7e-m\libc.a(memchr.o)
- .debug_line    0x000052c7       0x84 ../resources/Proteus/EWL/lib/armv7e-m\libc.a(strchr.o)
- .debug_line    0x0000534b       0x89 ../resources/Proteus/EWL/lib/armv7e-m\libc.a(strlen.o)
- .debug_line    0x000053d4       0x94 ../resources/Proteus/EWL/lib/armv7e-m\librt.a(gcc_ctor_dtor.o)
- .debug_line    0x00005468       0xc0 ../resources/Proteus/EWL/lib/armv7e-m\librt.a(ROMCopy.o)
- .debug_line    0x00005528      0x119 ../resources/Proteus/EWL/lib/armv7e-m\librt.a(__arm_eabi_init.o)
- .debug_line    0x00005641      0x21e ../resources/Proteus/EWL/lib/armv7e-m\librt.a(New.o)
- .debug_line    0x0000585f       0x77 ../resources/Proteus/EWL/lib/armv7e-m\libc.a(abort.o)
- .debug_line    0x000058d6      0x18c ../resources/Proteus/EWL/lib/armv7e-m\libc.a(alloc.o)
- .debug_line    0x00005a62       0x88 ../resources/Proteus/EWL/lib/armv7e-m\libc.a(strcmp.o)
- .debug_line    0x00005aea       0x96 ../resources/Proteus/EWL/lib/armv7e-m\libc.a(raise.o)
- .debug_line    0x00005b80       0x84 ../resources/Proteus/EWL/lib/armv7e-m\libc.a(signal.o)
+ .debug_line    0x0000029c      0x4e2 ../src/movement.o
+ .debug_line    0x0000077e      0x2d1 ../src/logging.o
+ .debug_line    0x00000a4f      0x35a Startup/__arm_start.o
+ .debug_line    0x00000da9      0x22e Startup/__arm_end.o
+ .debug_line    0x00000fd7      0x1ea Startup/kinetis_sysinit.o
+ .debug_line    0x000011c1      0x22d Libraries/FEHMotor.o
+ .debug_line    0x000013ee      0x215 Drivers/uart.o
+ .debug_line    0x00001603      0x1c3 Drivers/lptmr.o
+ .debug_line    0x000017c6      0x1e6 FEHProteus.o
+ .debug_line    0x000019ac      0x255 Drivers/FEHPropeller.o
+ .debug_line    0x00001c01      0x283 Libraries/FEHUtility.o
+ .debug_line    0x00001e84      0x55a Libraries/FEHIO.o
+ .debug_line    0x000023de      0x212 Drivers/adc16.o
+ .debug_line    0x000025f0      0x2e0 Libraries/FEHBuzzer.o
+ .debug_line    0x000028d0      0x390 Libraries/FEHServo.o
+ .debug_line    0x00002c60      0xe7f Libraries/FEHLCD.o
+ .debug_line    0x00003adf      0x219 Libraries/FEHBattery.o
+ .debug_line    0x00003cf8      0x306 Drivers/FEHXBee.o
+ .debug_line    0x00003ffe      0x527 Libraries/FEHWONKA.o
+ .debug_line    0x00004525       0x94 ../resources/Proteus/EWL/lib/armv7e-m\libc.a(sprintf.o)
+ .debug_line    0x000045b9       0xd2 ../resources/Proteus/EWL/lib/armv7e-m\libc.a(vsnprintf.o)
+ .debug_line    0x0000468b       0x94 ../resources/Proteus/EWL/lib/armv7e-m\libc.a(exit.o)
+ .debug_line    0x0000471f       0x8d ../resources/Proteus/EWL/lib/armv7e-m\libc.a(memcpy.o)
+ .debug_line    0x000047ac       0x8f ../resources/Proteus/EWL/lib/armv7e-m\libc.a(memset.o)
+ .debug_line    0x0000483b      0x2c6 ../resources/Proteus/EWL/lib/armv7e-m\libc.a(printformat_.o)
+ .debug_line    0x00004b01      0x2e3 ../resources/Proteus/EWL/lib/armv7e-m\libc.a(scanformat_.o)
+ .debug_line    0x00004de4      0x1dd ../resources/Proteus/EWL/lib/armv7e-m\libc.a(ctype_aeabi.o)
+ .debug_line    0x00004fc1      0x141 ../resources/Proteus/EWL/lib/armv7e-m\libc.a(__strtoul.o)
+ .debug_line    0x00005102      0x121 ../resources/Proteus/EWL/lib/armv7e-m\libc.a(__filll_mem.o)
+ .debug_line    0x00005223       0xa3 ../resources/Proteus/EWL/lib/armv7e-m\libc.a(memchr.o)
+ .debug_line    0x000052c6       0x84 ../resources/Proteus/EWL/lib/armv7e-m\libc.a(strchr.o)
+ .debug_line    0x0000534a       0x89 ../resources/Proteus/EWL/lib/armv7e-m\libc.a(strlen.o)
+ .debug_line    0x000053d3       0x94 ../resources/Proteus/EWL/lib/armv7e-m\librt.a(gcc_ctor_dtor.o)
+ .debug_line    0x00005467       0xc0 ../resources/Proteus/EWL/lib/armv7e-m\librt.a(ROMCopy.o)
+ .debug_line    0x00005527      0x119 ../resources/Proteus/EWL/lib/armv7e-m\librt.a(__arm_eabi_init.o)
+ .debug_line    0x00005640      0x21e ../resources/Proteus/EWL/lib/armv7e-m\librt.a(New.o)
+ .debug_line    0x0000585e       0x77 ../resources/Proteus/EWL/lib/armv7e-m\libc.a(abort.o)
+ .debug_line    0x000058d5      0x18c ../resources/Proteus/EWL/lib/armv7e-m\libc.a(alloc.o)
+ .debug_line    0x00005a61       0x88 ../resources/Proteus/EWL/lib/armv7e-m\libc.a(strcmp.o)
+ .debug_line    0x00005ae9       0x96 ../resources/Proteus/EWL/lib/armv7e-m\libc.a(raise.o)
+ .debug_line    0x00005b7f       0x84 ../resources/Proteus/EWL/lib/armv7e-m\libc.a(signal.o)
 
 .debug_macinfo  0x00000000   0x761ec0
  .debug_macinfo

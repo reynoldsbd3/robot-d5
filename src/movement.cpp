@@ -753,8 +753,8 @@ void ud_head(struct robot *bot) {
   struct log_data entry;
 
   // Set up journal entry
-  entry.fname = "ud_head";
-  entry.msg = "Updated heading to this value";
+  // entry.fname = "ud_head";
+  // entry.msg = "Updated heading to this value";
 
   // Take cases
   if (old_head > 45.0 && old_head <= 135.0) {
@@ -765,7 +765,7 @@ void ud_head(struct robot *bot) {
   } else if (old_head > 135.0 && old_head <= 225.0) {
 
     // New heading is in 1st or 2nd quadrant
-    if (new_head >= 90.0) {
+    if (raw_head >= 90.0) {
 
       // 1st quadrant
       new_head = raw_head;
@@ -783,7 +783,7 @@ void ud_head(struct robot *bot) {
   } else {
 
     // New heading is in 3rd or 4th quadrant
-    if (new_head >= 90.0) {
+    if (raw_head >= 90.0) {
 
       // 3rd quadrant
       new_head = 180.0 + raw_head;
@@ -797,8 +797,8 @@ void ud_head(struct robot *bot) {
 
   // Set new heading
   bot->head = new_head;
-  entry.value = new_head;
+  // entry.value = new_head;
 
   // Log journal entry
-  bot->journal = log(bot->journal, &entry);
+  // bot->journal = log(bot->journal, &entry);
 }
