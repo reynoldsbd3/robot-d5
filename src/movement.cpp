@@ -750,6 +750,11 @@ void ud_head(struct robot *bot) {
   float old_head = bot->head;
   float raw_head = (*bot->rps).Heading();
   float new_head;
+  struct log_data entry;
+
+  // Set up journal entry
+  entry.fname = "ud_head";
+  entry.msg = "Updated heading to this value";
 
   // Take cases
   if (old_head > 45.0 && old_head <= 135.0) {
@@ -792,4 +797,8 @@ void ud_head(struct robot *bot) {
 
   // Set new heading
   bot->head = new_head;
+  entry.value = new_head;
+
+  // Log journal entry
+  bot->journal = log(bot->journal, &entry);
 }

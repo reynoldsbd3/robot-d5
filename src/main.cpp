@@ -1,3 +1,4 @@
+
 #include <FEHIO.h>
 #include <FEHLCD.h>
 #include <FEHMotor.h>
@@ -42,11 +43,11 @@ int main() {
   journal = init_log();
 
   // Initialize RPS and WONKA communication
-  // rps.InitializeMenu();
-  // rps.Enable();
+  rps.InitializeMenu();
+  rps.Enable();
 
   // Allow time to initialize
-  // Sleep(250);
+  Sleep(250);
   
   // Pack the robot struct
   bot.l_mot = &l_mot;
@@ -61,18 +62,22 @@ int main() {
   bot.rps = &rps;
   bot.btns = &btns;
   bot.journal = journal;
-  // bot.head = rps.Heading();
+  bot.head = rps.Heading();
 
   //Wait for CdS cell
   // LCD.Clear();
   // LCD.WriteLine("Waiting for signal light");
   // while (cds_0.Value() > 0.5);
 
-  fwd_time(&bot, 5.0);
-  LCD.Write("Left counts:  ");
-  LCD.WriteLine(l_enc.Counts());
-  LCD.Write("Right counts: ");
-  LCD.WriteLine(r_enc.Counts());
+  while (!btns.MiddlePressed()) {
+
+    ud_head(&bot);
+    LCD.Clear();
+    LCD.Write("Heading: ");
+    LCD.WriteLine(bot.head);
+    Sleep(200);
+  }
+  Sleep(250);
   
   // Program finished
   // rps.Disable();
