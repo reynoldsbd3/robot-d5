@@ -12,14 +12,14 @@
 #define HEAD_ERR 3.0           // Maximum allowable heading error
 #define FL_PWR -90             // Forklift power
 #define FTRY_THRESH 20         // Y-coordinate where shop ends
-#define LINE_THRESH_FTRY_0 1.0
-#define NONE_THRESH_FTRY_0 2.8
-#define LINE_THRESH_SHOP_0 2.8
-#define NONE_THRESH_SHOP_0 1.0
-#define LINE_THRESH_FTRY_1 1.0
-#define NONE_THRESH_FTRY_1 2.8
-#define LINE_THRESH_SHOP_1 2.8
-#define NONE_THRESH_SHOP_1 1.0
+#define LINE_THRESH_FTRY_0 1.0 // Optosensor threshold for detecting line in factory
+#define NONE_THRESH_FTRY_0 2.8 // Optosensor threshold for detecting emptiness in factory
+#define LINE_THRESH_SHOP_0 2.8 // Optosensor threshold for detecting line in shop
+#define NONE_THRESH_SHOP_0 1.0 // Optosensor threshold for detecting emptiness in shop
+#define LINE_THRESH_FTRY_1 1.0 // Optosensor threshold for detecting line in factory
+#define NONE_THRESH_FTRY_1 2.8 // Optosensor threshold for detecting emptiness in factory
+#define LINE_THRESH_SHOP_1 2.8 // Optosensor threshold for detecting line in shop
+#define NONE_THRESH_SHOP_1 1.0 // Optosensor threshold for detecting emptiness in shop
 #define LM_PWR_FW -98          // Left motor forward power
 #define LM_PWR_LR -90          // Left motor left rotation power
 #define LM_PWR_LT 30           // Left motor left turn power
@@ -107,6 +107,7 @@ void fwd_dist(struct robot *bot, float distance) {
   int l_pwr = LM_PWR_FW;
   int r_pwr = RM_PWR_FW;
   int cnt_diff;
+  float orig_head;
   bool adjustment_made = false;
   struct log_data entry_0;
   struct log_data entry_1;
@@ -126,6 +127,10 @@ void fwd_dist(struct robot *bot, float distance) {
   entry_3.fname = "fwd_dist";
   entry_3.msg = "Adjustments were made this many times";
   entry_3.value = 0.0;
+
+  // Get original heading
+  ud_head(bot);
+  orig_head = bot->head;
   
   // Ensure a clean count to begin
   (*bot->l_enc).ResetCounts();
@@ -140,10 +145,10 @@ void fwd_dist(struct robot *bot, float distance) {
     (*bot->r_mot).SetPower(r_pwr);
 
     Sleep(50);
+    ud_head(bot);
     
     // // Check if one motor is outpacing another
-    if ((*bot->l_enc).Counts() / l_tgt > 
-      (*bot->r_enc).Counts() / r_tgt) {
+    if (head_diff(bot->head, orig_head) > 0) {
       
       // If left is faster than right, attempt to correct this
       // by applying a balancing factor
@@ -151,8 +156,7 @@ void fwd_dist(struct robot *bot, float distance) {
       r_pwr += BLNC_FCTR;
       adjustment_made = true;
       
-    } else if ((*bot->l_enc).Counts() / l_tgt < 
-      (*bot->r_enc).Counts() / r_tgt) {
+    } else if (head_diff(bot->head, orig_head) < 0) {
       
       // If right is faster than left, attempt to correct this
       // by applying a balancing factor
