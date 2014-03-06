@@ -16,8 +16,8 @@ void bck_tst(struct robot *bot);
 
 // Turning
 void rot_time(struct robot *bot, float time, bool cw);
-void rot_deg(struct robot *bot, int degree);
-void rot_head(struct robot *bot, int head);
+void rot_deg(struct robot *bot, float degree);
+void rot_head(struct robot *bot, float head);
 void rot_tst(struct robot *bot, bool cw);
 
 // Forklift
@@ -25,7 +25,7 @@ void raise_fork(struct robot *bot, float time);
 void lower_fork(struct robot *bot, float time);
 
 // Misc
-int head_diff(int head, int target);
+float head_diff(float head, float target);
 void ud_head(struct robot *bot);
 
 #endif

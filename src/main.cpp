@@ -69,18 +69,19 @@ int main() {
   // LCD.WriteLine("Waiting for signal light");
   // while (cds_0.Value() > 0.5);
 
-  while (!btns.MiddlePressed()) {
+  while (true) {
 
-    ud_head(&bot);
     LCD.Clear();
     LCD.Write("Heading: ");
     LCD.WriteLine(bot.head);
-    Sleep(200);
+    LCD.Write("Difference: ");
+    LCD.WriteLine(head_diff(bot.head, 90.0));
+    ud_head(&bot);
+    Sleep(20);
   }
-  Sleep(250);
   
   // Program finished
-  // rps.Disable();
+  rps.Disable();
   LCD.Clear();
   LCD.WriteLine("Complete.");
   LCD.WriteLine("Ready to dump...");

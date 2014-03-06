@@ -25,16 +25,16 @@
 #define LM_PWR_LT 30           // Left motor left turn power
 #define LM_PWR_RR 90           // Left motor right rotation power
 #define LM_PWR_RT 70           // Left motor right turn power
-#define LT_LPI 2.44            // Left tread links per inch
+#define LT_LPI 3.21            // Left tread links per inch
 #define RM_PWR_FW -90          // Right motor forward power
 #define RM_PWR_LR 95           // Right motor left rotation power
 #define RM_PWR_LT 70           // Right motor left turn power
 #define RM_PWR_RR -90          // Right motor right rotation power
 #define RM_PWR_RT 30           // Right motor right turn power
-#define RT_LPI 2.05            // Right tread links per inch
+#define RT_LPI 2.42            // Right tread links per inch
 
 // Prototypes
-int head_diff(int, int);
+float head_diff(float, float);
 int l_tgt_cts(float);
 int r_tgt_cts(float);
 void rot_deg(struct robot, int);
@@ -84,7 +84,7 @@ void fwd_time(struct robot *bot, float time) {
   (*bot->r_mot).SetPower(0);
 
   // Log journal entry
-  bot->journal = log(bot->journal, &entry);
+  // bot->journal = log(bot->journal, &entry);
 }
 
 /* Moves the robot forward a specific distance in inches.
@@ -148,7 +148,8 @@ void fwd_dist(struct robot *bot, float distance) {
     ud_head(bot);
     
     // // Check if one motor is outpacing another
-    if (head_diff(bot->head, orig_head) > 0) {
+    if ((*bot->l_enc).Counts() / l_tgt >
+      (*bot->r_enc).Counts() / r_tgt) {
       
       // If left is faster than right, attempt to correct this
       // by applying a balancing factor
@@ -156,7 +157,8 @@ void fwd_dist(struct robot *bot, float distance) {
       r_pwr += BLNC_FCTR;
       adjustment_made = true;
       
-    } else if (head_diff(bot->head, orig_head) < 0) {
+    } else if ((*bot->l_enc).Counts() / l_tgt <
+      (*bot->r_enc).Counts() / r_tgt) {
       
       // If right is faster than left, attempt to correct this
       // by applying a balancing factor
@@ -177,10 +179,10 @@ void fwd_dist(struct robot *bot, float distance) {
   (*bot->r_mot).SetPower(0);
 
   // Log journal entries
-  bot->journal = log(bot->journal, &entry_0);
-  bot->journal = log(bot->journal, &entry_1);
-  bot->journal = log(bot->journal, &entry_2);
-  bot->journal = log(bot->journal, &entry_3);
+  // bot->journal = log(bot->journal, &entry_0);
+  // bot->journal = log(bot->journal, &entry_1);
+  // bot->journal = log(bot->journal, &entry_2);
+  // bot->journal = log(bot->journal, &entry_3);
 }
 
 /* Causes the robot to "follow" a black line for an approximate distance in inches.
@@ -798,6 +800,13 @@ void ud_head(struct robot *bot) {
   // Set new heading
   bot->head = new_head;
   // entry.value = new_head;
+
+  // Override if RPS fails
+  if ((*bot->rps).Heading() == 0) {
+
+    // Just assume head hasn't changed
+    bot->head = old_head;
+  }
 
   // Log journal entry
   // bot->journal = log(bot->journal, &entry);
