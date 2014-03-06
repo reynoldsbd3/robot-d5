@@ -82,12 +82,39 @@ int main() {
   bot.head = rps.Heading();
 
   //Wait for CdS cell
-  // LCD.Clear();
-  // LCD.WriteLine("Waiting for signal light");
-  // while (cds_0.Value() > 0.5);
+  LCD.Clear();
+  LCD.WriteLine("Waiting for signal light");
+  while (cds_0.Value() > 0.5);
 
-  l_mot.SetPower(90);
-  
+  // Move towards skid
+  fwd_dist(&bot, 30.0);
+
+  // Rotate to face skid
+  rot_head(&bot, 178);
+
+  // Lower fork
+  f_mot.SetPower(30);
+  Sleep(400);
+  f_mot.SetPower(0);
+
+  // Move towards skid
+  fwd_dist(&bot, 10);
+
+  // Raise skid, wait to raise if needed
+  f_mot.SetPower(125);
+  bck_dist(&bot, 2.0);
+  // Sleep(400);
+  f_mot.SetPower(0);
+
+  // Maneuver to ramp
+  bck_dist(&bot, 5.0);
+  rot_head(&bot, 135.0);
+  bck_dist(&bot, 10.0);
+  rot_head(&bot, 0);
+
+  // Go down ramp
+  bck_dist(&bot, 20.0);
+
   // Program finished
   rps.Disable();
   LCD.Clear();

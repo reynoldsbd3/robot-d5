@@ -108,25 +108,6 @@ void fwd_dist(struct robot *bot, float distance) {
   int r_pwr = RM_PWR_FW;
   int cnt_diff;
   float orig_head;
-  bool adjustment_made = false;
-  struct log_data entry_0;
-  struct log_data entry_1;
-  struct log_data entry_2;
-  struct log_data entry_3;
-
-  // Initialize journal entries
-  entry_0.fname = "fwd_dist";
-  entry_0.msg = "Moved forward for this many inches";
-  entry_0.value = distance;
-  entry_1.fname = "fwd_dist";
-  entry_1.msg = "Left target was this";
-  entry_1.value = (float)l_tgt;
-  entry_2.fname = "fwd_dist";
-  entry_2.msg = "Right target was this";
-  entry_2.value = (float)r_tgt;
-  entry_3.fname = "fwd_dist";
-  entry_3.msg = "Adjustments were made this many times";
-  entry_3.value = 0.0;
 
   // Get original heading
   ud_head(bot);
@@ -144,6 +125,8 @@ void fwd_dist(struct robot *bot, float distance) {
     (*bot->l_mot).SetPower(l_pwr);
     (*bot->r_mot).SetPower(r_pwr);
 
+    // TODO algorithm is too greedy
+    // Increase this time period to use with RPS
     Sleep(50);
     ud_head(bot);
     
@@ -155,7 +138,6 @@ void fwd_dist(struct robot *bot, float distance) {
       // by applying a balancing factor
       l_pwr -= BLNC_FCTR;
       r_pwr += BLNC_FCTR;
-      adjustment_made = true;
       
     } else if ((*bot->l_enc).Counts() / l_tgt <
       (*bot->r_enc).Counts() / r_tgt) {
@@ -164,25 +146,12 @@ void fwd_dist(struct robot *bot, float distance) {
       // by applying a balancing factor
       l_pwr += BLNC_FCTR;
       r_pwr -= BLNC_FCTR;
-      adjustment_made = true;
-    }
-
-    if (adjustment_made) {
-
-      entry_3.value += 1;
-      adjustment_made = false;
     }
   }
   
   // Cease forward motion
   (*bot->l_mot).SetPower(0);
   (*bot->r_mot).SetPower(0);
-
-  // Log journal entries
-  // bot->journal = log(bot->journal, &entry_0);
-  // bot->journal = log(bot->journal, &entry_1);
-  // bot->journal = log(bot->journal, &entry_2);
-  // bot->journal = log(bot->journal, &entry_3);
 }
 
 /* Causes the robot to "follow" a black line for an approximate distance in inches.
@@ -372,40 +341,49 @@ void bck_dist(struct robot *bot, float distance) {
   int l_pwr = -1 * LM_PWR_FW;
   int r_pwr = -1 * RM_PWR_FW;
   int cnt_diff;
+  float orig_head;
+
+  // Get original heading
+  ud_head(bot);
+  orig_head = bot->head;
   
   // Ensure a clean count to begin
   (*bot->l_enc).ResetCounts();
   (*bot->r_enc).ResetCounts();
   
   // Move backward until robot reaches desired distance
-  while ((*bot->l_enc).Counts() < l_tgt && (*bot->r_enc).Counts() < r_tgt) {
+  while ((*bot->l_enc).Counts() < l_tgt &&
+    (*bot->r_enc).Counts() < r_tgt) {
     
-    // Move backward
+    // Move forward
     (*bot->l_mot).SetPower(l_pwr);
     (*bot->r_mot).SetPower(r_pwr);
+
+    // TODO algorithm is too greedy
+    // Increase this time period to use with RPS
+    Sleep(50);
+    ud_head(bot);
     
-    // Check if one motor is outpacing another
-    if ((*bot->l_enc).Counts() / l_tgt > 
+    // // Check if one motor is outpacing another
+    if ((*bot->l_enc).Counts() / l_tgt >
       (*bot->r_enc).Counts() / r_tgt) {
       
       // If left is faster than right, attempt to correct this
       // by applying a balancing factor
-      l_pwr += BLNC_FCTR;
-      r_pwr -= BLNC_FCTR;
+      l_pwr -= BLNC_FCTR;
+      r_pwr += BLNC_FCTR;
       
-    } else if ((*bot->l_enc).Counts() / l_tgt < 
+    } else if ((*bot->l_enc).Counts() / l_tgt <
       (*bot->r_enc).Counts() / r_tgt) {
       
       // If right is faster than left, attempt to correct this
       // by applying a balancing factor
-      l_pwr -= BLNC_FCTR;
-      r_pwr += BLNC_FCTR;
+      l_pwr += BLNC_FCTR;
+      r_pwr -= BLNC_FCTR;
     }
-
-    Sleep(50);
   }
   
-  // Cease back motion
+  // Cease backward motion
   (*bot->l_mot).SetPower(0);
   (*bot->r_mot).SetPower(0);
 }
