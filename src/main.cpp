@@ -1,4 +1,5 @@
 
+#include <FEHBattery.h>
 #include <FEHIO.h>
 #include <FEHLCD.h>
 #include <FEHMotor.h>
@@ -15,9 +16,9 @@
 #define LE_L_THRESH 0.5
 
 // Declare motors
-FEHMotor l_mot(FEHMotor::Motor1);
+FEHMotor l_mot(FEHMotor::Motor2);
 FEHMotor r_mot(FEHMotor::Motor0);
-FEHMotor f_mot(FEHMotor::Motor2);
+FEHMotor f_mot(FEHMotor::Motor3);
 
 // Declare sensors
 FEHEncoder l_enc(FEHIO::P0_0);
@@ -33,11 +34,26 @@ ButtonBoard btns(FEHIO::Bank3);
 // Declare WONKA interface
 FEHWONKA rps;
 
+// Declare a battery
+FEHBattery batt(FEHIO::BATTERY_VOLTAGE);
+
 int main() {
 
   // Variable declaration
   struct robot bot;
   struct log_data *journal;
+
+  // Display battery info
+  while (!btns.MiddlePressed()) {
+
+    LCD.Clear();
+    LCD.Write("Battery voltage: ");
+    LCD.WriteLine(batt.Voltage());
+    Sleep(250);
+
+  }
+
+  Sleep(250);
 
   // Initialize logging data
   journal = init_log();
@@ -61,6 +77,7 @@ int main() {
   bot.opt_2 = &opt_2;
   bot.rps = &rps;
   bot.btns = &btns;
+  bot.batt = &batt;
   bot.journal = journal;
   bot.head = rps.Heading();
 
@@ -69,16 +86,7 @@ int main() {
   // LCD.WriteLine("Waiting for signal light");
   // while (cds_0.Value() > 0.5);
 
-  while (true) {
-
-    LCD.Clear();
-    LCD.Write("Heading: ");
-    LCD.WriteLine(bot.head);
-    LCD.Write("Difference: ");
-    LCD.WriteLine(head_diff(bot.head, 90.0));
-    ud_head(&bot);
-    Sleep(20);
-  }
+  l_mot.SetPower(90);
   
   // Program finished
   rps.Disable();

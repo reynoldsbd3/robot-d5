@@ -1,6 +1,7 @@
 #ifndef ROBOT_H_
 #define ROBOT_H_
 
+#include <FEHBattery.h>
 #include <FEHIO.h>
 #include <FEHMotor.h>
 #include <FEHWONKA.h>
@@ -21,6 +22,7 @@ struct robot {
   AnalogInputPin *opt_2; // Pointer to third optosensor
   FEHWONKA *rps;         // Pointer to WONKA and RPS system
   ButtonBoard *btns;     // Pointer to button board
+  FEHBattery *batt;      // Pointer to battery
   
   float head;              // Robot's current heading
 

@@ -13,8 +13,8 @@
  ../resources/Proteus/EWL/EWL_C/include/limits_api.h \
  ../resources/Proteus/EWL/EWL_C/include/ewl_lib_ext1.h Drivers/adc16.h \
  Libraries/FEHLCD.h Libraries/FEHUtility.h ../src/logging.h \
- ../src/robot.h Libraries/FEHMotor.h Libraries/FEHWONKA.h \
- Drivers/FEHXBee.h
+ ../src/robot.h Libraries/FEHBattery.h Libraries/FEHIO.h \
+ Libraries/FEHMotor.h Libraries/FEHWONKA.h Drivers/FEHXBee.h
 
 ../resources/Proteus/EWL/EWL_C++/include/lib_ewl_c++.prefix:
 
@@ -55,6 +55,10 @@ Libraries/FEHUtility.h:
 ../src/logging.h:
 
 ../src/robot.h:
+
+Libraries/FEHBattery.h:
+
+Libraries/FEHIO.h:
 
 Libraries/FEHMotor.h:
 

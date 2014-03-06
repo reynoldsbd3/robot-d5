@@ -9,7 +9,7 @@
 #include "robot.h"
 
 #define BLNC_FCTR 3            // Offset factor for balamcing motor power
-#define HEAD_ERR 3.0           // Maximum allowable heading error
+#define HEAD_ERR 5.0           // Maximum allowable heading error
 #define FL_PWR -90             // Forklift power
 #define FTRY_THRESH 20         // Y-coordinate where shop ends
 #define LINE_THRESH_FTRY_0 1.0 // Optosensor threshold for detecting line in factory
@@ -21,15 +21,15 @@
 #define LINE_THRESH_SHOP_1 2.8 // Optosensor threshold for detecting line in shop
 #define NONE_THRESH_SHOP_1 1.0 // Optosensor threshold for detecting emptiness in shop
 #define LM_PWR_FW -98          // Left motor forward power
-#define LM_PWR_LR -90          // Left motor left rotation power
+#define LM_PWR_LR 90           // Left motor left rotation power
 #define LM_PWR_LT 30           // Left motor left turn power
-#define LM_PWR_RR 90           // Left motor right rotation power
+#define LM_PWR_RR -90          // Left motor right rotation power
 #define LM_PWR_RT 70           // Left motor right turn power
 #define LT_LPI 3.21            // Left tread links per inch
 #define RM_PWR_FW -90          // Right motor forward power
-#define RM_PWR_LR 95           // Right motor left rotation power
+#define RM_PWR_LR -95          // Right motor left rotation power
 #define RM_PWR_LT 70           // Right motor left turn power
-#define RM_PWR_RR -90          // Right motor right rotation power
+#define RM_PWR_RR 90           // Right motor right rotation power
 #define RM_PWR_RT 30           // Right motor right turn power
 #define RT_LPI 2.42            // Right tread links per inch
 
@@ -567,6 +567,9 @@ void rot_head(struct robot *bot, float head) {
       (*bot->l_mot).SetPower(LM_PWR_RR);
       (*bot->r_mot).SetPower(RM_PWR_RR);
     }
+
+    // Less greedy; time to work
+    Sleep(100);
 
     // Update heading and difference to target
     ud_head(bot);
