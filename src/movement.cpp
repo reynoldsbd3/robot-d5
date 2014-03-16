@@ -21,17 +21,17 @@
 #define LINE_THRESH_SHOP_1 2.8 // Optosensor threshold for detecting line in shop
 #define NONE_THRESH_SHOP_1 1.0 // Optosensor threshold for detecting emptiness in shop
 #define LM_PWR_FW -98          // Left motor forward power
-#define LM_PWR_LR 90           // Left motor left rotation power
+#define LM_PWR_LR 90          // Left motor left rotation power
 #define LM_PWR_LT 30           // Left motor left turn power
 #define LM_PWR_RR -90          // Left motor right rotation power
 #define LM_PWR_RT 70           // Left motor right turn power
-#define LT_LPI 3.21            // Left tread links per inch
+#define LT_LPI 2.38            // Left tread links per inch
 #define RM_PWR_FW -90          // Right motor forward power
-#define RM_PWR_LR -95          // Right motor left rotation power
+#define RM_PWR_LR -100         // Right motor left rotation power
 #define RM_PWR_LT 70           // Right motor left turn power
 #define RM_PWR_RR 90           // Right motor right rotation power
 #define RM_PWR_RT 30           // Right motor right turn power
-#define RT_LPI 2.42            // Right tread links per inch
+#define RT_LPI 2.58            // Right tread links per inch
 
 // Prototypes
 float head_diff(float, float);
@@ -482,28 +482,52 @@ void rot_time(struct robot *bot, float time, bool cw) {
  */
 void rot_deg(struct robot *bot, float degree) {
 
-  // Variable declaration
-  float target;
+  // Variable declarations
+  float target = (*bot->rps).Heading() + degree;
+  bool wrapped = false;
 
-  // Get an up to date reading
-  ud_head(bot);
+  // Correct target for wrap
+  if (target < 0.0) {
 
-  // Determine a target heading
-  target = bot->head + degree;
+    target = 180.0 - target;
+    wrapped = true;
 
-  // Ensure target is valid
-  if (target >= 360.0) {
+  } else if (target >= 179.9) {
 
-    target -= 360.0;
-
-  } else if (target < 0) {
-
-    target += 360.0;
+    target -= 179.9;
+    wrapped = true;
   }
 
-  // Rotate to the target heading
-  rot_head(bot, target);
-  ud_head(bot);
+  if (degree > 0) {
+
+    (*bot->l_mot).SetPower(LM_PWR_LR);
+    (*bot->r_mot).SetPower(RM_PWR_LR);
+
+    // Wrap before checking heading
+    if (wrapped) {
+      while ((*bot->rps).Heading() > 1.0);
+    }
+
+    // Continue rotating until heading is achieved
+    while ((*bot->rps).Heading() < target);
+
+  } else if (degree < 0) {
+
+    (*bot->l_mot).SetPower(LM_PWR_RR);
+    (*bot->r_mot).SetPower(RM_PWR_RR);
+
+    // Wrap before checking heading
+    if (wrapped) {
+      while ((*bot->rps).Heading() < 179.0);
+    }
+
+    // Continue rotating until heading is achieved
+    while ((*bot->rps).Heading() < target);
+  }
+
+  // Cease rotation
+  (*bot->l_mot).SetPower(0);
+  (*bot->r_mot).SetPower(0);
 }
 
 /* Rotates the robot such that it has a certain heading according

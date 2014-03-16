@@ -37,6 +37,8 @@ FEHWONKA rps;
 // Declare a battery
 FEHBattery batt(FEHIO::BATTERY_VOLTAGE);
 
+void turn_left();
+
 int main() {
 
   // Variable declaration
@@ -87,33 +89,57 @@ int main() {
   while (cds_0.Value() > 0.5);
 
   // Move towards skid
-  fwd_dist(&bot, 30.0);
+  fwd_dist(&bot, 36.0);
+  // while(!btns.MiddlePressed());
 
   // Rotate to face skid
-  rot_head(&bot, 178);
+  turn_left();
+  // rot_head(&bot, 177);
+  // while(!btns.MiddlePressed());
 
   // Lower fork
   f_mot.SetPower(30);
-  Sleep(400);
+  Sleep(900);
   f_mot.SetPower(0);
+  // while(!btns.MiddlePressed());
 
   // Move towards skid
   fwd_dist(&bot, 10);
+  // while(!btns.MiddlePressed());
 
-  // Raise skid, wait to raise if needed
-  f_mot.SetPower(125);
-  bck_dist(&bot, 2.0);
-  // Sleep(400);
-  f_mot.SetPower(0);
+  // Raise skid, wait to raise if needed 
+  f_mot.SetPower(-125);
+  Sleep(400);
+  bck_dist(&bot, 2.5);
+  Sleep(5000);
+  f_mot.SetPower(-30);
+  // while(!btns.MiddlePressed());
 
   // Maneuver to ramp
   bck_dist(&bot, 5.0);
   rot_head(&bot, 135.0);
   bck_dist(&bot, 10.0);
-  rot_head(&bot, 0);
+  rot_head(&bot, 175);
+  // while(!btns.MiddlePressed());
 
   // Go down ramp
-  bck_dist(&bot, 20.0);
+  bck_dist(&bot, 26.0);
+  // while(!btns.MiddlePressed());
+
+  // Line up with chiller
+  rot_head(&bot, 265);
+  fwd_dist(&bot, 9.0);
+  turn_left();
+  // while (!btns.MiddlePressed());
+
+  // Lower skid
+  f_mot.SetPower(30);
+  Sleep(200);
+  f_mot.SetPower(0);
+
+  // Insert skid
+  fwd_dist(&bot, 6.0);
+  bck_dist(&bot, 6.0);
 
   // Program finished
   rps.Disable();
@@ -123,4 +149,13 @@ int main() {
   LCD.WriteLine("Press middle button");
   dump(&bot);
   return 0;
+}
+
+void turn_left() {
+
+  l_mot.SetPower(90);
+  r_mot.SetPower(-90);
+  Sleep(2000);
+  l_mot.SetPower(0);
+  r_mot.SetPower(0);
 }
