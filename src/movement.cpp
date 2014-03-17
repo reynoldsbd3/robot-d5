@@ -21,15 +21,15 @@
 #define LINE_THRESH_SHOP_1 2.8 // Optosensor threshold for detecting line in shop
 #define NONE_THRESH_SHOP_1 1.0 // Optosensor threshold for detecting emptiness in shop
 #define LM_PWR_FW -98          // Left motor forward power
-#define LM_PWR_LR 90          // Left motor left rotation power
+#define LM_PWR_LR 80          // Left motor left rotation power
 #define LM_PWR_LT 30           // Left motor left turn power
-#define LM_PWR_RR -90          // Left motor right rotation power
+#define LM_PWR_RR -80          // Left motor right rotation power
 #define LM_PWR_RT 70           // Left motor right turn power
 #define LT_LPI 2.38            // Left tread links per inch
-#define RM_PWR_FW -90          // Right motor forward power
-#define RM_PWR_LR -100         // Right motor left rotation power
+#define RM_PWR_FW -80          // Right motor forward power
+#define RM_PWR_LR -80         // Right motor left rotation power
 #define RM_PWR_LT 70           // Right motor left turn power
-#define RM_PWR_RR 90           // Right motor right rotation power
+#define RM_PWR_RR 80           // Right motor right rotation power
 #define RM_PWR_RT 30           // Right motor right turn power
 #define RT_LPI 2.58            // Right tread links per inch
 
@@ -483,6 +483,8 @@ void rot_time(struct robot *bot, float time, bool cw) {
 void rot_deg(struct robot *bot, float degree) {
 
   // Variable declarations
+  float current_head = bot->rps->Heading();
+  float prev_head;
   float target = (*bot->rps).Heading() + degree;
   bool wrapped = false;
 
@@ -498,6 +500,8 @@ void rot_deg(struct robot *bot, float degree) {
     wrapped = true;
   }
 
+  LCD.Write("Target is: ");
+  LCD.WriteLine(target);
   if (degree > 0) {
 
     (*bot->l_mot).SetPower(LM_PWR_LR);
@@ -505,7 +509,17 @@ void rot_deg(struct robot *bot, float degree) {
 
     // Wrap before checking heading
     if (wrapped) {
-      while ((*bot->rps).Heading() > 1.0);
+      
+      do {
+
+        if (bot->rps->Heading() != 0.0) {
+
+          prev_head = current_head;
+          Sleep(10);
+          current_head = bot->rps->Heading();
+        }
+
+      } while (prev_head <= current_head);
     }
 
     // Continue rotating until heading is achieved
@@ -518,7 +532,17 @@ void rot_deg(struct robot *bot, float degree) {
 
     // Wrap before checking heading
     if (wrapped) {
-      while ((*bot->rps).Heading() < 179.0);
+      
+      do {
+
+        if (bot->rps->Heading() != 0.0) {
+
+          prev_head = current_head;
+          Sleep(10);
+          current_head = bot->rps->Heading();
+         }
+
+      } while (prev_head >= current_head);
     }
 
     // Continue rotating until heading is achieved
