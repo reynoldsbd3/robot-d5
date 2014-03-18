@@ -20,15 +20,25 @@
 #define NONE_THRESH_FTRY_1 2.8 // Optosensor threshold for detecting emptiness in factory
 #define LINE_THRESH_SHOP_1 2.8 // Optosensor threshold for detecting line in shop
 #define NONE_THRESH_SHOP_1 1.0 // Optosensor threshold for detecting emptiness in shop
+#define BCK_FTRY_LINE 1.0
+#define BCK_FTRY_NO_LINE 2.8
+#define BCK_SHOP_LINE 2.8
+#define BCK_SHOP_NO_LINE 1.0
 #define LM_PWR_FW -98          // Left motor forward power
+#define LM_PWR_FLW -60
+#define LM_PWR_LADJ 70
 #define LM_PWR_LR 80          // Left motor left rotation power
 #define LM_PWR_LT 30           // Left motor left turn power
+#define LM_PWR_RADJ -70
 #define LM_PWR_RR -80          // Left motor right rotation power
 #define LM_PWR_RT 70           // Left motor right turn power
 #define LT_LPI 2.38            // Left tread links per inch
 #define RM_PWR_FW -80          // Right motor forward power
+#define RM_PWR_FLW -60
+#define RM_PWR_LADJ -70
 #define RM_PWR_LR -80         // Right motor left rotation power
 #define RM_PWR_LT 70           // Right motor left turn power
+#define RM_PWR_RADJ 70
 #define RM_PWR_RR 80           // Right motor right rotation power
 #define RM_PWR_RT 30           // Right motor right turn power
 #define RT_LPI 2.58            // Right tread links per inch
@@ -40,14 +50,6 @@ int r_tgt_cts(float);
 void rot_deg(struct robot, int);
 void rot_head(struct robot, int);
 void ud_head(struct robot);
-
-// Enumerations
-enum line_state {
-
-  ON_LINE,
-  NEAR_EDGE,
-  OFF_LINE
-};
 
 // Forward motion --------------------------------------------------------------
 
@@ -388,6 +390,191 @@ void bck_dist(struct robot *bot, float distance) {
   (*bot->r_mot).SetPower(0);
 }
 
+void bck_flw(struct robot *bot, float distance) {
+
+  // Variable declarations
+  enum line_state current_state;
+  int i;
+  bool in_factory = bot->rps->Y() > FTRY_THRESH;
+  int l_tgt = l_tgt_cts(distance);
+  enum line_location location = UNKNOWN;
+  enum line_state previous_state;
+  int r_tgt = r_tgt_cts(distance);
+
+  // Keep following line until distance is reached
+  while (bot->l_enc->Counts() < l_tgt &&
+    bot->r_enc->Counts() < r_tgt) {
+
+    // Determine current line state
+    // Threshold comparisons vary depending on the location of
+    // the robot
+    if (in_factory) {
+
+      // In factory area, lines are less reflective than
+      // the floor
+      if (bot->opt_1->Value() < BCK_FTRY_LINE) {
+
+        // Robot is over line
+        current_state = ON_LINE;
+
+      } else if (bot->opt_1->Value() > BCK_FTRY_NO_LINE) {
+
+        // Robot is not over line
+        current_state = OFF_LINE;
+
+      } else {
+
+        // Robot is near line edge
+        current_state = NEAR_EDGE;
+      }
+    } else {
+
+      // In shop area, lines are more reflective than
+      // the floor
+      if (bot->opt_1->Value() > BCK_SHOP_LINE) {
+
+        // Robot is over line
+        current_state = ON_LINE;
+
+      } else if (bot->opt_1->Value() < BCK_SHOP_NO_LINE) {
+
+        // Robot is not over line
+        current_state = OFF_LINE;
+
+      } else {
+
+        // Robot is near line edge
+        current_state = NEAR_EDGE;
+      }
+    }
+
+    // Adjust motors based on current state
+    switch (current_state) {
+
+      case ON_LINE:
+
+        // Turn back towards the edge
+        switch (location) {
+
+          case LINE_ON_LEFT:
+
+            // Robot has moved too far leftward
+            bot->l_mot->SetPower(-1 * LM_PWR_RADJ);
+            bot->r_mot->SetPower(-1 * RM_PWR_RADJ);
+            break;
+
+          case LINE_ON_RIGHT:
+
+            // Robot has moved too far rightward
+            bot->l_mot->SetPower(-1 * LM_PWR_LADJ);
+            bot->r_mot->SetPower(-1 * RM_PWR_LADJ);
+            break;
+
+          case UNKNOWN:
+
+            // Default to putting the line on the left
+            bot->l_mot->SetPower(-1 * LM_PWR_RADJ);
+            bot->r_mot->SetPower(-1 * RM_PWR_RADJ);
+            location = LINE_ON_LEFT;
+            break;
+        }
+
+        break;
+
+      case NEAR_EDGE:
+
+        // Robot is where it needs to be
+        bot->l_mot->SetPower(-1 * LM_PWR_FLW);
+        bot->r_mot->SetPower(-1 * RM_PWR_FLW);
+        break;
+
+      case OFF_LINE:
+
+        switch (location) {
+
+          case LINE_ON_LEFT:
+
+            // Robot has moved too far rightward
+            bot->l_mot->SetPower(-1 * LM_PWR_LADJ);
+            bot->r_mot->SetPower(-1 * RM_PWR_LADJ);
+            break;
+
+          case LINE_ON_RIGHT:
+
+            // Robot has moved too far leftward
+            bot->l_mot->SetPower(-1 * LM_PWR_RADJ);
+            bot->r_mot->SetPower(-1 * RM_PWR_RADJ);
+            break;
+
+          case UNKNOWN:
+
+            // Find the line
+            // Hopefully, it is close
+
+            // Search to the left
+            bot->l_mot->SetPower(-1 * LM_PWR_LADJ);
+            bot->r_mot->SetPower(-1 * RM_PWR_LADJ);
+            for (i = 0; i < 100; i++) {
+
+              // Give time to search
+              Sleep(10);
+
+              // Stop search if line is found
+              if (in_factory && bot->opt_1->Value() < BCK_FTRY_LINE)
+                break;
+              if (!in_factory && bot->opt_1->Value() > BCK_SHOP_LINE)
+                break;
+            }
+
+            // If search was successful, mark line's location
+            if (i != 100) {
+
+              location = LINE_ON_LEFT;
+
+            } else {
+
+              // Otherwise, continue the search
+              // Search to the right
+              bot->l_mot->SetPower(-1 * LM_PWR_RADJ);
+              bot->r_mot->SetPower(-1 * RM_PWR_RADJ);
+              for (i = 0; i < 100; i++) {
+
+                // Give time to search
+                Sleep(10);
+
+                // Stop search if line is found
+                if (in_factory && bot->opt_1->Value() < BCK_FTRY_LINE)
+                  break;
+                if (!in_factory && bot->opt_1->Value() > BCK_SHOP_LINE)
+                  break;
+              }
+
+              // If search was successful, mark line's location
+              if (i != 100) {
+
+                location = LINE_ON_RIGHT;
+
+              } else {
+
+                // Otherwise, line is totally lost
+                return;
+              }
+
+            break;
+        }
+
+        break;
+      }
+    }
+
+    // Give algorithm time to work
+    Sleep(100);
+
+    // Remeber state
+    previous_state = current_state;
+  }
+}
+
 /* Moves the robot backward indefinitely.
  * Stops when middle button on button board is pressed.
  *
@@ -542,7 +729,7 @@ void rot_deg(struct robot *bot, float degree) {
           current_head = bot->rps->Heading();
          }
 
-      } while (prev_head >= current_head);
+      } while (prev_head >=  current_head);
     }
 
     // Continue rotating until heading is achieved

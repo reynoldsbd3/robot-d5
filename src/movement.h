@@ -3,6 +3,21 @@
 
 #include "robot.h"
 
+// Enumerations
+enum line_state {
+
+	ON_LINE,
+	NEAR_EDGE,
+	OFF_LINE
+};
+
+enum line_location {
+
+	LINE_ON_LEFT,
+	LINE_ON_RIGHT,
+	UNKNOWN
+};
+
 // Forward motion
 void fwd_time(struct robot *bot, float time);
 void fwd_dist(struct robot *bot, float distance);
