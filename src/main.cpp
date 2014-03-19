@@ -63,6 +63,7 @@ int main() {
   // Initialize RPS and WONKA communication
   rps.InitializeMenu();
   rps.Enable();
+  LCD.Clear();
 
   // Allow time to initialize
   Sleep(250);
@@ -83,17 +84,23 @@ int main() {
   bot.journal = journal;
   bot.head = rps.Heading();
 
-  for (int i = 0; i < 10; i++) {
+  // // Wait for CdS cell
+  // LCD.WriteLine("Waiting for signal");
+  // while(cds_0.Value() > 0.5);
+  // LCD.WriteLine("Starting");
 
-    LCD.Clear();
-    LCD.Write("Start heading: ");
-    LCD.WriteLine(rps.Heading());
-    rot_deg(&bot, 45.0);
-    LCD.Write("End heading: ");
-    LCD.WriteLine(rps.Heading());
-    while (!btns.MiddlePressed());
-    Sleep(500);
-  }
+  // // Move to the light
+  // LCD.WriteLine("Moving towards shop");
+  // fwd_dist(&bot, 26);
+  // rot_deg(&bot, 85);
+  // bck_dist(&bot, 27);
+  // while(!btns.MiddlePressed());
+
+  penis:
+  fwd_dist(&bot, 15);
+
+  while (!btns.MiddlePressed());
+  goto penis;
 
   // Program finished
   rps.Disable();

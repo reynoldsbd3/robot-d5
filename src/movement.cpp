@@ -32,7 +32,7 @@
 #define LM_PWR_RADJ -70
 #define LM_PWR_RR -80          // Left motor right rotation power
 #define LM_PWR_RT 70           // Left motor right turn power
-#define LT_LPI 2.38            // Left tread links per inch
+#define LT_LPI 2.51            // Left tread links per inch
 #define RM_PWR_FW -80          // Right motor forward power
 #define RM_PWR_FLW -60
 #define RM_PWR_LADJ -70
@@ -41,7 +41,7 @@
 #define RM_PWR_RADJ 70
 #define RM_PWR_RR 80           // Right motor right rotation power
 #define RM_PWR_RT 30           // Right motor right turn power
-#define RT_LPI 2.58            // Right tread links per inch
+#define RT_LPI 2.00            // Right tread links per inch
 
 // Prototypes
 float head_diff(float, float);
@@ -76,7 +76,7 @@ void fwd_time(struct robot *bot, float time) {
   
   // Begin forward motion
   (*bot->l_mot).SetPower(LM_PWR_FW);
-  (*bot->r_mot).SetPower(RM_PWR_FW);
+  (*bot->r_mot).SetPower(RM_PWR_FW + 8);
   
   // Wait for the specified amount of time
   Sleep(time);
@@ -687,8 +687,6 @@ void rot_deg(struct robot *bot, float degree) {
     wrapped = true;
   }
 
-  LCD.Write("Target is: ");
-  LCD.WriteLine(target);
   if (degree > 0) {
 
     (*bot->l_mot).SetPower(LM_PWR_LR);
@@ -1026,4 +1024,12 @@ void ud_head(struct robot *bot) {
 
   // Log journal entry
   // bot->journal = log(bot->journal, &entry);
+}
+
+void flw_light(struct robot *bot) {
+
+  if (bot->cds_0->Value() < 0.2) {
+
+    rot_deg(bot, -45);
+  }
 }
