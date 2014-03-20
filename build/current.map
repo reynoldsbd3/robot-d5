@@ -3190,90 +3190,90 @@ OUTPUT(../build/current.elf elf32-littlearm)
  .debug_macinfo
                 0x006fe7c0    0x63806 Libraries/FEHWONKA.o
 
-.debug_str      0x00000000     0x3896
- .debug_str     0x00000000     0x1466 ../src/main.o
-                               0x1539 (size before relaxing)
- .debug_str     0x00001466      0x34c ../src/movement.o
+.debug_str      0x00000000     0x3895
+ .debug_str     0x00000000     0x1465 ../src/main.o
+                               0x1538 (size before relaxing)
+ .debug_str     0x00001465      0x34c ../src/movement.o
                                0x181e (size before relaxing)
- .debug_str     0x000017b2       0x97 ../src/logging.o
+ .debug_str     0x000017b1       0x97 ../src/logging.o
                                0x1554 (size before relaxing)
- .debug_str     0x00001849      0x346 Startup/__arm_start.o
+ .debug_str     0x00001848      0x346 Startup/__arm_start.o
                                 0xddb (size before relaxing)
- .debug_str     0x00001b8f       0x2a Startup/__arm_end.o
+ .debug_str     0x00001b8e       0x2a Startup/__arm_end.o
                                  0xb1 (size before relaxing)
- .debug_str     0x00001bb9      0x154 Startup/kinetis_sysinit.o
+ .debug_str     0x00001bb8      0x154 Startup/kinetis_sysinit.o
                                 0x2c6 (size before relaxing)
- .debug_str     0x00001d0d       0x2c Libraries/FEHMotor.o
+ .debug_str     0x00001d0c       0x2c Libraries/FEHMotor.o
                                 0x2b7 (size before relaxing)
- .debug_str     0x00001d39      0x188 Drivers/uart.o
+ .debug_str     0x00001d38      0x188 Drivers/uart.o
                                 0x346 (size before relaxing)
- .debug_str     0x00001ec1       0x61 Drivers/lptmr.o
+ .debug_str     0x00001ec0       0x61 Drivers/lptmr.o
                                 0x1ff (size before relaxing)
- .debug_str     0x00001f22       0x28 FEHProteus.o
+ .debug_str     0x00001f21       0x28 FEHProteus.o
                                 0x24b (size before relaxing)
- .debug_str     0x00001f4a       0x25 Drivers/FEHPropeller.o
+ .debug_str     0x00001f49       0x25 Drivers/FEHPropeller.o
                                 0x38c (size before relaxing)
- .debug_str     0x00001f6f       0xc0 Libraries/FEHUtility.o
+ .debug_str     0x00001f6e       0xc0 Libraries/FEHUtility.o
                                 0x1d0 (size before relaxing)
- .debug_str     0x0000202f      0x2a2 Libraries/FEHIO.o
+ .debug_str     0x0000202e      0x2a2 Libraries/FEHIO.o
                                 0xa8c (size before relaxing)
- .debug_str     0x000022d1       0xdd Drivers/adc16.o
+ .debug_str     0x000022d0       0xdd Drivers/adc16.o
                                 0x290 (size before relaxing)
- .debug_str     0x000023ae      0x1ba Libraries/FEHBuzzer.o
+ .debug_str     0x000023ad      0x1ba Libraries/FEHBuzzer.o
                                 0x3a2 (size before relaxing)
- .debug_str     0x00002568      0x1d3 Libraries/FEHServo.o
+ .debug_str     0x00002567      0x1d3 Libraries/FEHServo.o
                                 0xe3d (size before relaxing)
- .debug_str     0x0000273b      0x21f Libraries/FEHLCD.o
+ .debug_str     0x0000273a      0x21f Libraries/FEHLCD.o
                                 0xde7 (size before relaxing)
- .debug_str     0x0000295a       0x30 Libraries/FEHBattery.o
+ .debug_str     0x00002959       0x30 Libraries/FEHBattery.o
                                 0x355 (size before relaxing)
- .debug_str     0x0000298a       0xf8 Drivers/FEHXBee.o
+ .debug_str     0x00002989       0xf8 Drivers/FEHXBee.o
                                 0x53b (size before relaxing)
- .debug_str     0x00002a82       0xfb Libraries/FEHWONKA.o
+ .debug_str     0x00002a81       0xfb Libraries/FEHWONKA.o
                                0x1312 (size before relaxing)
- .debug_str     0x00002b7d       0xbf ../resources/Proteus/EWL/lib/armv7e-m\libc.a(sprintf.o)
+ .debug_str     0x00002b7c       0xbf ../resources/Proteus/EWL/lib/armv7e-m\libc.a(sprintf.o)
                                 0x15a (size before relaxing)
- .debug_str     0x00002c3c       0x83 ../resources/Proteus/EWL/lib/armv7e-m\libc.a(vsnprintf.o)
+ .debug_str     0x00002c3b       0x83 ../resources/Proteus/EWL/lib/armv7e-m\libc.a(vsnprintf.o)
                                 0x1c3 (size before relaxing)
- .debug_str     0x00002cbf       0x2e ../resources/Proteus/EWL/lib/armv7e-m\libc.a(exit.o)
+ .debug_str     0x00002cbe       0x2e ../resources/Proteus/EWL/lib/armv7e-m\libc.a(exit.o)
                                 0x14e (size before relaxing)
- .debug_str     0x00002ced       0x1c ../resources/Proteus/EWL/lib/armv7e-m\libc.a(memcpy.o)
+ .debug_str     0x00002cec       0x1c ../resources/Proteus/EWL/lib/armv7e-m\libc.a(memcpy.o)
                                 0x138 (size before relaxing)
- .debug_str     0x00002d09       0x1c ../resources/Proteus/EWL/lib/armv7e-m\libc.a(memset.o)
+ .debug_str     0x00002d08       0x1c ../resources/Proteus/EWL/lib/armv7e-m\libc.a(memset.o)
                                 0x140 (size before relaxing)
- .debug_str     0x00002d25      0x227 ../resources/Proteus/EWL/lib/armv7e-m\libc.a(printformat_.o)
+ .debug_str     0x00002d24      0x227 ../resources/Proteus/EWL/lib/armv7e-m\libc.a(printformat_.o)
                                 0x3aa (size before relaxing)
- .debug_str     0x00002f4c      0x17b ../resources/Proteus/EWL/lib/armv7e-m\libc.a(scanformat_.o)
+ .debug_str     0x00002f4b      0x17b ../resources/Proteus/EWL/lib/armv7e-m\libc.a(scanformat_.o)
                                 0x3f0 (size before relaxing)
- .debug_str     0x000030c7       0x9d ../resources/Proteus/EWL/lib/armv7e-m\libc.a(ctype_aeabi.o)
+ .debug_str     0x000030c6       0x9d ../resources/Proteus/EWL/lib/armv7e-m\libc.a(ctype_aeabi.o)
                                 0x1b3 (size before relaxing)
- .debug_str     0x00003164       0x5b ../resources/Proteus/EWL/lib/armv7e-m\libc.a(__strtoul.o)
+ .debug_str     0x00003163       0x5b ../resources/Proteus/EWL/lib/armv7e-m\libc.a(__strtoul.o)
                                 0x1f2 (size before relaxing)
- .debug_str     0x000031bf       0x25 ../resources/Proteus/EWL/lib/armv7e-m\libc.a(__filll_mem.o)
+ .debug_str     0x000031be       0x25 ../resources/Proteus/EWL/lib/armv7e-m\libc.a(__filll_mem.o)
                                 0x152 (size before relaxing)
- .debug_str     0x000031e4       0x1c ../resources/Proteus/EWL/lib/armv7e-m\libc.a(memchr.o)
+ .debug_str     0x000031e3       0x1c ../resources/Proteus/EWL/lib/armv7e-m\libc.a(memchr.o)
                                 0x148 (size before relaxing)
- .debug_str     0x00003200       0x1c ../resources/Proteus/EWL/lib/armv7e-m\libc.a(strchr.o)
+ .debug_str     0x000031ff       0x1c ../resources/Proteus/EWL/lib/armv7e-m\libc.a(strchr.o)
                                 0x137 (size before relaxing)
- .debug_str     0x0000321c       0x1c ../resources/Proteus/EWL/lib/armv7e-m\libc.a(strlen.o)
+ .debug_str     0x0000321b       0x1c ../resources/Proteus/EWL/lib/armv7e-m\libc.a(strlen.o)
                                 0x140 (size before relaxing)
- .debug_str     0x00003238      0x119 ../resources/Proteus/EWL/lib/armv7e-m\librt.a(gcc_ctor_dtor.o)
+ .debug_str     0x00003237      0x119 ../resources/Proteus/EWL/lib/armv7e-m\librt.a(gcc_ctor_dtor.o)
                                 0x185 (size before relaxing)
- .debug_str     0x00003351       0x9b ../resources/Proteus/EWL/lib/armv7e-m\librt.a(ROMCopy.o)
+ .debug_str     0x00003350       0x9b ../resources/Proteus/EWL/lib/armv7e-m\librt.a(ROMCopy.o)
                                 0x140 (size before relaxing)
- .debug_str     0x000033ec       0xf3 ../resources/Proteus/EWL/lib/armv7e-m\librt.a(__arm_eabi_init.o)
+ .debug_str     0x000033eb       0xf3 ../resources/Proteus/EWL/lib/armv7e-m\librt.a(__arm_eabi_init.o)
                                 0x1ac (size before relaxing)
- .debug_str     0x000034df      0x253 ../resources/Proteus/EWL/lib/armv7e-m\librt.a(New.o)
+ .debug_str     0x000034de      0x253 ../resources/Proteus/EWL/lib/armv7e-m\librt.a(New.o)
                                 0x36c (size before relaxing)
- .debug_str     0x00003732       0x19 ../resources/Proteus/EWL/lib/armv7e-m\libc.a(abort.o)
+ .debug_str     0x00003731       0x19 ../resources/Proteus/EWL/lib/armv7e-m\libc.a(abort.o)
                                 0x136 (size before relaxing)
- .debug_str     0x0000374b       0xbc ../resources/Proteus/EWL/lib/armv7e-m\libc.a(alloc.o)
+ .debug_str     0x0000374a       0xbc ../resources/Proteus/EWL/lib/armv7e-m\libc.a(alloc.o)
                                 0x200 (size before relaxing)
- .debug_str     0x00003807       0x26 ../resources/Proteus/EWL/lib/armv7e-m\libc.a(strcmp.o)
+ .debug_str     0x00003806       0x26 ../resources/Proteus/EWL/lib/armv7e-m\libc.a(strcmp.o)
                                 0x149 (size before relaxing)
- .debug_str     0x0000382d       0x38 ../resources/Proteus/EWL/lib/armv7e-m\libc.a(raise.o)
+ .debug_str     0x0000382c       0x38 ../resources/Proteus/EWL/lib/armv7e-m\libc.a(raise.o)
                                 0x158 (size before relaxing)
- .debug_str     0x00003865       0x31 ../resources/Proteus/EWL/lib/armv7e-m\libc.a(signal.o)
+ .debug_str     0x00003864       0x31 ../resources/Proteus/EWL/lib/armv7e-m\libc.a(signal.o)
                                 0x170 (size before relaxing)
 
 .comment        0x00000000       0x79

@@ -96,11 +96,11 @@ int main() {
   // bck_dist(&bot, 27);
   // while(!btns.MiddlePressed());
 
-  penis:
+  test:
   fwd_dist(&bot, 15);
 
   while (!btns.MiddlePressed());
-  goto penis;
+  goto test;
 
   // Program finished
   rps.Disable();
