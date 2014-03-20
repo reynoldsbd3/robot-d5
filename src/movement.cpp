@@ -384,8 +384,8 @@ void bck_dist(struct robot *bot, float distance) {
         
         // If left is faster than right, attempt to correct this
         // by applying a balancing factor
-        l_pwr += BLNC_FCTR;
-        r_pwr -= BLNC_FCTR;
+        l_pwr -= BLNC_FCTR;
+        r_pwr += BLNC_FCTR;
         LCD.WriteLine("correcting to left");
         
       } else if (head_diff(orig_head, current_head) >
@@ -393,8 +393,8 @@ void bck_dist(struct robot *bot, float distance) {
         
         // If right is faster than left, attempt to correct this
         // by applying a balancing factor
-        l_pwr -= BLNC_FCTR;
-        r_pwr += BLNC_FCTR;
+        l_pwr += BLNC_FCTR;
+        r_pwr -= BLNC_FCTR;
         LCD.WriteLine("correction to right");
       }
 
