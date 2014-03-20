@@ -349,54 +349,63 @@ void bck_dist(struct robot *bot, float distance) {
   // Declare variables
   int l_tgt = l_tgt_cts(distance);
   int r_tgt = r_tgt_cts(distance);
-  int l_pwr = -1 * LM_PWR_FW;
-  int r_pwr = -1 * RM_PWR_FW;
-  int cnt_diff;
+  int l_pwr = LM_PWR_FW;
+  int r_pwr = RM_PWR_FW;
   float orig_head;
+  float current_head;
+  float start_time = TimeNow();
 
   // Get original heading
-  ud_head(bot);
-  orig_head = bot->head;
+  // Ignore RPS failures
+  while ((orig_head = bot->rps->Heading()) == 0.0);
   
   // Ensure a clean count to begin
-  (*bot->l_enc).ResetCounts();
-  (*bot->r_enc).ResetCounts();
+  bot->l_enc->ResetCounts();
+  bot->r_enc->ResetCounts();
   
   // Move backward until robot reaches desired distance
-  while ((*bot->l_enc).Counts() < l_tgt &&
-    (*bot->r_enc).Counts() < r_tgt) {
+  while (bot->l_enc->Counts() < l_tgt &&
+    bot->r_enc->Counts() < r_tgt) {
     
     // Move forward
-    (*bot->l_mot).SetPower(l_pwr);
-    (*bot->r_mot).SetPower(r_pwr);
+    bot->l_mot->SetPower(-1 * l_pwr);
+    bot->r_mot->SetPower(-1 * r_pwr);
 
-    // TODO algorithm is too greedy
-    // Increase this time period to use with RPS
-    Sleep(50);
-    ud_head(bot);
+    // Allow time for RPS values to change before re-mesuring
+    if (TimeNow() - start_time >= 0.5) {
+
+      // Get current heading
+      // Ignore RPS failures
+      while ((current_head = bot->rps->Heading()) == 0.0);
     
-    // // Check if one motor is outpacing another
-    if ((*bot->l_enc).Counts() / l_tgt >
-      (*bot->r_enc).Counts() / r_tgt) {
-      
-      // If left is faster than right, attempt to correct this
-      // by applying a balancing factor
-      l_pwr -= BLNC_FCTR;
-      r_pwr += BLNC_FCTR;
-      
-    } else if ((*bot->l_enc).Counts() / l_tgt <
-      (*bot->r_enc).Counts() / r_tgt) {
-      
-      // If right is faster than left, attempt to correct this
-      // by applying a balancing factor
-      l_pwr += BLNC_FCTR;
-      r_pwr -= BLNC_FCTR;
+      // Check if one motor is outpacing another
+      if (head_diff(orig_head, current_head) <
+        -1 * HEAD_ERR) {
+        
+        // If left is faster than right, attempt to correct this
+        // by applying a balancing factor
+        l_pwr += BLNC_FCTR;
+        r_pwr -= BLNC_FCTR;
+        LCD.WriteLine("correcting to left");
+        
+      } else if (head_diff(orig_head, current_head) >
+        HEAD_ERR) {
+        
+        // If right is faster than left, attempt to correct this
+        // by applying a balancing factor
+        l_pwr -= BLNC_FCTR;
+        r_pwr += BLNC_FCTR;
+        LCD.WriteLine("correction to right");
+      }
+
+      // Start counting time again
+      start_time = TimeNow();
     }
   }
   
-  // Cease backward motion
-  (*bot->l_mot).SetPower(0);
-  (*bot->r_mot).SetPower(0);
+  // Cease forward motion
+  bot->l_mot->SetPower(0);
+  bot->r_mot->SetPower(0);
 }
 
 void bck_flw(struct robot *bot, float distance) {
@@ -856,6 +865,11 @@ void rot_tst(struct robot *bot, bool cw) {
 
   // Give time to remove finger from button
   Sleep(200);
+}
+
+void crct_head(struct robot *bot, float head) {
+
+
 }
 
 // Forklift --------------------------------------------------------------------
