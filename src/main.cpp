@@ -84,30 +84,34 @@ int main() {
   bot.journal = journal;
   bot.head = rps.Heading();
 
-  // // Wait for CdS cell
-  // LCD.WriteLine("Waiting for signal");
-  // while(cds_0.Value() > 0.5);
-  // LCD.WriteLine("Starting");
-
-  // // Move to the light
-  // LCD.WriteLine("Moving towards shop");
-  // fwd_dist(&bot, 26);
-  // rot_deg(&bot, 85);
-  // bck_dist(&bot, 27);
-  // while(!btns.MiddlePressed());
-
   test:
-  fwd_dist(&bot, 15);
 
-  while (!btns.MiddlePressed());
-  goto test;
+  // Wait for CdS cell
+  LCD.WriteLine("Waiting for signal");
+  while(cds_0.Value() > 0.5);
+  LCD.WriteLine("Starting");
+
+  // Move to the light
+  LCD.WriteLine("Moving towards shop");
+  fwd_dist(&bot, 27);
+  rot_deg(&bot, 81);
+  bck_dist(&bot, 20);
+  while(!btns.MiddlePressed());
+
+  for (;;) {
+    if (btns.MiddlePressed()) {
+      goto test;
+    }
+    if (btns.LeftPressed()) {
+      goto end;
+    }
+  }
+
+  end:
 
   // Program finished
   rps.Disable();
   LCD.Clear();
   LCD.WriteLine("Complete.");
-  LCD.WriteLine("Ready to dump...");
-  LCD.WriteLine("Press middle button");
-  dump(&bot);
   return 0;
 }

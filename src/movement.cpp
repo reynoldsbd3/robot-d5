@@ -8,8 +8,8 @@
 #include "movement.h"
 #include "robot.h"
 
-#define BLNC_FCTR 3            // Offset factor for balamcing motor power
-#define HEAD_ERR 5.0           // Maximum allowable heading error
+#define BLNC_FCTR -7            // Offset factor for balamcing motor power
+#define HEAD_ERR 2.0           // Maximum allowable heading error
 #define FL_PWR -90             // Forklift power
 #define FTRY_THRESH 20         // Y-coordinate where shop ends
 #define LINE_THRESH_FTRY_0 1.0 // Optosensor threshold for detecting line in factory
@@ -24,7 +24,7 @@
 #define BCK_FTRY_NO_LINE 2.8
 #define BCK_SHOP_LINE 2.8
 #define BCK_SHOP_NO_LINE 1.0
-#define LM_PWR_FW -98          // Left motor forward power
+#define LM_PWR_FW -90          // Left motor forward power
 #define LM_PWR_FLW -60
 #define LM_PWR_LADJ 70
 #define LM_PWR_LR 80          // Left motor left rotation power
@@ -33,7 +33,7 @@
 #define LM_PWR_RR -80          // Left motor right rotation power
 #define LM_PWR_RT 70           // Left motor right turn power
 #define LT_LPI 2.51            // Left tread links per inch
-#define RM_PWR_FW -80          // Right motor forward power
+#define RM_PWR_FW -90          // Right motor forward power
 #define RM_PWR_FLW -60
 #define RM_PWR_LADJ -70
 #define RM_PWR_LR -80         // Right motor left rotation power
@@ -108,52 +108,61 @@ void fwd_dist(struct robot *bot, float distance) {
   int r_tgt = r_tgt_cts(distance);
   int l_pwr = LM_PWR_FW;
   int r_pwr = RM_PWR_FW;
-  int cnt_diff;
   float orig_head;
+  float current_head;
+  float start_time = TimeNow();
 
   // Get original heading
-  ud_head(bot);
-  orig_head = bot->head;
+  // Ignore RPS failures
+  while ((orig_head = bot->rps->Heading()) == 0.0);
   
   // Ensure a clean count to begin
-  (*bot->l_enc).ResetCounts();
-  (*bot->r_enc).ResetCounts();
+  bot->l_enc->ResetCounts();
+  bot->r_enc->ResetCounts();
   
   // Move forward until robot reaches desired distance
-  while ((*bot->l_enc).Counts() < l_tgt &&
-    (*bot->r_enc).Counts() < r_tgt) {
+  while (bot->l_enc->Counts() < l_tgt &&
+    bot->r_enc->Counts() < r_tgt) {
     
     // Move forward
-    (*bot->l_mot).SetPower(l_pwr);
-    (*bot->r_mot).SetPower(r_pwr);
+    bot->l_mot->SetPower(l_pwr);
+    bot->r_mot->SetPower(r_pwr);
 
-    // TODO algorithm is too greedy
-    // Increase this time period to use with RPS
-    Sleep(50);
-    ud_head(bot);
+    // Allow time for RPS values to change before re-mesuring
+    if (TimeNow() - start_time >= 0.5) {
+
+      // Get current heading
+      // Ignore RPS failures
+      while ((current_head = bot->rps->Heading()) == 0.0);
     
-    // // Check if one motor is outpacing another
-    if ((*bot->l_enc).Counts() / l_tgt >
-      (*bot->r_enc).Counts() / r_tgt) {
-      
-      // If left is faster than right, attempt to correct this
-      // by applying a balancing factor
-      l_pwr -= BLNC_FCTR;
-      r_pwr += BLNC_FCTR;
-      
-    } else if ((*bot->l_enc).Counts() / l_tgt <
-      (*bot->r_enc).Counts() / r_tgt) {
-      
-      // If right is faster than left, attempt to correct this
-      // by applying a balancing factor
-      l_pwr += BLNC_FCTR;
-      r_pwr -= BLNC_FCTR;
+      // Check if one motor is outpacing another
+      if (head_diff(orig_head, current_head) <
+        -1 * HEAD_ERR) {
+        
+        // If left is faster than right, attempt to correct this
+        // by applying a balancing factor
+        l_pwr -= BLNC_FCTR;
+        r_pwr += BLNC_FCTR;
+        LCD.WriteLine("correcting to left");
+        
+      } else if (head_diff(orig_head, current_head) >
+        HEAD_ERR) {
+        
+        // If right is faster than left, attempt to correct this
+        // by applying a balancing factor
+        l_pwr += BLNC_FCTR;
+        r_pwr -= BLNC_FCTR;
+        LCD.WriteLine("correction to right");
+      }
+
+      // Start counting time again
+      start_time = TimeNow();
     }
   }
   
   // Cease forward motion
-  (*bot->l_mot).SetPower(0);
-  (*bot->r_mot).SetPower(0);
+  bot->l_mot->SetPower(0);
+  bot->r_mot->SetPower(0);
 }
 
 /* Causes the robot to "follow" a black line for an approximate distance in inches.
@@ -670,10 +679,17 @@ void rot_time(struct robot *bot, float time, bool cw) {
 void rot_deg(struct robot *bot, float degree) {
 
   // Variable declarations
-  float current_head = bot->rps->Heading();
+  float current_head;
   float prev_head;
-  float target = (*bot->rps).Heading() + degree;
+  float target;
   bool wrapped = false;
+
+  // Get current heading
+  // Ignore RPS failures
+  while ((current_head = bot->rps->Heading()) == 0.0);
+
+  // Calculate target
+  target = current_head + degree;
 
   // Correct target for wrap
   if (target < 0.0) {
@@ -930,19 +946,19 @@ int r_tgt_cts(float distance) {
  *    Number of degrees seperating the robot from the
  *    desired heading
  */
-float head_diff(float head, float target) {
+float head_diff(float current, float target) {
 
   // Variable 
-  float difference = target - head;
+  float difference = target - current;
 
   // Reverse direction if need be
-  if (difference > 179.9) {
+  if (difference > 89.9) {
 
-    difference -= 360.0;
+    difference = 179.9 - difference;
   }
-  if (difference < -179.9) {
+  if (difference < -89.9) {
 
-    difference += 360.0;
+    difference += 179.9;
   }
 
   return difference;
@@ -1025,6 +1041,7 @@ void ud_head(struct robot *bot) {
   // Log journal entry
   // bot->journal = log(bot->journal, &entry);
 }
+// TODO delete this ^^^
 
 void flw_light(struct robot *bot) {
 
