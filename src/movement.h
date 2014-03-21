@@ -34,6 +34,7 @@ void rot_time(struct robot *bot, float time, bool cw);
 void rot_deg(struct robot *bot, float degree);
 void rot_head(struct robot *bot, float head);
 void rot_tst(struct robot *bot, bool cw);
+void crct_head(struct robot *bot, float head);
 
 // Forklift
 void raise_fork(struct robot *bot, float time);

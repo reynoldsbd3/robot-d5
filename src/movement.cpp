@@ -27,19 +27,19 @@
 #define LM_PWR_FW -90          // Left motor forward power
 #define LM_PWR_FLW -60
 #define LM_PWR_LADJ 70
-#define LM_PWR_LR 80          // Left motor left rotation power
+#define LM_PWR_LR 70          // Left motor left rotation power
 #define LM_PWR_LT 30           // Left motor left turn power
 #define LM_PWR_RADJ -70
-#define LM_PWR_RR -80          // Left motor right rotation power
+#define LM_PWR_RR -70          // Left motor right rotation power
 #define LM_PWR_RT 70           // Left motor right turn power
 #define LT_LPI 2.51            // Left tread links per inch
 #define RM_PWR_FW -90          // Right motor forward power
 #define RM_PWR_FLW -60
 #define RM_PWR_LADJ -70
-#define RM_PWR_LR -80         // Right motor left rotation power
+#define RM_PWR_LR -70         // Right motor left rotation power
 #define RM_PWR_LT 70           // Right motor left turn power
 #define RM_PWR_RADJ 70
-#define RM_PWR_RR 80           // Right motor right rotation power
+#define RM_PWR_RR 70           // Right motor right rotation power
 #define RM_PWR_RT 30           // Right motor right turn power
 #define RT_LPI 2.00            // Right tread links per inch
 
@@ -349,63 +349,54 @@ void bck_dist(struct robot *bot, float distance) {
   // Declare variables
   int l_tgt = l_tgt_cts(distance);
   int r_tgt = r_tgt_cts(distance);
-  int l_pwr = LM_PWR_FW;
-  int r_pwr = RM_PWR_FW;
+  int l_pwr = -1 * LM_PWR_FW;
+  int r_pwr = -1 * RM_PWR_FW;
+  int cnt_diff;
   float orig_head;
-  float current_head;
-  float start_time = TimeNow();
 
   // Get original heading
-  // Ignore RPS failures
-  while ((orig_head = bot->rps->Heading()) == 0.0);
+  ud_head(bot);
+  orig_head = bot->head;
   
   // Ensure a clean count to begin
-  bot->l_enc->ResetCounts();
-  bot->r_enc->ResetCounts();
+  (*bot->l_enc).ResetCounts();
+  (*bot->r_enc).ResetCounts();
   
   // Move backward until robot reaches desired distance
-  while (bot->l_enc->Counts() < l_tgt &&
-    bot->r_enc->Counts() < r_tgt) {
+  while ((*bot->l_enc).Counts() < l_tgt &&
+    (*bot->r_enc).Counts() < r_tgt) {
     
     // Move forward
-    bot->l_mot->SetPower(-1 * l_pwr);
-    bot->r_mot->SetPower(-1 * r_pwr);
+    (*bot->l_mot).SetPower(l_pwr);
+    (*bot->r_mot).SetPower(r_pwr);
 
-    // Allow time for RPS values to change before re-mesuring
-    if (TimeNow() - start_time >= 0.5) {
-
-      // Get current heading
-      // Ignore RPS failures
-      while ((current_head = bot->rps->Heading()) == 0.0);
+    // TODO algorithm is too greedy
+    // Increase this time period to use with RPS
+    Sleep(50);
+    ud_head(bot);
     
-      // Check if one motor is outpacing another
-      if (head_diff(orig_head, current_head) <
-        -1 * HEAD_ERR) {
-        
-        // If left is faster than right, attempt to correct this
-        // by applying a balancing factor
-        l_pwr -= BLNC_FCTR;
-        r_pwr += BLNC_FCTR;
-        LCD.WriteLine("correcting to left");
-        
-      } else if (head_diff(orig_head, current_head) >
-        HEAD_ERR) {
-        
-        // If right is faster than left, attempt to correct this
-        // by applying a balancing factor
-        l_pwr += BLNC_FCTR;
-        r_pwr -= BLNC_FCTR;
-        LCD.WriteLine("correction to right");
-      }
-
-      // Start counting time again
-      start_time = TimeNow();
+    // // Check if one motor is outpacing another
+    if ((*bot->l_enc).Counts() / l_tgt >
+      (*bot->r_enc).Counts() / r_tgt) {
+      
+      // If left is faster than right, attempt to correct this
+      // by applying a balancing factor
+      l_pwr -= BLNC_FCTR;
+      r_pwr += BLNC_FCTR;
+      
+    } else if ((*bot->l_enc).Counts() / l_tgt <
+      (*bot->r_enc).Counts() / r_tgt) {
+      
+      // If right is faster than left, attempt to correct this
+      // by applying a balancing factor
+      l_pwr += BLNC_FCTR;
+      r_pwr -= BLNC_FCTR;
     }
   }
   
-  // Cease forward motion
-  bot->l_mot->SetPower(0);
-  bot->r_mot->SetPower(0);
+  // Cease backward motion
+  (*bot->l_mot).SetPower(0);
+  (*bot->r_mot).SetPower(0);
 }
 
 void bck_flw(struct robot *bot, float distance) {
@@ -869,7 +860,27 @@ void rot_tst(struct robot *bot, bool cw) {
 
 void crct_head(struct robot *bot, float head) {
 
+  // Variable declarations
+  float diff = head_diff(head, bot->rps->Heading());
 
+  while (diff > 1.0 || diff < -1.0) {
+
+    if (diff < 0.0) {
+
+      bot->l_mot->SetPower(LM_PWR_RR);
+      bot->r_mot->SetPower(RM_PWR_RR);
+
+    } else if (diff > 0.0) {
+
+      bot->l_mot->SetPower(LM_PWR_LR);
+      bot->r_mot->SetPower(RM_PWR_LR);
+    }
+
+    diff = head_diff(head, bot->rps->Heading());
+  }
+
+  bot->l_mot->SetPower(0);
+  bot->r_mot->SetPower(0);
 }
 
 // Forklift --------------------------------------------------------------------

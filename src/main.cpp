@@ -10,11 +10,6 @@
 #include "movement.h"
 #include "robot.h"
 
-#define RE_H_THRESH 3.0
-#define RE_L_THRESH 0.5
-#define LE_H_THRESH 3.0
-#define LE_L_THRESH 0.5
-
 // Declare motors
 FEHMotor l_mot(FEHMotor::Motor2);
 FEHMotor r_mot(FEHMotor::Motor0);
@@ -28,22 +23,20 @@ AnalogInputPin opt_0(FEHIO::P2_0);
 AnalogInputPin opt_1(FEHIO::P2_1);
 AnalogInputPin opt_2(FEHIO::P2_2);
 
-// Button board
+// Declare button board
 ButtonBoard btns(FEHIO::Bank3);
 
 // Declare WONKA interface
 FEHWONKA rps;
 
-// Declare a battery
+// Declare battery
 FEHBattery batt(FEHIO::BATTERY_VOLTAGE);
-
-void turn_left();
 
 int main() {
 
   // Variable declaration
   struct robot bot;
-  struct log_data *journal;
+  float light_value;
 
   // Display battery info
   while (!btns.MiddlePressed()) {
@@ -52,20 +45,14 @@ int main() {
     LCD.Write("Battery voltage: ");
     LCD.WriteLine(batt.Voltage());
     Sleep(250);
-
   }
 
   Sleep(250);
-
-  // Initialize logging data
-  journal = init_log();
 
   // Initialize RPS and WONKA communication
   rps.InitializeMenu();
   rps.Enable();
   LCD.Clear();
-
-  // Allow time to initialize
   Sleep(250);
   
   // Pack the robot struct
@@ -81,8 +68,6 @@ int main() {
   bot.rps = &rps;
   bot.btns = &btns;
   bot.batt = &batt;
-  bot.journal = journal;
-  bot.head = rps.Heading();
 
   test:
 
@@ -93,10 +78,53 @@ int main() {
 
   // Move to the light
   LCD.WriteLine("Moving towards shop");
-  fwd_dist(&bot, 27);
+  fwd_dist(&bot, 23);
+  Sleep(250);
   rot_deg(&bot, 81);
+  Sleep(250);
   bck_dist(&bot, 20);
-  while(!btns.MiddlePressed());
+  Sleep(250);
+
+  // Detect light color
+  // Make sure a valid value is valid
+  LCD.WriteLine("Getting light value");
+  light_value = cds_0.Value();
+  LCD.WriteLine("Got light value");
+  Sleep(250);
+
+  // Display light color
+  if (light_value < 0.3) {
+
+    LCD.Clear(FEHLCD::Red);
+    LCD.SetBackgroundColor(FEHLCD::Red);
+
+  } else if (light_value < 2.4) {
+
+    LCD.Clear(FEHLCD::Blue);
+    LCD.SetBackgroundColor(FEHLCD::Blue);
+
+  } else {
+
+    LCD.Clear(FEHLCD::Green);
+    LCD.SetBackgroundColor(FEHLCD::Green);
+  }
+  Sleep(250);
+
+  // Navigate to a counter
+  rot_deg(&bot, -60);
+  Sleep(250);
+  bck_dist(&bot, 8.0);
+  Sleep(250);
+  rot_deg(&bot, 60.0);
+  Sleep(250);
+  bck_dist(&bot, 10.0);
+  Sleep(250);
+
+  // bck_dist(&bot, 10);
+  // fwd_dist(&bot, 15);
+  // rot_deg(&bot, 88);
+  // fwd_dist(&bot, 20);
+
 
   for (;;) {
     if (btns.MiddlePressed()) {
