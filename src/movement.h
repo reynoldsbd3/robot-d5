@@ -28,6 +28,7 @@ void fwd_tst(struct robot *bot);
 void bck_time(struct robot *bot, float time);
 void bck_dist(struct robot *bot, float distance);
 void bck_tst(struct robot *bot);
+void bck_flw(struct robot *bt, float distance);
 
 // Turning
 void rot_time(struct robot *bot, float time, bool cw);

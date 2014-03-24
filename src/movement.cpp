@@ -747,7 +747,7 @@ void rot_deg(struct robot *bot, float degree) {
     }
 
     // Continue rotating until heading is achieved
-    while ((*bot->rps).Heading() < target);
+    while ((*bot->rps).Heading() > target);
   }
 
   // Cease rotation

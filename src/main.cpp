@@ -1,4 +1,3 @@
-
 #include <FEHBattery.h>
 #include <FEHIO.h>
 #include <FEHLCD.h>
@@ -21,7 +20,6 @@ FEHEncoder r_enc(FEHIO::P0_1);
 AnalogInputPin cds_0(FEHIO::P1_0);
 AnalogInputPin opt_0(FEHIO::P2_0);
 AnalogInputPin opt_1(FEHIO::P2_1);
-AnalogInputPin opt_2(FEHIO::P2_2);
 
 // Declare button board
 ButtonBoard btns(FEHIO::Bank3);
@@ -64,7 +62,6 @@ int main() {
   bot.cds_0 = &cds_0;
   bot.opt_0 = &opt_0;
   bot.opt_1 = &opt_1;
-  bot.opt_2 = &opt_2;
   bot.rps = &rps;
   bot.btns = &btns;
   bot.batt = &batt;
@@ -76,64 +73,216 @@ int main() {
   while(cds_0.Value() > 0.5);
   LCD.WriteLine("Starting");
 
-  // Move to the light
-  LCD.WriteLine("Moving towards shop");
-  fwd_dist(&bot, 23);
-  Sleep(250);
-  rot_deg(&bot, 81);
-  Sleep(250);
-  bck_dist(&bot, 20);
-  Sleep(250);
+  // Short circuit to a specific test
+  goto pin;
 
-  // Detect light color
-  // Make sure a valid value is valid
-  LCD.WriteLine("Getting light value");
+  pin:
+
+  // Move to pin
+  fwd_dist(&bot, 23.0);
+  Sleep(200);
+  rot_deg(&bot, 45.0);
+  Sleep(200);
+  fwd_dist(&bot, 6.0);
+  Sleep(200);
+  rot_deg(&bot, -45.0);
+  Sleep(200);
+  fwd_dist(&bot, 10.0);
+  Sleep(200) ;
+
+  // Grab pin
+  f_mot.SetPower(-30);
+  Sleep(200);
+  bck_dist(&bot, 5.0);
+  Sleep(200);
+
+  // TODO drop off pin?
+
+  // Line up with skid
+  rot_deg(&bot, 90.0);
+  Sleep(200);
+
+  while (!btns.MiddlePressed());
+
+  skid:
+
+  // Lower fork, move to skid
+  f_mot.SetPower(60);
+  Sleep(400);          // TODO adjust to lower prongs
+  f_mot.SetPower(0);
+  Sleep(200);
+  fwd_flw(&bot, 12.0); // TODO flw?
+  Sleep(200);
+  f_mot.SetPower(-60);
+  Sleep(200);
+  bck_dist(&bot, 5.0);
+  Sleep(200);
+  f_mot.SetPower(-130);
+  Sleep(3000);
+  f_mot.SetPower(-30);
+  Sleep(200);
+
+  // Back up, line up with switch
+  bck_dist(&bot, 3.0);
+  Sleep(200);
+  rot_deg(&bot, 90.0);
+  Sleep(200);
+
+  while (!btns.MiddlePressed());
+
+  switch_:
+
+  // Flip switch
+  fwd_dist(&bot, 8.0);
+  Sleep(200);
+  bck_dist(&bot, 8.0);
+  Sleep(200);
+
+  // Line up with button
+  rot_deg(&bot, 45.0);
+  Sleep(200);
+  fwd_dist(&bot, 12.0);
+  Sleep(200);
+  rot_deg(&bot, -45.0);
+  Sleep(200);
+  fwd_dist(&bot, 25.0);
+  Sleep(200);
+
+  while (!btns.MiddlePressed());
+
+  button:
+
+  // Move to button
+  fwd_dist(&bot, 20.0);
+  Sleep(200);
+
+  // Press button a certain number of times
+  for (int i = 0; i < rps.Oven(); i++) {
+
+    fwd_dist(&bot, 4.0);
+    Sleep(200);
+    bck_dist(&bot, 4.0);
+    Sleep(200);
+  }
+
+  // Move to and line up with ramp
+  bck_dist(&bot, 5.0);
+  Sleep(200);
+  rot_deg(&bot, -45.0);
+  Sleep(200);
+  fwd_dist(&bot, 10.0);
+  Sleep(200);
+  rot_deg(&bot, 45.0);
+  Sleep(200);
+
+  while (!btns.MiddlePressed());
+
+  down_ramp:
+
+  // Move down ramp, stop at light
+  bck_dist(&bot, 23.0);
+  Sleep(200);
+
+  while (!btns.MiddlePressed());
+
+  scoop:
+
+  // Get value of shop light
   light_value = cds_0.Value();
-  LCD.WriteLine("Got light value");
-  Sleep(250);
 
-  // Display light color
   if (light_value < 0.3) {
 
-    LCD.Clear(FEHLCD::Red);
-    LCD.SetBackgroundColor(FEHLCD::Red);
-
-  } else if (light_value < 2.4) {
-
-    LCD.Clear(FEHLCD::Blue);
-    LCD.SetBackgroundColor(FEHLCD::Blue);
+    // Light is red; move to right
+    rot_deg(&bot, -45.0);
+    Sleep(200);
+    bck_flw(&bot, 15.0);
+    Sleep(200);
+    fwd_dist(&bot, 4.0);
+    Sleep(200);
+    rot_deg(&bot, 90.0);
+    Sleep(200);
+    fwd_dist(&bot, 4.0);
+    Sleep(200);
+    rot_deg(&bot, -90.0);
+    Sleep(200);
 
   } else {
 
-    LCD.Clear(FEHLCD::Green);
-    LCD.SetBackgroundColor(FEHLCD::Green);
+    // Light is blue; move to left
+    rot_deg(&bot, 45.0);
+    Sleep(200);
+    bck_flw(&bot, 15.0);
+    fwd_dist(&bot, 4.0);
+    Sleep(200);
+    rot_deg(&bot, 90.0);
+    Sleep(200);
+    fwd_dist(&bot, 14.0);
+    Sleep(200);
+    rot_deg(&bot, -90.0);
+    Sleep(200);
   }
-  Sleep(250);
 
-  // Navigate to a counter
-  rot_deg(&bot, -60);
-  Sleep(250);
+  while (!btns.MiddlePressed());
+
+  chiller:
+
+  // Lower skid, insert into chiller
+  f_mot.SetPower(60);
+  Sleep(400);
+  f_mot.SetPower(0);
+  Sleep(200);
+  fwd_dist(&bot, 8.0);
+  Sleep(200);
   bck_dist(&bot, 8.0);
-  Sleep(250);
-  rot_deg(&bot, 60.0);
-  Sleep(250);
-  bck_dist(&bot, 10.0);
-  Sleep(250);
+  Sleep(200);
 
-  // bck_dist(&bot, 10);
-  // fwd_dist(&bot, 15);
-  // rot_deg(&bot, 88);
-  // fwd_dist(&bot, 20);
+  // Raise skid, line up with ramp
+  f_mot.SetPower(80);
+  Sleep(500);
+  f_mot.SetPower(0);
+  Sleep(200);
+  rot_deg(&bot, -45.0);
+  Sleep(200);
+  fwd_dist(&bot, 3.0);
+  Sleep(200);
+  rot_deg(&bot, -45.0);
+  Sleep(200);
+  fwd_dist(&bot, 3.0);
+  Sleep(200);
+  rot_deg(&bot, 90.0);
+  Sleep(200);
 
+  while (!btns.MiddlePressed());
 
-  for (;;) {
+  up_ramp:
+
+  // Move up ramp
+  fwd_dist(&bot, 15.0);
+
+  // Line up with charger
+  rot_deg(&bot, 90.0);
+
+  while (!btns.MiddlePressed());
+
+  charger:
+
+  // Move to and activate charger
+  fwd_dist(&bot, 23.0);
+
+  while (true) {
+
     if (btns.MiddlePressed()) {
+
       goto test;
     }
+
     if (btns.LeftPressed()) {
+
       goto end;
     }
   }
+
+  while (!btns.MiddlePressed());
 
   end:
 
