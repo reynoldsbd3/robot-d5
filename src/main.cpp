@@ -78,28 +78,46 @@ int main() {
 
   pin:
 
+  // Drop fork a bit
+  f_mot.SetPower(30);
+  Sleep(200);
+  f_mot.SetPower(0);
+
   // Move to pin
-  fwd_dist(&bot, 23.0);
+  fwd_dist(&bot, 28.0);
   Sleep(200);
-  rot_deg(&bot, 45.0);
+  rot_deg(&bot, 40.0);
   Sleep(200);
-  fwd_dist(&bot, 6.0);
+  fwd_dist(&bot, 4.0);
   Sleep(200);
-  rot_deg(&bot, -45.0);
+  rot_deg(&bot, -37.0);
   Sleep(200);
-  fwd_dist(&bot, 10.0);
-  Sleep(200) ;
+  fwd_dist(&bot, 12.0);
+  Sleep(200);
 
   // Grab pin
   f_mot.SetPower(-30);
   Sleep(200);
   bck_dist(&bot, 5.0);
   Sleep(200);
+  f_mot.SetPower(0);
 
-  // TODO drop off pin?
+  // Drop off pin
+  rot_deg(&bot, -45.0);
+  Sleep(200);
+  f_mot.SetPower(60);
+  Sleep(250);
+  f_mot.SetPower(0);
+  Sleep(200);
+  bck_dist(&bot, 8.0);
+  Sleep(200);
 
   // Line up with skid
-  rot_deg(&bot, 90.0);
+  f_mot.SetPower(-60);
+  Sleep(400);
+  f_mot.SetPower(0);
+  Sleep(200);
+  rot_deg(&bot, 135.0);
   Sleep(200);
 
   while (!btns.MiddlePressed());

@@ -24,7 +24,7 @@
 #define BCK_FTRY_NO_LINE 2.8
 #define BCK_SHOP_LINE 2.8
 #define BCK_SHOP_NO_LINE 1.0
-#define LM_PWR_FW -90          // Left motor forward power
+#define LM_PWR_FW -96          // Left motor forward power
 #define LM_PWR_FLW -60
 #define LM_PWR_LADJ 70
 #define LM_PWR_LR 70          // Left motor left rotation power
