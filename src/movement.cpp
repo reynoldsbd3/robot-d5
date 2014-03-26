@@ -32,7 +32,7 @@
 #define LM_PWR_RADJ -70
 #define LM_PWR_RR -70          // Left motor right rotation power
 #define LM_PWR_RT 70           // Left motor right turn power
-#define LT_LPI 2.51            // Left tread links per inch
+#define LT_LPI 2.32            // Left tread links per inch
 #define RM_PWR_FW -90          // Right motor forward power
 #define RM_PWR_FLW -60
 #define RM_PWR_LADJ -70
@@ -41,7 +41,7 @@
 #define RM_PWR_RADJ 70
 #define RM_PWR_RR 70           // Right motor right rotation power
 #define RM_PWR_RT 30           // Right motor right turn power
-#define RT_LPI 2.00            // Right tread links per inch
+#define RT_LPI 2.27            // Right tread links per inch
 
 // Prototypes
 float head_diff(float, float);
@@ -143,7 +143,6 @@ void fwd_dist(struct robot *bot, float distance) {
         // by applying a balancing factor
         l_pwr -= BLNC_FCTR;
         r_pwr += BLNC_FCTR;
-        LCD.WriteLine("correcting to left");
         
       } else if (head_diff(orig_head, current_head) >
         HEAD_ERR) {
@@ -152,7 +151,6 @@ void fwd_dist(struct robot *bot, float distance) {
         // by applying a balancing factor
         l_pwr += BLNC_FCTR;
         r_pwr -= BLNC_FCTR;
-        LCD.WriteLine("correction to right");
       }
 
       // Start counting time again
@@ -710,13 +708,15 @@ void rot_deg(struct robot *bot, float degree) {
 
     // Wrap before checking heading
     if (wrapped) {
+
+      // Initialize the variable
+      prev_head = current_head;
       
       do {
 
         if (bot->rps->Heading() != 0.0) {
 
-          prev_head = current_head;
-          Sleep(10);
+          Sleep(100);
           current_head = bot->rps->Heading();
         }
 
@@ -733,13 +733,15 @@ void rot_deg(struct robot *bot, float degree) {
 
     // Wrap before checking heading
     if (wrapped) {
+
+      // Initialize the variable
+      prev_head = current_head;
       
       do {
 
         if (bot->rps->Heading() != 0.0) {
 
-          prev_head = current_head;
-          Sleep(10);
+          Sleep(100);
           current_head = bot->rps->Heading();
          }
 

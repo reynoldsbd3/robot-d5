@@ -90,7 +90,7 @@ int main() {
   Sleep(200);
   fwd_dist(&bot, 4.0);
   Sleep(200);
-  rot_deg(&bot, -37.0);
+  rot_deg(&bot, -40.0);
   Sleep(200);
   fwd_dist(&bot, 12.0);
   Sleep(200);
@@ -106,18 +106,22 @@ int main() {
   rot_deg(&bot, -45.0);
   Sleep(200);
   f_mot.SetPower(60);
-  Sleep(250);
+  Sleep(350);
   f_mot.SetPower(0);
   Sleep(200);
-  bck_dist(&bot, 8.0);
+  bck_dist(&bot, 4.0);
   Sleep(200);
 
   // Line up with skid
   f_mot.SetPower(-60);
-  Sleep(400);
+  Sleep(600);
   f_mot.SetPower(0);
   Sleep(200);
-  rot_deg(&bot, 135.0);
+  rot_deg(&bot, 45.0);
+  Sleep(200);
+  fwd_dist(&bot, 4.0);
+  Sleep(200);
+  rot_deg(&bot, 90.0);
   Sleep(200);
 
   while (!btns.MiddlePressed());
@@ -126,13 +130,13 @@ int main() {
 
   // Lower fork, move to skid
   f_mot.SetPower(60);
-  Sleep(400);          // TODO adjust to lower prongs
+  Sleep(600);          // TODO adjust to lower prongs
   f_mot.SetPower(0);
   Sleep(200);
-  fwd_flw(&bot, 12.0); // TODO flw?
+  fwd_dist(&bot, 12.0); // TODO flw?
   Sleep(200);
   f_mot.SetPower(-60);
-  Sleep(200);
+  Sleep(600);
   bck_dist(&bot, 5.0);
   Sleep(200);
   f_mot.SetPower(-130);
@@ -296,7 +300,7 @@ int main() {
 
     if (btns.LeftPressed()) {
 
-      goto end;
+      break;
     }
   }
 
