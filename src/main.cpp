@@ -84,7 +84,7 @@ int main() {
   f_mot.SetPower(0);
 
   // Move to pin
-  fwd_dist(&bot, 28.0);
+  fwd_dist(&bot, 25.0);
   Sleep(200);
   rot_deg(&bot, 40.0);
   Sleep(200);
