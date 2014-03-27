@@ -84,21 +84,21 @@ int main() {
   f_mot.SetPower(0);
 
   // Move to pin
-  fwd_dist(&bot, 25.0);
+  fwd_dist(&bot, 28.0);
   Sleep(200);
   rot_deg(&bot, 40.0);
   Sleep(200);
   fwd_dist(&bot, 4.0);
   Sleep(200);
-  rot_deg(&bot, -40.0);
+  rot_deg(&bot, -43.0);
   Sleep(200);
-  fwd_dist(&bot, 12.0);
+  fwd_dist(&bot, 14.0);
   Sleep(200);
 
   // Grab pin
   f_mot.SetPower(-30);
   Sleep(200);
-  bck_dist(&bot, 5.0);
+  bck_dist(&bot, 7.0);
   Sleep(200);
   f_mot.SetPower(0);
 
@@ -114,7 +114,7 @@ int main() {
 
   // Line up with skid
   f_mot.SetPower(-60);
-  Sleep(600);
+  Sleep(800);
   f_mot.SetPower(0);
   Sleep(200);
   rot_deg(&bot, 45.0);
@@ -133,20 +133,18 @@ int main() {
   Sleep(600);          // TODO adjust to lower prongs
   f_mot.SetPower(0);
   Sleep(200);
-  fwd_dist(&bot, 12.0); // TODO flw?
+  fwd_dist(&bot, 12.0);
   Sleep(200);
   f_mot.SetPower(-60);
   Sleep(600);
   bck_dist(&bot, 5.0);
   Sleep(200);
   f_mot.SetPower(-130);
-  Sleep(3000);
+  Sleep(1500);
   f_mot.SetPower(-30);
   Sleep(200);
 
   // Back up, line up with switch
-  bck_dist(&bot, 3.0);
-  Sleep(200);
   rot_deg(&bot, 90.0);
   Sleep(200);
 
@@ -167,7 +165,7 @@ int main() {
   Sleep(200);
   rot_deg(&bot, -45.0);
   Sleep(200);
-  fwd_dist(&bot, 25.0);
+  fwd_dist(&bot, 10.0);
   Sleep(200);
 
   while (!btns.MiddlePressed());
@@ -175,7 +173,7 @@ int main() {
   button:
 
   // Move to button
-  fwd_dist(&bot, 20.0);
+  fwd_dist(&bot, 10.0);
   Sleep(200);
 
   // Press button a certain number of times

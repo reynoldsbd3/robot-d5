@@ -129,7 +129,7 @@ void fwd_dist(struct robot *bot, float distance) {
     bot->r_mot->SetPower(r_pwr);
 
     // Allow time for RPS values to change before re-mesuring
-    if (TimeNow() - start_time >= 0.5) {
+    if (TimeNow() - start_time >= 0.6) {
 
       // Get current heading
       // Ignore RPS failures
