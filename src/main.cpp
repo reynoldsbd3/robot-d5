@@ -64,7 +64,7 @@ int main() {
   bot.opt_1 = &opt_1;
   bot.rps = &rps;
   bot.btns = &btns;
-  bot.batt = &batt;
+  bot.batt = &batt; 
 
   // Wait for CdS cell
   LCD.WriteLine("Waiting for signal");
@@ -88,7 +88,7 @@ int main() {
   Sleep(200);
   rot_deg(&bot, 40.0);
   Sleep(200);
-  fwd_dist(&bot, 4.0);
+  fwd_dist(&bot, 8.0);
   Sleep(200);
   rot_deg(&bot, -40.0);
   Sleep(200);
@@ -100,20 +100,20 @@ int main() {
   // Grab pin
   f_mot.SetPower(-30);
   Sleep(200);
-  bck_dist(&bot, 9.0);
+  bck_dist(&bot, 7.0);
   Sleep(200);
   f_mot.SetPower(0);
   Sleep(200);
 
   // Line up with ramp
-  rot_deg(&bot, 90.0);
+  rot_deg(&bot, 40.0);
   Sleep(200);
-  rot_deg(&bot, 5.0 - rps.Heading());
+  rot_deg(&bot, 40.0);
   Sleep(200);
-  rot_deg(&bot, -5.0);
+  rot_deg(&bot, 175.0 - rps.Heading());
   Sleep(200);
-
-  while (!btns.MiddlePressed());
+  rot_deg(&bot, 5.0);
+  Sleep(200);
 
   // Move to counter
   bck_dist(&bot, 17.0);

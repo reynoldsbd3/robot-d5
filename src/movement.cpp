@@ -27,19 +27,19 @@
 #define LM_PWR_FW -96          // Left motor forward power
 #define LM_PWR_FLW -60
 #define LM_PWR_LADJ 70
-#define LM_PWR_LR 70          // Left motor left rotation power
+#define LM_PWR_LR 125          // Left motor left rotation power
 #define LM_PWR_LT 30           // Left motor left turn power
 #define LM_PWR_RADJ -70
-#define LM_PWR_RR -70          // Left motor right rotation power
+#define LM_PWR_RR -125          // Left motor right rotation power
 #define LM_PWR_RT 70           // Left motor right turn power
 #define LT_LPI 2.32            // Left tread links per inch
 #define RM_PWR_FW -90          // Right motor forward power
 #define RM_PWR_FLW -60
 #define RM_PWR_LADJ -70
-#define RM_PWR_LR -70         // Right motor left rotation power
+#define RM_PWR_LR -125         // Right motor left rotation power
 #define RM_PWR_LT 70           // Right motor left turn power
 #define RM_PWR_RADJ 70
-#define RM_PWR_RR 70           // Right motor right rotation power
+#define RM_PWR_RR 125           // Right motor right rotation power
 #define RM_PWR_RT 30           // Right motor right turn power
 #define RT_LPI 2.27            // Right tread links per inch
 
