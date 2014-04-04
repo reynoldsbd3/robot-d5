@@ -5,7 +5,6 @@
 #include <FEHUtility.h>
 #include <FEHWONKA.h>
 
-#include "logging.h"
 #include "movement.h"
 #include "robot.h"
 
@@ -71,11 +70,6 @@ int main() {
   while(cds_0.Value() > 0.5);
   LCD.WriteLine("Starting");
 
-
-  // Get a good beginning heading
-  rot_deg(&bot, 90.0 - rps.Heading());
-  Sleep(200);
-
   // Drop fork a bit
   f_mot.SetPower(30);
   Sleep(200);
@@ -84,15 +78,17 @@ int main() {
   // Move to pin
   fwd_dist(&bot, 28.0);
   Sleep(200);
-  rot_deg(&bot, 90.0 - rps.Heading());
+  rot_corr(&bot, (90.0 - rps.Heading()) / 2);
   Sleep(200);
   rot_deg(&bot, 40.0);
   Sleep(200);
-  fwd_dist(&bot, 8.0);
+  fwd_dist(&bot, 4.5);
   Sleep(200);
   rot_deg(&bot, -40.0);
   Sleep(200);
-  rot_deg(&bot, 90.0 - rps.Heading());
+  rot_corr(&bot, (90.0 - rps.Heading()) / 2);
+  Sleep(200);
+  rot_corr(&bot, 3.0);
   Sleep(200);
   fwd_dist(&bot, 14.0);
   Sleep(200);
@@ -100,43 +96,76 @@ int main() {
   // Grab pin
   f_mot.SetPower(-30);
   Sleep(200);
-  bck_dist(&bot, 7.0);
+  bck_dist(&bot, 10.0);
   Sleep(200);
   f_mot.SetPower(0);
   Sleep(200);
 
   // Line up with ramp
-  rot_deg(&bot, 40.0);
+  rot_deg(&bot, 45.0);
   Sleep(200);
-  rot_deg(&bot, 40.0);
-  Sleep(200);
-  rot_deg(&bot, 175.0 - rps.Heading());
-  Sleep(200);
-  rot_deg(&bot, 5.0);
+  rot_deg(&bot, 45.0);
   Sleep(200);
 
-  // Move to counter
-  bck_dist(&bot, 17.0);
+  // Do a heading correction to get heading close to 0
+  // This correction is different dpending on whether the robot
+  // has or has not already passed the 0 degree mark
+  if (rps.Heading() < 90) {
+
+    // In this case, move downward close to 0
+    rot_corr(&bot, (0.5 - rps.Heading()) / 2);
+
+  } else if (rps.Heading() > 90) {
+
+    // In this case, move a litte further towards 0
+    rot_corr(&bot, (179.4 - rps.Heading()) / 2);
+  }
   Sleep(200);
-  rot_deg(&bot, 5.0 - rps.Heading());
+
+  // Move to shop
+  bck_dist(&bot, 22.0);
   Sleep(200);
-  rot_deg(&bot, -5.0);
+
+  // Do a heading correction to get heading close to 0
+  // This correction is different dpending on whether the robot
+  // has or has not already passed the 0 degree mark
+  if (rps.Heading() < 90) {
+
+    // In this case, move downward close to 0
+    rot_corr(&bot, (0.5 - rps.Heading()) / 2);
+
+  } else if (rps.Heading() > 90) {
+
+    // In this case, move a litte further towards 0
+    rot_corr(&bot, (179.4 - rps.Heading()) / 2);
+  }
   Sleep(200);
 
   // Line up with left counter
   rot_deg(&bot, 45.0);
   Sleep(200);
-  bck_dist(&bot, 6.0);
+  bck_dist(&bot, 9.0);
   Sleep(200);
   rot_deg(&bot, -45.0);
   Sleep(200);
-  rot_deg(&bot, 5.0 - rps.Heading());
-  Sleep(200);
-  rot_deg(&bot, -5.0);
+
+  // Do a heading correction to get heading close to 0
+  // This correction is different dpending on whether the robot
+  // has or has not already passed the 0 degree mark
+  if (rps.Heading() < 90) {
+
+    // In this case, move downward close to 0
+    rot_corr(&bot, (0.5 - rps.Heading()) / 2);
+
+  } else if (rps.Heading() > 90) {
+
+    // In this case, move a litte further towards 0
+    rot_corr(&bot, (179.4 - rps.Heading()) / 2);
+  }
   Sleep(200);
 
   // Deposit scoop
-  bck_dist(&bot, 12.0);
+  bck_dist(&bot, 9.5);
   Sleep(200);
 
   // Program finished

@@ -27,19 +27,23 @@
 #define LM_PWR_FW -96          // Left motor forward power
 #define LM_PWR_FLW -60
 #define LM_PWR_LADJ 70
-#define LM_PWR_LR 125          // Left motor left rotation power
+#define LM_PWR_LC 85
+#define LM_PWR_LR 100          // Left motor left rotation power
 #define LM_PWR_LT 30           // Left motor left turn power
 #define LM_PWR_RADJ -70
-#define LM_PWR_RR -125          // Left motor right rotation power
+#define LM_PWR_RC -85
+#define LM_PWR_RR -100          // Left motor right rotation power
 #define LM_PWR_RT 70           // Left motor right turn power
 #define LT_LPI 2.32            // Left tread links per inch
 #define RM_PWR_FW -90          // Right motor forward power
 #define RM_PWR_FLW -60
 #define RM_PWR_LADJ -70
-#define RM_PWR_LR -125         // Right motor left rotation power
+#define RM_PWR_LC -85
+#define RM_PWR_LR -100         // Right motor left rotation power
 #define RM_PWR_LT 70           // Right motor left turn power
 #define RM_PWR_RADJ 70
-#define RM_PWR_RR 125           // Right motor right rotation power
+#define RM_PWR_RC 85
+#define RM_PWR_RR 100           // Right motor right rotation power
 #define RM_PWR_RT 30           // Right motor right turn power
 #define RT_LPI 2.27            // Right tread links per inch
 
@@ -730,6 +734,89 @@ void rot_deg(struct robot *bot, float degree) {
 
     (*bot->l_mot).SetPower(LM_PWR_RR);
     (*bot->r_mot).SetPower(RM_PWR_RR);
+
+    // Wrap before checking heading
+    if (wrapped) {
+
+      // Initialize the variable
+      prev_head = current_head;
+      
+      do {
+
+        if (bot->rps->Heading() != 0.0) {
+
+          Sleep(100);
+          current_head = bot->rps->Heading();
+         }
+
+      } while (prev_head >=  current_head);
+    }
+
+    // Continue rotating until heading is achieved
+    while ((*bot->rps).Heading() > target);
+  }
+
+  // Cease rotation
+  (*bot->l_mot).SetPower(0);
+  (*bot->r_mot).SetPower(0);
+}
+
+void rot_corr(struct robot *bot, float degree) {
+
+  // Variable declarations
+  float current_head;
+  float prev_head;
+  float target;
+  bool wrapped = false;
+
+  // Get current heading
+  // Ignore RPS failures
+  while ((current_head = bot->rps->Heading()) == 0.0);
+
+  // Calculate target
+  target = current_head + degree;
+
+  // Correct target for wrap
+  if (target < 0.0) {
+
+    target = 180.0 - target;
+    wrapped = true;
+
+  } else if (target >= 179.9) {
+
+    target -= 179.9;
+    wrapped = true;
+  }
+
+  if (degree > 0) {
+
+    (*bot->l_mot).SetPower(LM_PWR_LC);
+    (*bot->r_mot).SetPower(RM_PWR_LC);
+
+    // Wrap before checking heading
+    if (wrapped) {
+
+      // Initialize the variable
+      prev_head = current_head;
+      
+      do {
+
+        if (bot->rps->Heading() != 0.0) {
+
+          Sleep(100);
+          current_head = bot->rps->Heading();
+        }
+
+      } while (prev_head <= current_head);
+    }
+
+    // Continue rotating until heading is achieved
+    while ((*bot->rps).Heading() < target);
+
+  } else if (degree < 0) {
+
+    (*bot->l_mot).SetPower(LM_PWR_RC);
+    (*bot->r_mot).SetPower(RM_PWR_RC);
 
     // Wrap before checking heading
     if (wrapped) {

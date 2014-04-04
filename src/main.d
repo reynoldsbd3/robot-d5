@@ -14,7 +14,7 @@
  ../resources/Proteus/EWL/EWL_C/include/ewl_lib_ext1.h Drivers/adc16.h \
  Libraries/FEHIO.h Libraries/FEHLCD.h Libraries/FEHMotor.h \
  Libraries/FEHUtility.h Libraries/FEHWONKA.h Drivers/FEHXBee.h \
- ../src/logging.h ../src/movement.h ../src/robot.h
+ ../src/movement.h ../src/robot.h ../src/logging.h
 
 ../resources/Proteus/EWL/EWL_C++/include/lib_ewl_c++.prefix:
 
@@ -62,8 +62,8 @@ Libraries/FEHWONKA.h:
 
 Drivers/FEHXBee.h:
 
-../src/logging.h:
-
 ../src/movement.h:
 
 ../src/robot.h:
+
+../src/logging.h:
