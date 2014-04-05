@@ -34,7 +34,7 @@
 #define LM_PWR_RC -85
 #define LM_PWR_RR -100          // Left motor right rotation power
 #define LM_PWR_RT 70           // Left motor right turn power
-#define LT_LPI 2.32            // Left tread links per inch
+#define LT_LPI 2.77            // Left tread links per inch
 #define RM_PWR_FW -90          // Right motor forward power
 #define RM_PWR_FLW -60
 #define RM_PWR_LADJ -70
@@ -45,7 +45,7 @@
 #define RM_PWR_RC 85
 #define RM_PWR_RR 100           // Right motor right rotation power
 #define RM_PWR_RT 30           // Right motor right turn power
-#define RT_LPI 2.27            // Right tread links per inch
+#define RT_LPI 1.75            // Right tread links per inch
 
 // Prototypes
 float head_diff(float, float);

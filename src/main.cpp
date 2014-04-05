@@ -16,7 +16,7 @@ FEHMotor f_mot(FEHMotor::Motor3);
 // Declare sensors
 FEHEncoder l_enc(FEHIO::P0_0);
 FEHEncoder r_enc(FEHIO::P0_1);
-AnalogInputPin cds_0(FEHIO::P1_0);
+AnalogInputPin cds_0(FEHIO::P1_0); 
 AnalogInputPin opt_0(FEHIO::P2_0);
 AnalogInputPin opt_1(FEHIO::P2_1);
 
@@ -71,7 +71,7 @@ int main() {
   LCD.WriteLine("Starting");
 
   // Drop fork a bit
-  f_mot.SetPower(30);
+  f_mot.SetPower(20);
   Sleep(200);
   f_mot.SetPower(0);
 
@@ -88,13 +88,11 @@ int main() {
   Sleep(200);
   rot_corr(&bot, (90.0 - rps.Heading()) / 2);
   Sleep(200);
-  rot_corr(&bot, 3.0);
-  Sleep(200);
   fwd_dist(&bot, 14.0);
   Sleep(200);
 
   // Grab pin
-  f_mot.SetPower(-30);
+  f_mot.SetPower(-50);
   Sleep(200);
   bck_dist(&bot, 10.0);
   Sleep(200);
@@ -102,9 +100,9 @@ int main() {
   Sleep(200);
 
   // Line up with ramp
-  rot_deg(&bot, 45.0);
+  rot_deg(&bot, 40.0);
   Sleep(200);
-  rot_deg(&bot, 45.0);
+  rot_deg(&bot, 40.0);
   Sleep(200);
 
   // Do a heading correction to get heading close to 0
@@ -165,7 +163,9 @@ int main() {
   Sleep(200);
 
   // Deposit scoop
-  bck_dist(&bot, 9.5);
+  bck_dist(&bot, 12.0);
+  Sleep(200);
+  fwd_dist(&bot, 8.0);
   Sleep(200);
 
   // Program finished
