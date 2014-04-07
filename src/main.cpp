@@ -71,8 +71,8 @@ int main() {
   LCD.WriteLine("Starting");
 
   // Drop fork a bit
-  f_mot.SetPower(20);
-  Sleep(200);
+  f_mot.SetPower(15);
+  Sleep(250);
   f_mot.SetPower(0);
 
   // Move to pin
@@ -130,12 +130,12 @@ int main() {
   if (rps.Heading() < 90) {
 
     // In this case, move downward close to 0
-    rot_corr(&bot, (0.5 - rps.Heading()) / 2);
+    rot_corr(&bot, 1.0 - rps.Heading());
 
   } else if (rps.Heading() > 90) {
 
     // In this case, move a litte further towards 0
-    rot_corr(&bot, (179.4 - rps.Heading()) / 2);
+    rot_corr(&bot, 179.0 - rps.Heading());
   }
   Sleep(200);
 
@@ -166,6 +166,74 @@ int main() {
   bck_dist(&bot, 12.0);
   Sleep(200);
   fwd_dist(&bot, 8.0);
+  Sleep(200);
+
+  // Do a heading correction to get heading close to 0
+  // This correction is different dpending on whether the robot
+  // has or has not already passed the 0 degree mark
+  if (rps.Heading() < 90) {
+
+    // In this case, move downward close to 0
+    rot_corr(&bot, (0.5 - rps.Heading()) / 2);
+
+  } else if (rps.Heading() > 90) {
+
+    // In this case, move a litte further towards 0
+    rot_corr(&bot, (179.4 - rps.Heading()) / 2);
+  }
+  Sleep(200);
+
+  // Line up with ramp
+  rot_deg(&bot, 45.0);
+  Sleep(200);
+  fwd_dist(&bot, 9.0);
+  Sleep(200);
+  rot_deg(&bot, -45.0);
+  Sleep(200);
+
+  // Do a heading correction to get heading close to 0
+  // This correction is different dpending on whether the robot
+  // has or has not already passed the 0 degree mark
+  if (rps.Heading() < 90) {
+
+    // In this case, move downward close to 0
+    rot_corr(&bot, (0.5 - rps.Heading()) / 2);
+
+  } else if (rps.Heading() > 90) {
+
+    // In this case, move a litte further towards 0
+    rot_corr(&bot, (179.4 - rps.Heading()) / 2);
+  }
+  Sleep(200);
+
+  // Move up ramp
+  fwd_dist(&bot, 19.0);
+
+  // Do a heading correction to get heading close to 0
+  // This correction is different dpending on whether the robot
+  // has or has not already passed the 0 degree mark
+  if (rps.Heading() < 90) {
+
+    // In this case, move downward close to 0
+    rot_corr(&bot, (0.5 - rps.Heading()) / 2);
+
+  } else if (rps.Heading() > 90) {
+
+    // In this case, move a litte further towards 0
+    rot_corr(&bot, (179.4 - rps.Heading()) / 2);
+  }
+  Sleep(200);
+
+  // Line up with charging station
+  rot_deg(&bot, 40.0);
+  Sleep(200);
+  rot_deg(&bot, 40.0);
+  Sleep(200);
+  rot_corr(&bot, (90.0 - rps.Heading()) / 2);
+  Sleep(200);
+
+  // Move into charging station
+  fwd_dist(&bot, 20.0);
   Sleep(200);
 
   // Program finished
